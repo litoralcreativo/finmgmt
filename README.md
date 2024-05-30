@@ -1,4 +1,4 @@
-# Financial Management System
+# Financial Management System (FinMGMT)
 
 This project allows the management of financial transactions and accounting balances for an individual or a group of people. It is built using the MEAN stack, comprising a backend, a frontend, and a database.
 
