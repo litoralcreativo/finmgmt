@@ -3,7 +3,7 @@ import { BehaviorSubject, from, map } from "rxjs";
 require("dotenv").config();
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/";
-const dbName = process.env.DB_NAME || "warehouse";
+const dbName = process.env.DB_NAME || "finmgmt";
 
 const client = new MongoClient(uri);
 

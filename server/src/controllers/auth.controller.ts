@@ -63,7 +63,38 @@ export const localAuthLogout = (req: Request, res: Response) => {
       msg: "Logged out successfully",
       code: 200,
     });
-  } catch (e) {
-    throw e;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Fail to get user, internal server error"),
+    });
+  }
+};
+
+export const getUserInfo = (req: Request, res: Response) => {
+  try {
+    const userId = (req.user as any)?.id;
+    userService.getById(userId).subscribe({
+      next: (user: User | null) => {
+        if (!user) {
+          return res
+            .status(400)
+            .json({ ...new ResponseStrategy(400, "User not found") });
+        }
+        return res.status(200).json({
+          id: user._id,
+          email: user.email,
+          name: user.name,
+        });
+      },
+      error: (err) => {
+        throw new Error(err);
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Fail to get user, internal server error"),
+    });
   }
 };

@@ -6,9 +6,9 @@ export class User {
   public get _id(): string {
     return this.id;
   }
-  private created: number;
-  private name: { first?: string | null; last?: string | null };
-  private email: string | null;
+  created: number;
+  name: { first?: string | null; last?: string | null };
+  email: string | null;
   security: { passwordHash: string | null };
 
   constructor() {

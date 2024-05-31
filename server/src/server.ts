@@ -7,7 +7,7 @@ import cors from "cors";
 import { router as movementRouter } from "./controllers/movement.routes";
 import { router as authRouter } from "./controllers/auth.routes";
 import { swaggerSpec } from "./swagger";
-import { authenticate } from "./middlewares/autenticate.middleware";
+import { requireAuth } from "./middlewares/autenticate.middleware";
 import "./auth";
 
 const app = express();
@@ -46,7 +46,7 @@ app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/auth", authRouter);
-app.use("/movement", authenticate, movementRouter);
+app.use("/movement", requireAuth, movementRouter);
 
 app.all("*", (req, res) => {
   res.status(404).json({
