@@ -10,7 +10,7 @@ DbManager.getInstance().subscribe((x) => {
   if (x) userService = new UserService(x);
 });
 
-export const localAuthRegistration = (req: Request, res: Response) => {
+export const registration = (req: Request, res: Response) => {
   try {
     const { firstName, lastName, email, password } = req.body;
     const user = new User();
@@ -29,11 +29,7 @@ export const localAuthRegistration = (req: Request, res: Response) => {
   }
 };
 
-export const localAuthLogin = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const login = (req: Request, res: Response, next: NextFunction) => {
   try {
     passport.authenticate("local", (err: any, user: User) => {
       if (err) {
@@ -46,9 +42,7 @@ export const localAuthLogin = (
         if (err) {
           return next();
         }
-        res
-          .status(200)
-          .json({ ...new ResponseStrategy(200, "Logged in successfully") });
+        res.status(200).json({ redirectTo: "/dashboard" });
       });
     })(req, res, next);
   } catch (e) {
@@ -56,12 +50,23 @@ export const localAuthLogin = (
   }
 };
 
-export const localAuthLogout = (req: Request, res: Response) => {
+export const logout = (req: Request, res: Response, next: NextFunction) => {
   try {
-    res.status(200).json({
-      timestamp: Date.now(),
-      msg: "Logged out successfully",
-      code: 200,
+    req.logout((err) => {
+      if (err) {
+        next(err);
+      }
+      req.session.destroy((err) => {
+        if (err) {
+          next(err);
+        }
+        res.clearCookie("app-auth");
+        res.status(200).json({
+          timestamp: Date.now(),
+          msg: "Logged out successfully",
+          code: 200,
+        });
+      });
     });
   } catch (error) {
     console.error(error);
@@ -82,7 +87,6 @@ export const getUserInfo = (req: Request, res: Response) => {
             .json({ ...new ResponseStrategy(400, "User not found") });
         }
         return res.status(200).json({
-          id: user._id,
           email: user.email,
           name: user.name,
         });
@@ -91,6 +95,21 @@ export const getUserInfo = (req: Request, res: Response) => {
         throw new Error(err);
       },
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Fail to get user, internal server error"),
+    });
+  }
+};
+
+export const checkIsAuth = (req: Request, res: Response) => {
+  try {
+    res.status(200).json({
+      ...new ResponseStrategy(200, "OK"),
+      isAuth: req.isAuthenticated(),
+    });
+    req.isAuthenticated();
   } catch (error) {
     console.error(error);
     res.status(500).json({

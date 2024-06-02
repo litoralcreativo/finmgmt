@@ -8,9 +8,13 @@ import { ShellModule } from './shell/shell.module';
 import { SharedModule } from './shared/shared.module';
 import { HomeComponent } from './home/home.component';
 import { LitoTableConfigService } from 'lito-fr';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './shared/handlers/AuthInterceptor';
+import { ReactiveFormsModule } from '@angular/forms';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [AppComponent, HomeComponent, DashboardComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -18,7 +22,9 @@ import { LitoTableConfigService } from 'lito-fr';
     ShellModule,
     SharedModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

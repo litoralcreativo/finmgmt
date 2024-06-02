@@ -1,7 +1,6 @@
 import express from "express";
 import passport from "passport";
 import session from "express-session";
-import cookieSession from "cookie-session";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import { router as movementRouter } from "./controllers/movement.routes";
@@ -16,20 +15,13 @@ const PORT = 3000;
 // cors config
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
-/* // session config
-app.use(
-  cookieSession({
-    name: "app-auth",
-    keys: ["secret-new", "secret-old"],
-    maxAge: 60 * 60 * 24,
-  })
-); */
 // session config
 app.use(
   session({

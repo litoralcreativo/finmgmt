@@ -9,6 +9,12 @@ mat-toolbar.main-app-toolbar {
   position: sticky;
   top: 0;
   flex-shrink: 0;
+
+  > .toolbar-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
+  }
 }
 
 mat-drawer-container.main-app-drawer-container {

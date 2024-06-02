@@ -1,0 +1,50 @@
+<div class="mat-dialog-title-login" mat-dialog-title>
+  <span class="mat-h1" cdkTrapFocus>Login</span>
+  <button mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content>
+  <form [formGroup]="form" class="login-form">
+    <mat-form-field appearance="standard">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        formControlName="username"
+        title="username"
+        autocomplete
+      />
+      <mat-error *ngIf="form.controls.username.errors">
+        Enter a valid email
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        formControlName="password"
+        title="password"
+        autocomplete
+      />
+      <mat-error *ngIf="form.controls.password.errors">
+        The password must be between 4 and 60 characters
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <button
+    mat-flat-button
+    (click)="login()"
+    color="primary"
+    class="login-btn expand"
+  >
+    Sign In
+  </button>
+  <div class="text-align-center expand">
+    Not a member yet? <button mat-button>Sign Up</button>
+  </div>
+</div>

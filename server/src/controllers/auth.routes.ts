@@ -1,18 +1,19 @@
 import express from "express";
-import passport from "passport";
 import { requireAuth } from "../middlewares/autenticate.middleware";
 import {
+  checkIsAuth,
   getUserInfo,
-  localAuthLogin,
-  localAuthLogout,
-  localAuthRegistration,
+  login,
+  logout,
+  registration,
 } from "./auth.controller";
 
 const router = express.Router();
 
-router.post("/register", localAuthRegistration);
-router.post("/login", localAuthLogin);
-router.post("/logout", localAuthLogout);
+router.post("/login", login);
+router.post("/logout", logout);
+router.post("/register", registration);
 router.get("/user", requireAuth, getUserInfo);
+router.get("/authenticated", checkIsAuth);
 
 export { router };
