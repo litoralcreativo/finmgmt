@@ -6,6 +6,9 @@ export class User {
   public get _id(): string {
     return this.id;
   }
+  public set _id(value: any) {
+    this.id = value;
+  }
   created: number;
   name: { first?: string | null; last?: string | null };
   email: string | null;

@@ -14,6 +14,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: DashboardComponent,
   },
+  {
+    path: 'accounts',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./accounts/accounts.module').then((m) => m.AccountsModule),
+  },
 ];
 
 @NgModule({

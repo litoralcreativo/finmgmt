@@ -13,16 +13,25 @@ DbManager.getInstance().subscribe((x) => {
 export const registration = (req: Request, res: Response) => {
   try {
     const { firstName, lastName, email, password } = req.body;
-    const user = new User();
-    user.setFirstName(firstName);
-    user.setLastName(lastName);
-    user.setEmail(email);
-    user.setPassword(password);
+    const newUser = new User();
+    newUser.setFirstName(firstName);
+    newUser.setLastName(lastName);
+    newUser.setEmail(email);
+    newUser.setPassword(password);
 
-    userService.createOne(user).subscribe((val: any) => {
-      res
-        .status(200)
-        .json({ ...new ResponseStrategy(200, "Successfuly registered"), user });
+    userService.getByEmail(email).subscribe((user) => {
+      if (user) {
+        return res
+          .status(400)
+          .json({ ...new ResponseStrategy(400, "Email already used") });
+      }
+
+      userService.createOne(newUser).subscribe((val: any) => {
+        res.status(200).json({
+          ...new ResponseStrategy(200, "Successfuly registered"),
+          user,
+        });
+      });
     });
   } catch (e: any) {
     res.status(400).json({ ...new ResponseStrategy(400, e.message) });

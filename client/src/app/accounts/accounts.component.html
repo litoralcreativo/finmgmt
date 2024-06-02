@@ -1,0 +1,37 @@
+<mat-card class="accounts-toolbar">
+  <mat-form-field>
+    <mat-label>Filtered types</mat-label>
+    <mat-select
+      (selectionChange)="sort($event.value)"
+      [value]="'amount'"
+      multiple
+    >
+      <mat-option *ngFor="let option of accountTypes" [value]="option">{{
+        option
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-checkbox
+    [(ngModel)]="hideEmpty"
+    color="primary"
+    (ngModelChange)="updateList()"
+    >Hide empty accounts</mat-checkbox
+  >
+</mat-card>
+<mat-accordion multi>
+  <mat-expansion-panel *ngFor="let accountGroup of sortedAccounts" expanded>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ accountGroup.title | uppercase }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="account-group">
+      <div class="acounts-grid">
+        <app-account-card
+          *ngFor="let account of accountGroup.accounts"
+          [account]="account"
+        ></app-account-card>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

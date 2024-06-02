@@ -1,4 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/theming";
+$primary: mat-palette($mat-deep-purple);
+$gold: mat-palette($mat-amber);
+$accent: mat-palette($mat-amber);
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.positive {
+  color: #3ca55c;
+}
+.bluish {
+  color: #3c6aa5;
+}
+.negative {
+  color: #cd5c5c;
+}
+.zerotive {
+  color: #797979;
+}

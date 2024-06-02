@@ -1,9 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 import { AuthService } from '../shared/services/auth.service';
 import { MatDrawerContainer } from '@angular/material/sidenav';
+
+export type NavItem = {
+  name: string;
+  route: string;
+  icon: string;
+  active?: boolean;
+};
 
 @Component({
   selector: 'app-shell',
@@ -14,6 +22,21 @@ export class ShellComponent implements OnInit {
   loggedIn: boolean = false;
   @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
 
+  navItems: NavItem[] = [
+    {
+      name: 'Dashboard',
+      route: '/dashboard',
+      icon: 'dashboard',
+      active: false,
+    },
+    {
+      name: 'Accounts',
+      route: '/accounts',
+      icon: 'wallet',
+      active: false,
+    },
+  ];
+
   constructor(
     private router: Router,
     private aRoute: ActivatedRoute,
@@ -22,10 +45,23 @@ export class ShellComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this._updateActiveNavItem(event.urlAfterRedirects);
+      }
+    });
+
     this.authService.userData.subscribe((user) => {
       this.loggedIn = !!user;
 
       if (!user) this.drawerContainer?.close();
+      else this.drawerContainer?.open();
+    });
+  }
+
+  private _updateActiveNavItem(currentRoute: string) {
+    this.navItems.forEach((item) => {
+      item.active = item.route === currentRoute;
     });
   }
 
@@ -41,9 +77,33 @@ export class ShellComponent implements OnInit {
     this.dialog
       .open(LoginComponent, { width: '400px' })
       .afterClosed()
-      .subscribe((succesfulLogin) => {
-        if (succesfulLogin) {
-          this.drawerContainer.open();
+      .subscribe((result) => {
+        switch (result) {
+          case 'ok':
+            this.drawerContainer.open();
+            break;
+          case 'changeDialog':
+            this.openRegisterDialog();
+            break;
+          default:
+            break;
+        }
+      });
+  }
+
+  openRegisterDialog() {
+    this.dialog
+      .open(RegisterComponent, { width: '450px' })
+      .afterClosed()
+      .subscribe((result) => {
+        switch (result) {
+          case 'ok':
+            break;
+          case 'changeDialog':
+            this.openLoginDialog();
+            break;
+          default:
+            break;
         }
       });
   }

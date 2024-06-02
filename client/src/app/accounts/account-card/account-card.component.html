@@ -1,0 +1,21 @@
+<mat-card>
+  <mat-card-title
+    >{{ account.name }}
+    <mat-icon class="favorite-account-icon" *ngIf="account.favorite"
+      >star</mat-icon
+    ></mat-card-title
+  >
+  <mat-card-subtitle>{{ account.type }}</mat-card-subtitle>
+  <mat-card-content>
+    <h2
+      [class.positive]="account.amount > 0"
+      [class.bluish]="account.symbol === 'USD'"
+      [class.negative]="account.amount < 0"
+      [class.zerotive]="account.amount == 0"
+    >
+      {{ account.amount | currency }}
+      <span class="mat-caption">{{ account.symbol }}</span>
+    </h2>
+  </mat-card-content>
+  <div matRipple></div>
+</mat-card>

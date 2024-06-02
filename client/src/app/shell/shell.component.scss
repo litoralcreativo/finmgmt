@@ -1,3 +1,5 @@
+@import "../../styles.scss";
+
 :host {
   width: 100vw;
   height: 100vh;
@@ -25,17 +27,25 @@ mat-drawer-container.main-app-drawer-container {
     flex-direction: column;
     justify-content: start;
     align-items: center;
+
+    .active-link {
+      background-color: mat-color($primary, 50);
+      color: mat-color($primary, 400);
+    }
   }
 
   mat-drawer-content {
     position: relative;
     > main {
       padding: 0.5rem 1rem;
-      position: absolute;
+      margin-right: auto;
+      margin-left: auto;
+      max-width: 1200px;
+      /* position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
-      right: 0;
+      right: 0; */
     }
   }
 }

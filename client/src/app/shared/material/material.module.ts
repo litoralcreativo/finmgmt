@@ -13,6 +13,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { A11yModule } from '@angular/cdk/a11y';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
+import { MatRippleModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [],
@@ -31,6 +37,12 @@ import { MatMenuModule } from '@angular/material/menu';
     A11yModule,
     MatProgressSpinnerModule,
     MatMenuModule,
+    MatDialogModule,
+    MatCardModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatExpansionModule,
   ],
 })
 export class MaterialModule {}

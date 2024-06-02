@@ -49,11 +49,13 @@ export class AuthService {
       });
   }
 
-  register(username: string, password: string): Observable<any> {
-    return this.http.post(routes.auth.register, {
-      username,
-      password,
-    });
+  register(data: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  }): Observable<any> {
+    return this.http.post(routes.auth.register, data);
   }
 
   fetchUserInfo(
@@ -85,6 +87,7 @@ export class AuthService {
       )
       .pipe(
         tap((res) => {
+          this.router.navigate(['/dashboard']);
           this._userData.next(res);
         })
       );

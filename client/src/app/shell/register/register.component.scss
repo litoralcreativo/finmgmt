@@ -1,0 +1,40 @@
+form.register-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .form-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.register-btn {
+  margin: 1rem 0;
+}
+
+.expand {
+  width: 100%;
+}
+
+.mat-dialog-title-register {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  .mat-h1 {
+    flex-grow: 1;
+    margin-bottom: 0;
+  }
+}

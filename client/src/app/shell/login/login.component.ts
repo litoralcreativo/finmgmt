@@ -36,8 +36,12 @@ export class LoginComponent implements OnInit {
           this.router.navigate([x.redirectTo]);
         });
       }
-      this.dialogRef.close(true);
+      this.dialogRef.close('ok');
     });
+  }
+
+  changeToRegister() {
+    this.dialogRef.close('changeDialog');
   }
 
   close() {
