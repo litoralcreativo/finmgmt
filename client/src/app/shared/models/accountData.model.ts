@@ -6,4 +6,9 @@ export type AccountData = {
   favorite?: boolean;
 };
 
-export type AccountType = 'digital wallet' | 'cash' | 'bank account' | 'broker';
+export enum AccountType {
+  DIGITAL_WALLET = 'digital wallet',
+  CASH = 'cash',
+  BANK_ACCOUNT = 'bank account',
+  BROKER = 'broker',
+}

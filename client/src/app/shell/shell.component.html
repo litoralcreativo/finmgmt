@@ -2,16 +2,32 @@
   <button mat-icon-button (click)="drawer.toggle()" *ngIf="loggedIn">
     <mat-icon>{{ drawer.opened ? "close" : "menu" }}</mat-icon>
   </button>
-  <span>Financial managment system</span>
+  <span *ngIf="screenSize >= 2">Financial managment system</span>
   <div class="toolbar-actions">
     <ng-container
       *ngTemplateOutlet="loggedIn ? loggedActions : unloggedActions"
     ></ng-container>
   </div>
 </mat-toolbar>
+<div id="symbol-changes-info" class="mat-caption">
+  <div *ngIf="changes.get('MEP')" class="symbol-change">
+    Dolar MEP:
+    <!-- <div class="variacion">
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='up'">▲</span>
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='down'">▼</span>
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='equal'">=</span>
+    </div> -->
+    <span> {{ changes.get("MEP")?.venta | currency }}</span>
+  </div>
+  <!-- <mat-chip-list aria-label="symbol changes">
+    <mat-chip color="accent" selected
+      ></mat-chip
+    >
+  </mat-chip-list> -->
+</div>
 
 <mat-drawer-container class="main-app-drawer-container" autosize>
-  <mat-drawer #drawer mode="side">
+  <mat-drawer #drawer [mode]="screenSize >= 2 ? 'side' : 'over'">
     <mat-nav-list *ngFor="let item of navItems">
       <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link">
         <mat-icon mat-list-icon [color]="item.active ? 'primary' : undefined">{{

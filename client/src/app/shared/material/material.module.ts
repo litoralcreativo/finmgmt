@@ -19,6 +19,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [],
@@ -43,6 +44,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatSelectModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatChipsModule,
   ],
 })
 export class MaterialModule {}

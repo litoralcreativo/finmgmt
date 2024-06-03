@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountData, AccountType } from '../shared/models/accountData.model';
+import { SymbolChangeService } from '../shared/services/symbol-change.service';
 
 @Component({
   selector: 'app-accounts',
@@ -8,130 +9,115 @@ import { AccountData, AccountType } from '../shared/models/accountData.model';
 })
 export class AccountsComponent implements OnInit {
   accounts: AccountData[];
-  sortedAccounts: { title: string; accounts: AccountData[] }[];
-  sortBy?: 'amount' | 'type';
+  sortedAccounts: { title: string; accounts: AccountData[]; sum: number }[];
   hideEmpty: boolean = false;
   accountTypes: AccountType[] = [
-    'digital wallet',
-    'bank account',
-    'broker',
-    'cash',
+    AccountType.DIGITAL_WALLET,
+    AccountType.BANK_ACCOUNT,
+    AccountType.BROKER,
+    AccountType.CASH,
   ];
+  selectedAccountTypes: AccountType[] = [...this.accountTypes];
 
-  constructor() {}
+  constructor(private symbolChangeService: SymbolChangeService) {}
 
   ngOnInit(): void {
     this.accounts = [
       {
         name: 'Mercado Pago',
-        type: 'digital wallet',
+        type: AccountType.DIGITAL_WALLET,
         amount: 27546.19,
         symbol: 'ARS',
         favorite: true,
       },
       {
+        name: 'NaranjaX',
+        type: AccountType.DIGITAL_WALLET,
+        amount: 0,
+        symbol: 'ARS',
+      },
+      {
         name: 'Personal Pay',
-        type: 'digital wallet',
+        type: AccountType.DIGITAL_WALLET,
         amount: 0,
         symbol: 'ARS',
       },
       {
         name: 'Santander',
-        type: 'bank account',
-        amount: 0,
+        type: AccountType.BANK_ACCOUNT,
+        amount: 40344.45,
         symbol: 'ARS',
       },
       {
         name: 'Ahorros',
-        type: 'cash',
-        amount: 6700,
+        type: AccountType.CASH,
+        amount: 200,
         symbol: 'USD',
       },
       {
         name: 'BBVA',
-        type: 'bank account',
+        type: AccountType.BANK_ACCOUNT,
         amount: 0,
         symbol: 'ARS',
       },
       {
         name: 'Bull Market 1',
-        type: 'broker',
+        type: AccountType.BROKER,
         amount: 3821458.18,
         symbol: 'ARS',
       },
       {
         name: 'Bull Market 2',
-        type: 'broker',
+        type: AccountType.BROKER,
         amount: 527222.84,
         symbol: 'ARS',
       },
       {
         name: 'Efectivo',
-        type: 'cash',
+        type: AccountType.CASH,
         amount: 5400,
         symbol: 'ARS',
       },
     ];
-    this.sortedAccounts = [
-      {
-        title: 'All accounts',
-        accounts: this.accounts.sort((a, b) => {
-          return a.amount < b.amount ? 1 : -1;
-        }),
-      },
-    ];
-  }
-
-  sort(sortBy: 'amount' | 'type') {
-    this.sortBy = sortBy;
     this.updateList();
   }
 
   updateList() {
-    switch (this.sortBy) {
-      case 'amount':
-        this.sortedAccounts = [
-          {
-            title: 'All accounts',
-            accounts: this.accounts
-              .sort(this.sortByAmount)
-              .filter(this.emptyPredicate),
-          },
-        ];
-        break;
-      case 'type':
-        const types: string[] = [...new Set(this.accounts.map((x) => x.type))];
+    const types: string[] = [
+      ...new Set(this.accounts.map((x) => x.type)),
+    ].filter((x) => this.selectedAccountTypes.includes(x));
 
-        this.sortedAccounts = types.map((type) => {
-          const filtered = this.accounts.filter((x) => x.type === type);
-          return {
-            title: type,
-            accounts: filtered
-              .sort(this.sortByAmount)
-              .filter(this.emptyPredicate),
-          };
-        });
-        break;
+    this.sortedAccounts = types
+      .map((type) => {
+        const filtered = this.accounts
+          .filter((x) => x.type === type)
+          .sort(this.compareByAmount)
+          .filter(this.emptyPredicate);
 
-      default:
-        this.sortedAccounts = [
-          {
-            title: 'All accounts',
-            accounts: this.accounts.filter(this.emptyPredicate),
-          },
-        ];
-        break;
-    }
+        return {
+          title: type,
+          sum: this.totalAmount(filtered),
+          accounts: filtered,
+        };
+      })
+      .filter((x) => x.accounts.length > 0);
   }
 
-  /**
-   * Returns a sorted copy of the array
-   * @param acc Original array of AccountData
-   */
-  private sortByAmount = (a: AccountData, b: AccountData) => {
+  private compareByAmount = (a: AccountData, b: AccountData) => {
     return a.amount < b.amount ? 1 : -1;
   };
 
-  private emptyPredicate = (x: AccountData) =>
-    this.hideEmpty ? x.amount !== 0 : x;
+  private emptyPredicate = (x: AccountData) => {
+    return this.hideEmpty ? x.amount !== 0 : x;
+  };
+
+  private totalAmount(accArr: AccountData[]): number {
+    return accArr.reduce((a, c) => {
+      const symbolCoeficent: number =
+        c.symbol === 'USD'
+          ? this.symbolChangeService.prices.get('MEP')?.venta ?? 0
+          : 1;
+      return a + c.amount * symbolCoeficent;
+    }, 0);
+  }
 }

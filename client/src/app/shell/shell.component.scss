@@ -19,6 +19,17 @@ mat-toolbar.main-app-toolbar {
   }
 }
 
+#symbol-changes-info {
+  background-color: mat-color($accent, 300);
+  /* color: white; */
+  padding: 2px 1rem;
+  > div.symbol-change {
+    float: right;
+    display: flex;
+    flex-direction: row;
+  }
+}
+
 mat-drawer-container.main-app-drawer-container {
   flex-grow: 1;
 
@@ -41,11 +52,6 @@ mat-drawer-container.main-app-drawer-container {
       margin-right: auto;
       margin-left: auto;
       max-width: 1200px;
-      /* position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0; */
     }
   }
 }

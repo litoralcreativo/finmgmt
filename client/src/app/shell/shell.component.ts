@@ -5,6 +5,9 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthService } from '../shared/services/auth.service';
 import { MatDrawerContainer } from '@angular/material/sidenav';
+import { SymbolChangeService } from '../shared/services/symbol-change.service';
+import { BreakpointService } from '../shared/services/breakpoint.service';
+import { SymbolChange } from '../shared/models/symbolChange.model';
 
 export type NavItem = {
   name: string;
@@ -37,11 +40,16 @@ export class ShellComponent implements OnInit {
     },
   ];
 
+  changes: Map<string, SymbolChange> = new Map();
+  screenSize: number;
+
   constructor(
     private router: Router,
     private aRoute: ActivatedRoute,
     public authService: AuthService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private symbolChange: SymbolChangeService,
+    private breakpointService: BreakpointService
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +64,28 @@ export class ShellComponent implements OnInit {
 
       if (!user) this.drawerContainer?.close();
       else this.drawerContainer?.open();
+    });
+
+    this.symbolChange.$prices.subscribe((x) => (this.changes = x));
+
+    this.breakpointService.bpSubject.subscribe((x) => {
+      switch (x) {
+        case 'XSmall':
+          this.screenSize = 1;
+          break;
+        case 'Small':
+          this.screenSize = 2;
+          break;
+        case 'Medium':
+          this.screenSize = 3;
+          break;
+        case 'Large':
+          this.screenSize = 4;
+          break;
+        case 'XLarge':
+          this.screenSize = 5;
+          break;
+      }
     });
   }
 
