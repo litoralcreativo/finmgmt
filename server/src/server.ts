@@ -3,8 +3,9 @@ import passport from "passport";
 import session from "express-session";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
-import { router as movementRouter } from "./controllers/movement.routes";
 import { router as authRouter } from "./controllers/auth.routes";
+import { router as accountRouter } from "./controllers/account.routes";
+import { router as movementRouter } from "./controllers/movement.routes";
 import { swaggerSpec } from "./swagger";
 import { requireAuth } from "./middlewares/autenticate.middleware";
 import "./auth";
@@ -38,6 +39,7 @@ app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/auth", authRouter);
+app.use("/account", accountRouter);
 app.use("/movement", requireAuth, movementRouter);
 
 app.all("*", (req, res) => {
