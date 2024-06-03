@@ -11,13 +11,13 @@
 </mat-toolbar>
 <div id="symbol-changes-info" class="mat-caption">
   <div *ngIf="changes.get('MEP')" class="symbol-change">
-    Dolar MEP:
-    <!-- <div class="variacion">
-      <span *ngIf="changes.get('MEP')?.['class-variacion']==='up'">▲</span>
-      <span *ngIf="changes.get('MEP')?.['class-variacion']==='down'">▼</span>
-      <span *ngIf="changes.get('MEP')?.['class-variacion']==='equal'">=</span>
-    </div> -->
-    <span> {{ changes.get("MEP")?.venta | currency }}</span>
+    Dolar MEP: {{ changes.get("MEP")?.venta | currency }}
+  </div>
+  <div *ngIf="changes.get('INFORMAL')" class="symbol-change">
+    Dolar Blue: {{ changes.get("INFORMAL")?.venta | currency }}
+  </div>
+  <div *ngIf="changes.get('CRIPTO')" class="symbol-change">
+    Dolar Cripto: {{ changes.get("CRIPTO")?.venta | currency }}
   </div>
   <!-- <mat-chip-list aria-label="symbol changes">
     <mat-chip color="accent" selected
@@ -57,3 +57,9 @@
 <ng-template #loggedActions>
   <app-user-menu></app-user-menu>
 </ng-template>
+
+<!-- <div class="variacion">
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='up'">▲</span>
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='down'">▼</span>
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='equal'">=</span>
+    </div> -->

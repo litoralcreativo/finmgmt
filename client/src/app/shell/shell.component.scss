@@ -21,12 +21,16 @@ mat-toolbar.main-app-toolbar {
 
 #symbol-changes-info {
   background-color: mat-color($accent, 300);
-  /* color: white; */
   padding: 2px 1rem;
+
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 1rem;
+
   > div.symbol-change {
-    float: right;
     display: flex;
     flex-direction: row;
+    text-align: center;
   }
 }
 

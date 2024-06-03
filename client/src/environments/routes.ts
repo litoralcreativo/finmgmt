@@ -12,5 +12,7 @@ export const routes = {
   },
   currency: {
     mep: `${DOLAR_URL}/dolarrava/mep/variacion`,
+    cripto: `${DOLAR_URL}/dolarcripto/variacion`,
+    informal: `${DOLAR_URL}/dolar/informal/variacion`,
   },
 };
