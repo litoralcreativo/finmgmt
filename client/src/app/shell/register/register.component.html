@@ -33,31 +33,35 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <mat-form-field appearance="standard">
-      <mat-label>Email</mat-label>
-      <input
-        matInput
-        formControlName="email"
-        title="email"
-        autocomplete="email"
-      />
-      <mat-error *ngIf="form.controls.email.errors">
-        Enter a valid email
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="standard">
-      <mat-label>Password</mat-label>
-      <input
-        matInput
-        type="password"
-        formControlName="password"
-        title="password"
-        autocomplete="new-password"
-      />
-      <mat-error *ngIf="form.controls.password.errors">
-        The password must be between 4 and 60 characters
-      </mat-error>
-    </mat-form-field>
+    <div class="form-row">
+      <mat-form-field appearance="standard">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          title="email"
+          autocomplete="email"
+        />
+        <mat-error *ngIf="form.controls.email.errors">
+          Enter a valid email
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="standard">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          type="password"
+          formControlName="password"
+          title="password"
+          autocomplete="new-password"
+        />
+        <mat-error *ngIf="form.controls.password.errors">
+          The password must be between 4 and 60 characters
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
 </div>
 

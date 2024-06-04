@@ -5,9 +5,16 @@ import { AccountsRoutingModule } from './accounts-routing.module';
 import { AccountsComponent } from './accounts.component';
 import { SharedModule } from '../shared/shared.module';
 import { AccountCardComponent } from './account-card/account-card.component';
+import { AccountListComponent } from './account-list/account-list.component';
+import { AccountManagmentDialogComponent } from './account-managment-dialog/account-managment-dialog.component';
 
 @NgModule({
-  declarations: [AccountsComponent, AccountCardComponent],
+  declarations: [
+    AccountsComponent,
+    AccountCardComponent,
+    AccountListComponent,
+    AccountManagmentDialogComponent,
+  ],
   imports: [CommonModule, AccountsRoutingModule, SharedModule],
 })
 export class AccountsModule {}

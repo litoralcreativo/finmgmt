@@ -4,9 +4,10 @@ import { MaterialModule } from './material/material.module';
 import { LitoFrModule } from 'lito-fr';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SkeletonLoaderDirective } from './directives/skeleton-loader.directive';
 
 @NgModule({
-  declarations: [],
+  declarations: [SkeletonLoaderDirective],
   imports: [
     CommonModule,
     MaterialModule,
@@ -19,6 +20,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     LitoFrModule,
     ReactiveFormsModule,
     HttpClientModule,
+
+    SkeletonLoaderDirective,
   ],
 })
 export class SharedModule {}

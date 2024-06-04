@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { AccountData, AccountType } from '../shared/models/accountData.model';
-import { SymbolChangeService } from '../shared/services/symbol-change.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AccountService } from '../shared/services/account.service';
+import { AccountListComponent } from './account-list/account-list.component';
+import { AccountManagmentDialogComponent } from './account-managment-dialog/account-managment-dialog.component';
 
 @Component({
   selector: 'app-accounts',
@@ -8,21 +10,11 @@ import { SymbolChangeService } from '../shared/services/symbol-change.service';
   styleUrls: ['./accounts.component.scss'],
 })
 export class AccountsComponent implements OnInit {
-  accounts: AccountData[];
-  sortedAccounts: { title: string; accounts: AccountData[]; sum: number }[];
-  hideEmpty: boolean = false;
-  accountTypes: AccountType[] = [
-    AccountType.DIGITAL_WALLET,
-    AccountType.BANK_ACCOUNT,
-    AccountType.BROKER,
-    AccountType.CASH,
-  ];
-  selectedAccountTypes: AccountType[] = [...this.accountTypes];
-
-  constructor(private symbolChangeService: SymbolChangeService) {}
+  @ViewChild(AccountListComponent) accountListComponent: AccountListComponent;
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.accounts = [
+    /* this.accounts = [
       {
         name: 'Mercado Pago',
         type: AccountType.DIGITAL_WALLET,
@@ -78,46 +70,20 @@ export class AccountsComponent implements OnInit {
         amount: 5400,
         symbol: 'ARS',
       },
-    ];
-    this.updateList();
+    ]; */
   }
 
-  updateList() {
-    const types: string[] = [
-      ...new Set(this.accounts.map((x) => x.type)),
-    ].filter((x) => this.selectedAccountTypes.includes(x));
-
-    this.sortedAccounts = types
-      .map((type) => {
-        const filtered = this.accounts
-          .filter((x) => x.type === type)
-          .sort(this.compareByAmount)
-          .filter(this.emptyPredicate);
-
-        return {
-          title: type,
-          sum: this.totalAmount(filtered),
-          accounts: filtered,
-        };
+  openNewAccountDialog() {
+    this.dialog
+      .open(AccountManagmentDialogComponent, {
+        width: '450px',
+        disableClose: true,
       })
-      .filter((x) => x.accounts.length > 0);
-  }
-
-  private compareByAmount = (a: AccountData, b: AccountData) => {
-    return a.amount < b.amount ? 1 : -1;
-  };
-
-  private emptyPredicate = (x: AccountData) => {
-    return this.hideEmpty ? x.amount !== 0 : x;
-  };
-
-  private totalAmount(accArr: AccountData[]): number {
-    return accArr.reduce((a, c) => {
-      const symbolCoeficent: number =
-        c.symbol === 'USD'
-          ? this.symbolChangeService.prices.get('MEP')?.venta ?? 0
-          : 1;
-      return a + c.amount * symbolCoeficent;
-    }, 0);
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.accountListComponent?.fetchList();
+        }
+      });
   }
 }

@@ -1,46 +1,7 @@
 <mat-card class="accounts-toolbar">
-  <button mat-flat-button color="primary">
+  <button mat-flat-button color="primary" (click)="openNewAccountDialog()">
     <mat-icon>add</mat-icon> New account
   </button>
-  <!-- <mat-form-field>
-    <mat-label>Filtered types</mat-label>
-    <mat-select
-      (selectionChange)="updateList()"
-      multiple
-      [(value)]="selectedAccountTypes"
-    >
-      <mat-option
-        *ngFor="let option of accountTypes"
-        [value]="option"
-        selected
-        >{{ option }}</mat-option
-      >
-    </mat-select>
-  </mat-form-field> -->
-  <!-- <mat-checkbox
-    [(ngModel)]="hideEmpty"
-    color="primary"
-    (ngModelChange)="updateList()"
-    >Hide empty accounts</mat-checkbox
-  > -->
 </mat-card>
-<mat-accordion multi class="headers-align">
-  <mat-expansion-panel *ngFor="let accountGroup of sortedAccounts">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        {{ accountGroup.title | uppercase }}
-      </mat-panel-title>
-      <mat-panel-description>
-        {{ accountGroup.sum | currency }}
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <div class="account-group">
-      <div class="acounts-grid">
-        <app-account-card
-          *ngFor="let account of accountGroup.accounts"
-          [account]="account"
-        ></app-account-card>
-      </div>
-    </div>
-  </mat-expansion-panel>
-</mat-accordion>
+
+<app-account-list></app-account-list>

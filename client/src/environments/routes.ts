@@ -15,4 +15,8 @@ export const routes = {
     cripto: `${DOLAR_URL}/dolarcripto/variacion`,
     informal: `${DOLAR_URL}/dolar/informal/variacion`,
   },
+  account: {
+    all: `${environment.apiUrl}/account`,
+    create: `${environment.apiUrl}/account`,
+  },
 };

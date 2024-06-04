@@ -25,10 +25,7 @@ export const getByUser = (req: Request, res: Response) => {
         filter
       )
       .subscribe((val) => {
-        res.status(200).json({
-          ...new ResponseStrategy(200, "OK"),
-          elements: val.elements,
-        });
+        res.status(200).json(val.elements);
       });
   } catch (error) {
     console.error(error);

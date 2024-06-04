@@ -12,3 +12,10 @@ export enum AccountType {
   BANK_ACCOUNT = 'bank account',
   BROKER = 'broker',
 }
+
+export const ACCOUNT_TYPES: AccountType[] = [
+  AccountType.DIGITAL_WALLET,
+  AccountType.BANK_ACCOUNT,
+  AccountType.BROKER,
+  AccountType.CASH,
+];
