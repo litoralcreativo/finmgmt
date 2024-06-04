@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountData } from 'src/app/shared/models/accountData.model';
 
 @Component({
@@ -9,7 +10,11 @@ import { AccountData } from 'src/app/shared/models/accountData.model';
 export class AccountCardComponent implements OnInit {
   @Input('account') account: AccountData;
 
-  constructor() {}
+  constructor(private router: Router, private aRoute: ActivatedRoute) {}
 
   ngOnInit(): void {}
+
+  goToAccount() {
+    this.router.navigate([this.account._id], { relativeTo: this.aRoute });
+  }
 }

@@ -1,0 +1,79 @@
+<section class="account-container">
+  <div class="account-grid">
+    <div class="grid-area grid-top"></div>
+    <div class="grid-area grid-left">
+      <mat-card *ngIf="account">
+        <mat-card-title
+          ><span>{{ account.name }}</span>
+          <span>
+            <mat-icon
+              (click)="toogleFavorite()"
+              class="favorite-account-icon"
+              color="accent"
+              [class.not-favorite]="!account.favorite"
+              >{{ account.favorite ? "star" : "star_outlined" }}</mat-icon
+            >
+          </span>
+        </mat-card-title>
+        <mat-card-subtitle>{{ account.type }}</mat-card-subtitle>
+        <mat-card-content>
+          <h2
+            [class.positive]="account.amount > 0"
+            [class.bluish]="account.symbol === 'USD'"
+            [class.negative]="account.amount < 0"
+            [class.zerotive]="account.amount == 0"
+          >
+            {{ account.amount | currency }}
+            <span class="mat-caption">{{ account.symbol }}</span>
+          </h2>
+        </mat-card-content>
+      </mat-card>
+      <div class="account-card-actions">
+        <button mat-button class="mat-elevation-z1 positive">INCOMING $</button>
+        <button mat-button class="mat-elevation-z1 negative">OUTGOING $</button>
+      </div>
+    </div>
+    <div class="grid-area grid-right">
+      <div class="mat-card movements-list-container">
+        <h2 class="movements-list-title">Your activity</h2>
+        <mat-divider></mat-divider>
+        <div class="movements-search-bar">
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input matInput />
+            <span matSuffix><mat-icon>search</mat-icon></span>
+          </mat-form-field>
+        </div>
+        <mat-action-list class="movement-list">
+          <mat-list-item *ngFor="let movimiento of movimientos">
+            <div class="movement-left">
+              <div mat-line>{{ movimiento.description }}</div>
+              <div class="movement-light mat-caption">
+                {{ movimiento.type }}
+              </div>
+            </div>
+            <div class="movement-right">
+              <div
+                mat-line
+                class="movement-amount"
+                [class.positive]="movimiento.amount > 0"
+                [class.bold]="movimiento.amount > 0"
+              >
+                {{ movimiento.amount > 0 ? "+" : ""
+                }}{{ movimiento.amount | currency : "USD" : "$ " }}
+              </div>
+              <div class="movement-date movement-light mat-caption">
+                {{ movimiento.date | date }}
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-action-list>
+        <button mat-button class="activity-history" color="primary">
+          <span>ACTIVITY HISTORY</span>
+        </button>
+      </div>
+    </div>
+    <div class="grid-area grid-bottom"></div>
+  </div>
+</section>

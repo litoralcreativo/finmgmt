@@ -42,6 +42,11 @@ export abstract class Crud<T extends BSON.Document> {
     );
   }
 
+  public getSingle(filter?: Filter<T>) {
+    const query = (filter || {}) as Filter<BSON.Document>;
+    return from(this.collection.findOne<T>(query));
+  }
+
   public getById(id: string): Observable<T | null> {
     const filter = { _id: new ObjectId(id) };
     return from(this.collection.findOne<T>(filter));
@@ -55,7 +60,19 @@ export abstract class Crud<T extends BSON.Document> {
     );
   }
 
-  public updateOne(id: string, obj: Partial<T>): Observable<UpdateResult<T>> {
+  public updateOne(
+    filter: Filter<T>,
+    obj: Partial<T>
+  ): Observable<UpdateResult<T>> {
+    const query = (filter || {}) as Filter<BSON.Document>;
+    const update = { $set: obj };
+    return from(this.collection.updateOne(query, update));
+  }
+
+  public updateOneById(
+    id: string,
+    obj: Partial<T>
+  ): Observable<UpdateResult<T>> {
     const filter = { _id: new ObjectId(id) };
     const update = { $set: obj };
     return from(this.collection.updateOne(filter, update));

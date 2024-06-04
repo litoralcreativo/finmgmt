@@ -1,7 +1,10 @@
-<mat-card>
+<mat-card (click)="goToAccount()">
   <mat-card-title
     >{{ account.name }}
-    <mat-icon class="favorite-account-icon" *ngIf="account.favorite"
+    <mat-icon
+      class="favorite-account-icon"
+      *ngIf="account.favorite"
+      color="accent"
       >star</mat-icon
     ></mat-card-title
   >

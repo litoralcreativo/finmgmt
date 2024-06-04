@@ -1,5 +1,9 @@
 <mat-toolbar class="main-app-toolbar" color="primary">
-  <button mat-icon-button (click)="drawer.toggle()" *ngIf="loggedIn">
+  <button
+    mat-icon-button
+    (click)="drawer.toggle()"
+    *ngIf="loggedIn && this.screenSize < 2"
+  >
     <mat-icon>{{ drawer.opened ? "close" : "menu" }}</mat-icon>
   </button>
   <span *ngIf="screenSize >= 2">Financial managment system</span>
@@ -9,15 +13,15 @@
     ></ng-container>
   </div>
 </mat-toolbar>
-<div id="symbol-changes-info" class="mat-caption">
+<div id="sub-toolbar-info" class="mat-caption">
   <div *ngIf="changes.get('MEP')" class="symbol-change">
-    Dolar MEP: {{ changes.get("MEP")?.venta | currency }}
+    MEP: {{ changes.get("MEP")?.venta | currency }}
   </div>
   <div *ngIf="changes.get('INFORMAL')" class="symbol-change">
-    Dolar Blue: {{ changes.get("INFORMAL")?.venta | currency }}
+    Blue: {{ changes.get("INFORMAL")?.venta | currency }}
   </div>
   <div *ngIf="changes.get('CRIPTO')" class="symbol-change">
-    Dolar Cripto: {{ changes.get("CRIPTO")?.venta | currency }}
+    Cripto: {{ changes.get("CRIPTO")?.venta | currency }}
   </div>
   <!-- <mat-chip-list aria-label="symbol changes">
     <mat-chip color="accent" selected
@@ -27,7 +31,11 @@
 </div>
 
 <mat-drawer-container class="main-app-drawer-container" autosize>
-  <mat-drawer #drawer [mode]="screenSize >= 2 ? 'side' : 'over'">
+  <mat-drawer
+    #drawer
+    [mode]="screenSize >= 2 ? 'side' : 'over'"
+    [opened]="this.screenSize >= 2 && loggedIn"
+  >
     <mat-nav-list *ngFor="let item of navItems">
       <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link">
         <mat-icon mat-list-icon [color]="item.active ? 'primary' : undefined">{{
@@ -39,9 +47,9 @@
   </mat-drawer>
 
   <mat-drawer-content>
-    <main class="main-responsive-container">
+    <section class="main-responsive-container">
       <ng-content></ng-content>
-    </main>
+    </section>
   </mat-drawer-content>
 </mat-drawer-container>
 

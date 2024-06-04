@@ -1,6 +1,7 @@
-@import "../../../styles.scss";
-
 mat-card {
+  -webkit-user-select: none;
+  user-select: none;
+
   cursor: pointer;
   overflow: hidden;
   .mat-ripple {
@@ -13,6 +14,5 @@ mat-card {
 
   .favorite-account-icon {
     float: right;
-    color: mat-color($accent, 600);
   }
 }

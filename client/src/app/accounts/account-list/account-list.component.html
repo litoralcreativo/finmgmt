@@ -17,11 +17,19 @@
         <app-account-card
           *ngFor="let account of accountGroup.accounts"
           [account]="account"
-        ></app-account-card>
+        >
+        </app-account-card>
       </div>
     </div>
   </mat-expansion-panel>
 </mat-accordion>
+
+<!-- <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+  <div class="example-box" *ngFor="let movie of movies" cdkDrag>
+    {{movie.title}}
+    <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">
+  </div>
+</div> -->
 
 <ng-template #fetchingTemplate>
   <div class="account-group">

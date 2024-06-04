@@ -61,7 +61,7 @@ export const updateMovementById = (req: Request, res: Response) => {
       .status(400)
       .json({ message: "Including _id in the request body is not allowed" });
   }
-  movementService.updateOne(id, dto).subscribe((result) => {
+  movementService.updateOneById(id, dto).subscribe((result) => {
     if (!result.acknowledged) {
       res
         .status(500)

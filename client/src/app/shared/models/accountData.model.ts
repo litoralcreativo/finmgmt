@@ -1,4 +1,5 @@
 export type AccountData = {
+  _id: string;
   name: string;
   type: AccountType;
   amount: number;

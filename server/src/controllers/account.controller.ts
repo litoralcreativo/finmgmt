@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Filter } from "mongodb";
+import { BSON, Filter, ObjectId } from "mongodb";
 import { DbManager } from "../../bdd/db";
 import { Account, AccountRequestDTO } from "../models/account.model";
 import { ResponseStrategy } from "../models/response.model";
@@ -51,6 +51,58 @@ export const create = (req: Request, res: Response) => {
         ...new ResponseStrategy(200, "OK"),
       })
     );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Internal server error"),
+    });
+  }
+};
+
+export const getById = (req: Request, res: Response) => {
+  try {
+    let userId: string = (req.user as any)?.id;
+    const { id } = req.params;
+
+    const filter: Filter<Account> = {
+      user_id: userId,
+      _id: new ObjectId(id),
+    };
+
+    accountService.getSingle(filter).subscribe((val) => {
+      if (val) return res.status(200).json(val);
+      else
+        return res.status(404).json({
+          ...new ResponseStrategy(404, "Item not found"),
+        });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Internal server error"),
+    });
+  }
+};
+
+export const setFavorite = (req: Request, res: Response) => {
+  try {
+    let userId: string = (req.user as any)?.id;
+    const { id } = req.params;
+    const { favorite } = req.body;
+
+    const filter: Filter<Account> = {
+      user_id: userId,
+      _id: new ObjectId(id),
+    };
+    accountService
+      .updateOne(filter, { favorite: favorite })
+      .subscribe((val) => {
+        if (val) return res.status(200).json(val);
+        else
+          return res.status(404).json({
+            ...new ResponseStrategy(404, "Item not found"),
+          });
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({

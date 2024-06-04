@@ -5,9 +5,10 @@ import { LitoFrModule } from 'lito-fr';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SkeletonLoaderDirective } from './directives/skeleton-loader.directive';
+import { TransactionComponent } from './components/transaction/transaction.component';
 
 @NgModule({
-  declarations: [SkeletonLoaderDirective],
+  declarations: [SkeletonLoaderDirective, TransactionComponent],
   imports: [
     CommonModule,
     MaterialModule,

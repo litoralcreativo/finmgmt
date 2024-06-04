@@ -21,4 +21,22 @@ export class AccountService {
       withCredentials: true,
     });
   }
+
+  getById(id: string): Observable<AccountData> {
+    return this.http.get<AccountData>(routes.account.byId(id), {
+      withCredentials: true,
+    });
+  }
+
+  toogleFavorite(accountId: string, state: boolean): Observable<boolean> {
+    return this.http.patch<boolean>(
+      routes.account.setFavorite(accountId),
+      {
+        favorite: state,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+  }
 }

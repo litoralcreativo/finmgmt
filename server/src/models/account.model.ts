@@ -1,7 +1,7 @@
+import { BSON } from "mongodb";
 import { ObjectIdType } from "./objectid.model";
 
-export type Account = {
-  _id: ObjectIdType;
+export type Account = BSON.Document & {
   user_id: string;
   created: Date;
   name: string;

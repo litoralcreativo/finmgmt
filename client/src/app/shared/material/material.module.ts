@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [],
@@ -45,6 +46,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatCheckboxModule,
     MatExpansionModule,
     MatChipsModule,
+    DragDropModule,
   ],
 })
 export class MaterialModule {}

@@ -19,7 +19,7 @@ mat-toolbar.main-app-toolbar {
   }
 }
 
-#symbol-changes-info {
+#sub-toolbar-info {
   background-color: mat-color($accent, 300);
   padding: 2px 1rem;
 
@@ -51,11 +51,16 @@ mat-drawer-container.main-app-drawer-container {
 
   mat-drawer-content {
     position: relative;
-    > main {
-      padding: 0.5rem 1rem;
-      margin-right: auto;
-      margin-left: auto;
-      max-width: 1200px;
+    > section.main-responsive-container {
+      padding: 0.875rem;
+      margin: 0 auto;
     }
+  }
+}
+
+@media (width > 768px) {
+  mat-drawer-content > section.main-responsive-container {
+    padding: 1.5em 2em;
+    max-width: 65.25em;
   }
 }
