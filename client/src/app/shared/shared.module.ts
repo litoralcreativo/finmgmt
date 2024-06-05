@@ -5,10 +5,10 @@ import { LitoFrModule } from 'lito-fr';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SkeletonLoaderDirective } from './directives/skeleton-loader.directive';
-import { TransactionComponent } from './components/transaction/transaction.component';
+import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
 
 @NgModule({
-  declarations: [SkeletonLoaderDirective, TransactionComponent],
+  declarations: [SkeletonLoaderDirective, TransactionDialogComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -21,7 +21,6 @@ import { TransactionComponent } from './components/transaction/transaction.compo
     LitoFrModule,
     ReactiveFormsModule,
     HttpClientModule,
-
     SkeletonLoaderDirective,
   ],
 })
