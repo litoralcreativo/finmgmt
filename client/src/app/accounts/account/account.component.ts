@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { AccountData } from 'src/app/shared/models/accountData.model';
+import { TransactionDialogComponent } from 'src/app/shared/components/transaction-dialog/transaction-dialog.component';
+import { Account, AccountData } from 'src/app/shared/models/accountData.model';
 import { Movement } from 'src/app/shared/models/movement.model';
+import { Transaction } from 'src/app/shared/models/transaction.model';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 
@@ -12,12 +15,13 @@ import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 })
 export class AccountComponent extends FetchingFlag implements OnInit {
   accountId: string;
-  account: AccountData;
+  account: Account;
   movimientos: ({ type: string } & Movement)[];
 
   constructor(
     private aRoute: ActivatedRoute,
-    private accService: AccountService
+    private accService: AccountService,
+    private dialog: MatDialog
   ) {
     super();
     this.movimientos = [
@@ -98,9 +102,24 @@ export class AccountComponent extends FetchingFlag implements OnInit {
 
   toogleFavorite() {
     this.accService
-      .toogleFavorite(this.accountId, !this.account.favorite)
+      .toogleFavorite(this.accountId, !this.account.data.favorite)
       .subscribe((acc) => {
-        this.account.favorite = !this.account.favorite;
+        const state = this.account.data.favorite;
+        this.account.favorite(!state);
       });
+  }
+
+  openTransactionDialog(type: 'in' | 'out') {
+    const transaction: Transaction = new Transaction();
+    switch (type) {
+      case 'in':
+        transaction.setDestination(this.account);
+        break;
+      case 'in':
+        break;
+    }
+    this.dialog.open<TransactionDialogComponent>(TransactionDialogComponent, {
+      data: transaction,
+    });
   }
 }

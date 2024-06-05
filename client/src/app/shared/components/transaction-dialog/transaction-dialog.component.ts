@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AccountData } from '../../models/accountData.model';
+import { Transaction } from '../../models/transaction.model';
 import { FetchingFlag } from '../../utils/fetching-flag';
 
 @Component({
@@ -24,7 +25,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<TransactionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: AccountData | undefined
+    @Inject(MAT_DIALOG_DATA) public data: Transaction
   ) {
     super();
   }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  Account,
   AccountData,
   AccountType,
   ACCOUNT_TYPES,
@@ -14,8 +15,8 @@ import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
   styleUrls: ['./account-list.component.scss'],
 })
 export class AccountListComponent extends FetchingFlag implements OnInit {
-  accounts: AccountData[];
-  sortedAccounts: { title: string; accounts: AccountData[]; sum: number }[];
+  accounts: Account[];
+  sortedAccounts: { title: string; accounts: Account[]; sum: number }[];
   hideEmpty: boolean = false;
   selectedAccountTypes: AccountType[] = [...ACCOUNT_TYPES];
 
@@ -45,13 +46,13 @@ export class AccountListComponent extends FetchingFlag implements OnInit {
 
   updateList() {
     const types: string[] = [
-      ...new Set(this.accounts.map((x) => x.type)),
+      ...new Set(this.accounts.map((x) => x.data.type)),
     ].filter((x) => this.selectedAccountTypes.includes(x));
 
     this.sortedAccounts = types
       .map((type) => {
         const filtered = this.accounts
-          .filter((x) => x.type === type)
+          .filter((x) => x.data.type === type)
           .sort(this.compareByAmount)
           .filter(this.emptyPredicate);
 
@@ -64,21 +65,21 @@ export class AccountListComponent extends FetchingFlag implements OnInit {
       .filter((x) => x.accounts.length > 0);
   }
 
-  private compareByAmount = (a: AccountData, b: AccountData) => {
-    return a.amount < b.amount ? 1 : -1;
+  private compareByAmount = (a: Account, b: Account) => {
+    return a.data.amount < b.data.amount ? 1 : -1;
   };
 
-  private emptyPredicate = (x: AccountData) => {
-    return this.hideEmpty ? x.amount !== 0 : x;
+  private emptyPredicate = (x: Account) => {
+    return this.hideEmpty ? x.data.amount !== 0 : x;
   };
 
-  private totalAmount(accArr: AccountData[]): number {
+  private totalAmount(accArr: Account[]): number {
     return accArr.reduce((a, c) => {
       const symbolCoeficent: number =
-        c.symbol === 'USD'
+        c.data.symbol === 'USD'
           ? this.symbolChangeService.prices.get('MEP')?.venta ?? 0
           : 1;
-      return a + c.amount * symbolCoeficent;
+      return a + c.data.amount * symbolCoeficent;
     }, 0);
   }
 }

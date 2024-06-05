@@ -4,7 +4,7 @@
     <div class="grid-area grid-left">
       <mat-card *ngIf="account">
         <mat-card-title
-          ><span>{{ account.name }}</span>
+          ><span>{{ account.data.name }}</span>
           <span>
             <mat-icon
               (click)="toogleFavorite()"
@@ -15,16 +15,16 @@
             >
           </span>
         </mat-card-title>
-        <mat-card-subtitle>{{ account.type }}</mat-card-subtitle>
+        <mat-card-subtitle>{{ account.data.type }}</mat-card-subtitle>
         <mat-card-content>
           <h2
-            [class.positive]="account.amount > 0"
-            [class.bluish]="account.symbol === 'USD'"
-            [class.negative]="account.amount < 0"
-            [class.zerotive]="account.amount == 0"
+            [class.positive]="account.data.amount > 0"
+            [class.bluish]="account.data.symbol === 'USD'"
+            [class.negative]="account.data.amount < 0"
+            [class.zerotive]="account.data.amount == 0"
           >
-            {{ account.amount | currency }}
-            <span class="mat-caption">{{ account.symbol }}</span>
+            {{ account.data.amount | currency }}
+            <span class="mat-caption">{{ account.data.symbol }}</span>
           </h2>
         </mat-card-content>
       </mat-card>

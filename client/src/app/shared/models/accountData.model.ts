@@ -1,12 +1,3 @@
-export type AccountData = {
-  _id: string;
-  name: string;
-  type: AccountType;
-  amount: number;
-  symbol: string;
-  favorite?: boolean;
-};
-
 export enum AccountType {
   DIGITAL_WALLET = 'digital wallet',
   CASH = 'cash',
@@ -20,3 +11,27 @@ export const ACCOUNT_TYPES: AccountType[] = [
   AccountType.BROKER,
   AccountType.CASH,
 ];
+
+export type AccountData = {
+  _id: string;
+  name: string;
+  type: AccountType;
+  amount: number;
+  symbol: string;
+  favorite?: boolean;
+};
+
+export class Account {
+  private _data: AccountData;
+  public get data(): AccountData {
+    return this._data;
+  }
+
+  constructor(data: AccountData) {
+    this._data = data;
+  }
+
+  favorite(state: boolean) {
+    this.data.favorite = state;
+  }
+}

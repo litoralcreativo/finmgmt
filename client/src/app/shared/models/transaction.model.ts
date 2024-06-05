@@ -1,4 +1,4 @@
-import { AccountData } from './accountData.model';
+import { Account, AccountData } from './accountData.model';
 
 export enum TransactionType {
   TRANSFER = 'transfer',
@@ -46,19 +46,19 @@ export type _Transaction =
   | CashTransaction;
 
 export class Transaction {
-  origin?: AccountData;
-  destination?: AccountData;
+  origin?: Account;
+  destination?: Account;
 
-  constructor(origin?: AccountData, destination?: AccountData) {
+  constructor(origin?: Account, destination?: Account) {
     this.origin = origin;
     this.destination = destination;
     if (
       this.origin &&
       this.destination &&
-      this.origin.symbol !== this.destination.symbol
+      this.origin.data.symbol !== this.destination.data.symbol
     ) {
       throw new Error(
-        `Origin(${this.origin.symbol}) and destination(${this.destination.symbol}) must have the same symbol`
+        `Origin(${this.origin.data.symbol}) and destination(${this.destination.data.symbol}) must have the same symbol`
       );
     }
   }
@@ -68,9 +68,9 @@ export class Transaction {
    * @param account the destination account
    * @returns if the destination was set
    */
-  setDestination(account: AccountData): boolean {
+  setDestination(account: Account): boolean {
     // if origin exist, and the symbol of both accounts are not the same, we must return false
-    if (this.origin && this.origin.symbol !== account.symbol) {
+    if (this.origin && this.origin.data.symbol !== account.data.symbol) {
       return false;
     }
     this.destination = account;
@@ -82,9 +82,12 @@ export class Transaction {
    * @param account the origin account
    * @returns if the origin was set
    */
-  setOrigin(account: AccountData): boolean {
+  setOrigin(account: Account): boolean {
     // if origin exist, and the symbol of both accounts are not the same, we must return false
-    if (this.destination && this.destination.symbol !== account.symbol) {
+    if (
+      this.destination &&
+      this.destination.data.symbol !== account.data.symbol
+    ) {
       return false;
     }
     this.origin = account;

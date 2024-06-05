@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AccountData } from 'src/app/shared/models/accountData.model';
+import { Account, AccountData } from 'src/app/shared/models/accountData.model';
 
 @Component({
   selector: 'app-account-card',
@@ -8,13 +8,13 @@ import { AccountData } from 'src/app/shared/models/accountData.model';
   styleUrls: ['./account-card.component.scss'],
 })
 export class AccountCardComponent implements OnInit {
-  @Input('account') account: AccountData;
+  @Input('account') account: Account;
 
   constructor(private router: Router, private aRoute: ActivatedRoute) {}
 
   ngOnInit(): void {}
 
   goToAccount() {
-    this.router.navigate([this.account._id], { relativeTo: this.aRoute });
+    this.router.navigate([this.account.data._id], { relativeTo: this.aRoute });
   }
 }
