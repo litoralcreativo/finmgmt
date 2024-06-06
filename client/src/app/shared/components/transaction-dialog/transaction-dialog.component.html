@@ -1,37 +1,92 @@
-<h1 mat-dialog-title>New account</h1>
+<div mat-dialog-title>
+  <div [ngSwitch]="type">
+    <div *ngSwitchCase="'incoming'">
+      <div mat-line>Incoming transaction</div>
+      <div mat-line class="mat-caption">
+        to {{ data.destination?.data?.name }}
+      </div>
+    </div>
+    <div *ngSwitchCase="'outgoing'">
+      <div mat-line>Outgoing transaction</div>
+      <div mat-line class="mat-caption">from {{ data.origin?.data?.name }}</div>
+    </div>
+    <div *ngSwitchDefault>
+      <div mat-line>Transaction</div>
+    </div>
+  </div>
+</div>
+
 <div mat-dialog-content>
-  <form [formGroup]="form" class="register-form">
+  <form [formGroup]="form">
     <div class="form-row">
-      <mat-form-field appearance="standard">
-        <mat-label>Account name</mat-label>
-        <input matInput formControlName="name" title="name" />
-        <mat-error *ngIf="form.controls.name.errors"
-          >The name must be between 6 and 32 characters long</mat-error
-        >
+      <mat-form-field appearance="outline" class="amount-form-control">
+        <mat-label>Amount</mat-label>
+        <input
+          [class.negative]="type === 'outgoing'"
+          [class.positive]="type === 'incoming'"
+          class="transaction-amount"
+          matInput
+          formControlName="amount"
+          title="amount"
+          prefix="{{ type === 'outgoing' ? '-' : '' }}$ "
+          mask="separator.2"
+          thousandSeparator=","
+          value="0"
+        />
       </mat-form-field>
     </div>
     <div class="form-row">
       <mat-form-field appearance="standard">
-        <mat-label>Type</mat-label>
-        <mat-select formControlName="type">
-          <mat-option value="digital wallet">Digital Wallet</mat-option>
-          <mat-option value="cash">Cash</mat-option>
-          <mat-option value="bank account">Bank Account</mat-option>
-          <mat-option value="broker">Broker</mat-option>
-        </mat-select>
-        <mat-error *ngIf="form.controls.type.hasError('required')"
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" title="description" />
+        <mat-error *ngIf="form.controls.description.hasError('required')"
           >This field is required</mat-error
         >
       </mat-form-field>
+    </div>
+
+    <div class="form-row">
       <mat-form-field appearance="standard">
-        <mat-label>Symbol</mat-label>
-        <mat-select formControlName="symbol" value="ARS">
-          <mat-option value="ARS">Peso argentino (ARS)</mat-option>
-          <mat-option value="USD">Dolar estadounidense (USD)</mat-option>
-        </mat-select>
-        <mat-error *ngIf="form.controls.symbol.hasError('required')"
-          >This field is required</mat-error
+        <mat-label>Categories</mat-label>
+        <mat-chip-list #chipList aria-label="Category selection">
+          <mat-chip
+            #chipItem="matChip"
+            *ngFor="let category of categories"
+            [color]="
+              chipItem.selected
+                ? 'accent'
+                : chipItem.toggleSelected() && 'accent'
+            "
+            [removable]="true"
+            (removed)="remove(category)"
+            selected
+          >
+            {{ category }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          <input
+            placeholder="Add a category..."
+            #categoryInput
+            formControlName="categories"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"
+          />
+        </mat-chip-list>
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          (optionSelected)="selected($event)"
         >
+          <mat-option
+            *ngFor="let category of filteredCategories | async"
+            [value]="category"
+          >
+            {{ category }}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </div>
   </form>

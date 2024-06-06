@@ -6,15 +6,21 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SkeletonLoaderDirective } from './directives/skeleton-loader.directive';
 import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
-
+import { NumericInputDirective } from './directives/numeric-input.directive';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 @NgModule({
-  declarations: [SkeletonLoaderDirective, TransactionDialogComponent],
+  declarations: [
+    SkeletonLoaderDirective,
+    TransactionDialogComponent,
+    NumericInputDirective,
+  ],
   imports: [
     CommonModule,
     MaterialModule,
     LitoFrModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxMaskModule.forRoot(),
   ],
   exports: [
     MaterialModule,

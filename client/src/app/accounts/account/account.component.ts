@@ -4,7 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { TransactionDialogComponent } from 'src/app/shared/components/transaction-dialog/transaction-dialog.component';
 import { Account, AccountData } from 'src/app/shared/models/accountData.model';
 import { Movement } from 'src/app/shared/models/movement.model';
-import { Transaction } from 'src/app/shared/models/transaction.model';
+import {
+  IncomingTransaction,
+  OutgoingTransaction,
+  Transaction,
+} from 'src/app/shared/models/transaction.model';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 
@@ -110,16 +114,18 @@ export class AccountComponent extends FetchingFlag implements OnInit {
   }
 
   openTransactionDialog(type: 'in' | 'out') {
-    const transaction: Transaction = new Transaction();
+    let transaction: Transaction;
     switch (type) {
       case 'in':
-        transaction.setDestination(this.account);
+        transaction = new IncomingTransaction(this.account);
         break;
-      case 'in':
+      case 'out':
+        transaction = new OutgoingTransaction(this.account);
         break;
     }
     this.dialog.open<TransactionDialogComponent>(TransactionDialogComponent, {
       data: transaction,
+      width: '500px',
     });
   }
 }

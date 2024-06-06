@@ -10,8 +10,8 @@
               (click)="toogleFavorite()"
               class="favorite-account-icon"
               color="accent"
-              [class.not-favorite]="!account.favorite"
-              >{{ account.favorite ? "star" : "star_outlined" }}</mat-icon
+              [class.not-favorite]="!account.data.favorite"
+              >{{ account.data.favorite ? "star" : "star_outlined" }}</mat-icon
             >
           </span>
         </mat-card-title>
@@ -29,8 +29,20 @@
         </mat-card-content>
       </mat-card>
       <div class="account-card-actions">
-        <button mat-button class="mat-elevation-z1 positive">INCOMING $</button>
-        <button mat-button class="mat-elevation-z1 negative">OUTGOING $</button>
+        <button
+          mat-button
+          class="mat-elevation-z1 positive"
+          (click)="openTransactionDialog('in')"
+        >
+          INCOMING $
+        </button>
+        <button
+          mat-button
+          class="mat-elevation-z1 negative"
+          (click)="openTransactionDialog('out')"
+        >
+          OUTGOING $
+        </button>
       </div>
     </div>
     <div class="grid-area grid-right">
