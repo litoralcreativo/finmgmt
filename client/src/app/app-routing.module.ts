@@ -20,6 +20,12 @@ const routes: Routes = [
     loadChildren: () =>
       import('./accounts/accounts.module').then((m) => m.AccountsModule),
   },
+  {
+    path: 'spaces',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./accounts/accounts.module').then((m) => m.AccountsModule),
+  },
 ];
 
 @NgModule({

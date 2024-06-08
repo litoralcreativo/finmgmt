@@ -9,7 +9,11 @@ import {
 } from "mongodb";
 import { forkJoin, from, map, Observable } from "rxjs";
 import { ObjectIdType } from "./objectid.model";
-import { PaginatedType, PaginationRequest } from "./pagination.model";
+import {
+  CountedList,
+  PaginatedType,
+  PaginationRequest,
+} from "./pagination.model";
 
 export abstract class Crud<T extends BSON.Document> {
   protected collection: Collection<BSON.Document>;
@@ -21,16 +25,35 @@ export abstract class Crud<T extends BSON.Document> {
   public getAll(
     pagination?: PaginationRequest,
     filter?: Filter<T>
-  ): Observable<PaginatedType<T>> {
+  ): Observable<PaginatedType<T> | CountedList<T>> {
     const query = (filter || {}) as Filter<BSON.Document>;
+
+    let getElements$;
+
+    // If the request doesn't need pagination
+    if (!pagination) {
+      return (getElements$ = from(
+        this.collection.find<T>(query).toArray()
+      ).pipe(
+        map((elements) => {
+          return {
+            total: elements.length,
+            elements,
+          };
+        })
+      ));
+    }
+
+    // Otherwise
+
     const skip = pagination ? pagination.page * pagination.pageSize : 0;
     const limit = pagination ? pagination.pageSize : 10;
 
-    const getElements$ = from(
+    getElements$ = from(
       this.collection.find<T>(query).skip(skip).limit(limit).toArray()
     );
 
-    const getCount$ = from(this.collection.countDocuments());
+    const getCount$ = from(this.collection.countDocuments(query));
 
     return forkJoin([getElements$, getCount$]).pipe(
       map(([elements, total]) => ({

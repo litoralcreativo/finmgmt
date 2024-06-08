@@ -6,6 +6,7 @@ import cors from "cors";
 import { router as authRouter } from "./controllers/auth.routes";
 import { router as accountRouter } from "./controllers/account.routes";
 import { router as movementRouter } from "./controllers/movement.routes";
+import { router as spaceRouter } from "./controllers/financialSpace.route";
 import { swaggerSpec } from "./swagger";
 import { requireAuth } from "./middlewares/autenticate.middleware";
 import "./auth";
@@ -41,6 +42,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
 app.use("/movement", requireAuth, movementRouter);
+app.use("/spaces", requireAuth, spaceRouter);
 
 app.all("*", (req, res) => {
   res.status(404).json({

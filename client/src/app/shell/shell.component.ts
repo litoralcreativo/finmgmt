@@ -38,6 +38,12 @@ export class ShellComponent implements OnInit {
       icon: 'wallet',
       active: false,
     },
+    {
+      name: 'Spaces',
+      route: '/spaces',
+      icon: 'business_center',
+      active: false,
+    },
   ];
 
   changes: Map<string, SymbolChange> = new Map();
