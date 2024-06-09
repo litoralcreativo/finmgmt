@@ -12,8 +12,10 @@ import { Account, AccountData } from '../../models/accountData.model';
 import { Transaction, TransactionType } from '../../models/transaction.model';
 import { AccountService } from '../../services/account.service';
 import { FetchingFlag } from '../../utils/fetching-flag';
-import { Observable } from 'rxjs';
+import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { Scope } from '../../models/scope.model';
+import { ScopeService } from '../../services/scope.service';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-transaction-dialog',
@@ -25,21 +27,18 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
   secondFormGroup: FormGroup;
 
   form: FormGroup;
-  userAccounts: Account[];
-  type: TransactionType;
-
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredCategories: Observable<string[]>;
-  categories: string[] = [];
-  allCategories: string[] = [];
+  userAccounts: Account[] = [];
+  userScopes: Scope[] = [];
+  type?: TransactionType;
+  categories: Category[] = [];
 
   @ViewChild('categoriesInput') categoriesInput: ElementRef<HTMLInputElement>;
-
-  scopes: Scope[] = [];
+  defaultCategory: Category[];
 
   constructor(
     public dialogRef: MatDialogRef<TransactionDialogComponent>,
     private accService: AccountService,
+    private scopeService: ScopeService,
     @Inject(MAT_DIALOG_DATA) public data: Transaction
   ) {
     super();
@@ -47,6 +46,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
   ngOnInit(): void {
     this.type = this.data.type;
+
     this.form = new FormGroup({
       amount: new FormControl(null, [Validators.required]),
       description: new FormControl(''),
@@ -56,25 +56,54 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
       scope: new FormControl(null, [Validators.required]),
       category: new FormControl(null, [Validators.required]),
     });
-    this.form.controls.date.disable();
+    this.form.get('date')?.disable();
+    this.form.get('category')?.disable();
+
     this.fetchLists();
+
+    this.form.get('scope')?.valueChanges.subscribe((scope: Scope) => {
+      if (scope) {
+        this.form.get('category')?.enable();
+        this.categories = scope.getCategories();
+      } else {
+        this.form.get('category')?.reset();
+        this.form.get('category')?.disable();
+      }
+    });
   }
 
   fetchLists() {
     this.fetching = true;
-    this.accService
-      .getAccounts()
-      .subscribe({
-        next: (acc) => {
-          if (this.data.origin) this.userAccounts = acc;
-        },
-      })
-      .add(() => (this.fetching = false));
+
+    const $accounts: Observable<Account[]> = this.accService.$account;
+    const $scopes: Observable<Scope[]> = this.scopeService.$scopes;
+
+    combineLatest([$accounts, $scopes]).subscribe({
+      next: ([accounts, scopes]) => {
+        this.userAccounts = accounts;
+        this.userScopes = scopes;
+        this.setDefaultScopeAndCat();
+        this.fetching = false;
+      },
+    });
+  }
+
+  setDefaultScopeAndCat() {
+    const firstPrivateScope = this.userScopes.find((x) => !x.data.shared);
+    this.form.get('scope')?.setValue(firstPrivateScope);
+    if (firstPrivateScope) {
+      this.form.get('category')?.enable();
+      this.categories = firstPrivateScope.getCategories();
+      this.form
+        .get('category')
+        ?.setValue(firstPrivateScope.getDefaultCategory());
+    }
   }
 
   commit() {
     const { amount, description } = this.form.value;
     this.data.setAmount(amount);
     this.data.setDescription(description);
+    this.dialogRef.close();
   }
 }

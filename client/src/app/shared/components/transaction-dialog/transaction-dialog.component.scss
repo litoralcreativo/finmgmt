@@ -29,3 +29,9 @@ form {
   font-weight: 500;
   font-size: x-large;
 }
+
+::ng-deep mat-form-field.iconed-form-field {
+  .mat-form-field-infix {
+    height: 1.4rem;
+  }
+}

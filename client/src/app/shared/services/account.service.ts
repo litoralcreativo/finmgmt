@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
 import { Account, AccountData } from '../models/accountData.model';
 
@@ -9,14 +9,27 @@ import { Account, AccountData } from '../models/accountData.model';
   providedIn: 'root',
 })
 export class AccountService {
-  constructor(private http: HttpClient) {}
+  $account: BehaviorSubject<Account[]> = new BehaviorSubject<Account[]>([]);
 
-  getAccounts(): Observable<Account[]> {
-    return this.http
+  constructor(private http: HttpClient) {
+    this.getAccounts();
+  }
+
+  getAccounts() {
+    this.http
       .get<AccountData[]>(routes.account.all, {
         withCredentials: true,
       })
-      .pipe(map((accs) => accs.map((acc) => new Account(acc))));
+      .pipe(first())
+      .subscribe((res) => {
+        this.$account.next(res.map((x) => new Account(x)));
+      });
+
+    /* return this.http
+      .get<AccountData[]>(routes.account.all, {
+        withCredentials: true,
+      })
+      .pipe(map((accs) => accs.map((acc) => new Account(acc)))); */
   }
 
   createAccount(account: Partial<AccountData>): Observable<any> {

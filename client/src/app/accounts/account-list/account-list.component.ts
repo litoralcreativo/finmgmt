@@ -33,15 +33,13 @@ export class AccountListComponent extends FetchingFlag implements OnInit {
 
   fetchList() {
     this.fetching = true;
-    this.accService
-      .getAccounts()
-      .subscribe({
-        next: (acc) => {
-          this.accounts = acc;
-          this.updateList();
-        },
-      })
-      .add(() => (this.fetching = false));
+    this.accService.$account.subscribe({
+      next: (acc) => {
+        this.accounts = acc;
+        this.updateList();
+        this.fetching = false;
+      },
+    });
   }
 
   updateList() {

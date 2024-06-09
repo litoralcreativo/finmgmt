@@ -11,7 +11,7 @@ import { AccountManagmentDialogComponent } from './account-managment-dialog/acco
 })
 export class AccountsComponent implements OnInit {
   @ViewChild(AccountListComponent) accountListComponent: AccountListComponent;
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, private accService: AccountService) {}
 
   ngOnInit(): void {
     /* this.accounts = [
@@ -82,7 +82,8 @@ export class AccountsComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          this.accountListComponent?.fetchList();
+          // this.accountListComponent?.fetchList();
+          this.accService.getAccounts();
         }
       });
   }
