@@ -6,22 +6,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Account, AccountData } from '../../models/accountData.model';
 import { Transaction, TransactionType } from '../../models/transaction.model';
 import { AccountService } from '../../services/account.service';
 import { FetchingFlag } from '../../utils/fetching-flag';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Scope } from '../../models/scope.model';
 
 @Component({
   selector: 'app-transaction-dialog',
@@ -43,6 +35,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
   @ViewChild('categoriesInput') categoriesInput: ElementRef<HTMLInputElement>;
 
+  scopes: Scope[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<TransactionDialogComponent>,
     private accService: AccountService,
@@ -56,28 +50,17 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     this.form = new FormGroup({
       amount: new FormControl(null, [Validators.required]),
       description: new FormControl(''),
+      date: new FormControl(new Date(), []),
       origin: new FormControl(this.data.origin ?? null),
       destination: new FormControl(this.data.destination ?? null),
-      categories: new FormControl([]),
+      scope: new FormControl(null, [Validators.required]),
+      category: new FormControl(null, [Validators.required]),
     });
-    this.fetchList();
-    this.updateFilteredCategories();
+    this.form.controls.date.disable();
+    this.fetchLists();
   }
 
-  updateFilteredCategories() {
-    this.filteredCategories = this.form.controls.categories.valueChanges.pipe(
-      startWith(null),
-      map((category: string | null) =>
-        category
-          ? this._filter(category)
-          : this.allCategories
-              .filter((x) => !this.categories.includes(x))
-              .slice()
-      )
-    );
-  }
-
-  fetchList() {
+  fetchLists() {
     this.fetching = true;
     this.accService
       .getAccounts()
@@ -87,41 +70,6 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
         },
       })
       .add(() => (this.fetching = false));
-  }
-
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-    if (value) {
-      this.categories.push(value);
-    }
-    event.chipInput!.clear();
-    this.form.controls.categories.setValue(null);
-  }
-
-  remove(category: string): void {
-    const index = this.categories.indexOf(category);
-
-    if (index >= 0) {
-      this.categories.splice(index, 1);
-    }
-
-    this.form.controls.categories.setValue('');
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.categories.push(event.option.viewValue);
-    this.categoriesInput.nativeElement.value = '';
-    this.form.controls.categories.setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const categoryValue = value.toLowerCase();
-
-    return this.allCategories.filter(
-      (category) =>
-        !this.categories.includes(category) &&
-        category.toLowerCase().includes(categoryValue)
-    );
   }
 
   commit() {

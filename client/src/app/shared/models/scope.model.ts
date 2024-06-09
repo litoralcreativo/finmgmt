@@ -1,6 +1,6 @@
 import { Category } from './category.model';
 
-export type SpaceResponse = {
+export type ScopeResponse = {
   _id: string;
   cerator: string;
   users: string[];
@@ -10,10 +10,10 @@ export type SpaceResponse = {
   categories: Category[];
 };
 
-export class Space {
-  data: SpaceResponse;
+export class Scope {
+  data: ScopeResponse;
 
-  constructor(init: SpaceResponse) {
+  constructor(init: ScopeResponse) {
     this.data = init;
   }
 

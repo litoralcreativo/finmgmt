@@ -1,6 +1,6 @@
 import { ObjectIdType } from "./objectid.model";
 
-export type FinancialSpace = {
+export type FinancialScope = {
   _id: ObjectIdType;
   creator: string;
   users: string[];
@@ -16,7 +16,7 @@ export type Category = {
   fixed: boolean;
 };
 
-export type FinancialSpaceRequestDTO = {
+export type FinancialScopeRequestDTO = {
   account_id: string;
   amount: number;
   name: string;

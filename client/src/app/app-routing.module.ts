@@ -21,10 +21,10 @@ const routes: Routes = [
       import('./accounts/accounts.module').then((m) => m.AccountsModule),
   },
   {
-    path: 'spaces',
+    path: 'scopes',
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('./spaces/spaces.module').then((m) => m.SpacesModule),
+      import('./scopes/scopes.module').then((m) => m.ScopeModule),
   },
 ];
 

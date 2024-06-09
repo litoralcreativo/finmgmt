@@ -1,12 +1,12 @@
 import express from "express";
 import validatePagination from "../middlewares/pagination.middleware";
-import { getAllSpaces, getSpaceById } from "./financialSpace.controller";
+import { getAllScope, getScopeById } from "./financialScope.controller";
 
 const router = express.Router();
 
-router.get("/", validatePagination, getAllSpaces);
+router.get("/", validatePagination, getAllScope);
 
-router.get("/:id", getSpaceById);
+router.get("/:id", getScopeById);
 
 /* router.post("/", createMovement);
 

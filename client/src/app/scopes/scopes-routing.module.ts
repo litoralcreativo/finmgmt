@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SpaceComponent } from './space/space.component';
-import { SpacesComponent } from './spaces.component';
+import { ScopeComponent } from './scope/scope.component';
+import { ScopesComponent } from './scopes.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: SpacesComponent,
+    component: ScopesComponent,
   },
   {
-    path: ':spaceId',
-    component: SpaceComponent,
+    path: ':scopeId',
+    component: ScopeComponent,
   },
 ];
 
@@ -18,4 +18,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SpacesRoutingModule {}
+export class ScopesRoutingModule {}

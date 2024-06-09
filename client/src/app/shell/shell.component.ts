@@ -39,8 +39,8 @@ export class ShellComponent implements OnInit {
       active: false,
     },
     {
-      name: 'Spaces',
-      route: '/spaces',
+      name: 'Scopes',
+      route: '/scopes',
       icon: 'business_center',
       active: false,
     },

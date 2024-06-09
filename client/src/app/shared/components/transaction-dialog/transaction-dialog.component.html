@@ -169,50 +169,28 @@
           >This field is required</mat-error
         >
       </mat-form-field>
+      <mat-form-field appearance="standard" class="transaction-date">
+        <mat-label>Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="dp3"
+          title="date"
+          formControlName="date"
+        />
+        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+        <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+      </mat-form-field>
     </div>
 
     <div class="form-row">
       <mat-form-field appearance="standard">
-        <mat-label>Categories</mat-label>
-        <mat-chip-list #chipList aria-label="Category selection">
-          <mat-chip
-            #chipItem="matChip"
-            *ngFor="let category of categories"
-            [color]="
-              chipItem.selected
-                ? 'accent'
-                : chipItem.toggleSelected() && 'accent'
-            "
-            [removable]="true"
-            (removed)="remove(category)"
-            selected
-          >
-            {{ category }}
-            <button matChipRemove>
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip>
-          <input
-            placeholder="Add a category..."
-            #categoryInput
-            formControlName="categories"
-            [matAutocomplete]="auto"
-            [matChipInputFor]="chipList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="add($event)"
-          />
-        </mat-chip-list>
-        <mat-autocomplete
-          #auto="matAutocomplete"
-          (optionSelected)="selected($event)"
-        >
-          <mat-option
-            *ngFor="let category of filteredCategories | async"
-            [value]="category"
-          >
-            {{ category }}
+        <mat-label>Scope</mat-label>
+        <mat-select formControlName="scope">
+          <mat-option>--</mat-option>
+          <mat-option *ngFor="let scope of scopes" [value]="scope">
+            {{ scope.data.name }}
           </mat-option>
-        </mat-autocomplete>
+        </mat-select>
       </mat-form-field>
     </div>
   </form>

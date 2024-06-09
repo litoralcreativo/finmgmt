@@ -3,29 +3,28 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
-import { Category } from '../models/category.model';
-import { Space, SpaceResponse } from '../models/space.model';
+import { Scope, ScopeResponse } from '../models/scope.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SpaceService {
-  $spaces: BehaviorSubject<Space[]> = new BehaviorSubject<Space[]>([]);
+export class ScopeService {
+  $scopes: BehaviorSubject<Scope[]> = new BehaviorSubject<Scope[]>([]);
 
   constructor(private http: HttpClient) {
-    this.getSpaces();
+    this.getScopes();
   }
 
-  getSpaces() {
+  getScopes() {
     this.http
-      .get<{ total: number; elements: SpaceResponse[] }>(routes.spaces.all, {
+      .get<{ total: number; elements: ScopeResponse[] }>(routes.scopes.all, {
         withCredentials: true,
       })
       .pipe(first())
       .subscribe((res) => {
-        this.$spaces.next(
+        this.$scopes.next(
           res.elements
-            .map((x) => new Space(x))
+            .map((x) => new Scope(x))
             .sort((a, b) => {
               return Number(a.data.shared) - Number(b.data.shared);
             })
@@ -33,11 +32,11 @@ export class SpaceService {
       });
   }
 
-  getById(spaceId: string): Observable<Space> {
+  getById(scopeId: string): Observable<Scope> {
     return this.http
-      .get<SpaceResponse>(routes.spaces.byId(spaceId), {
+      .get<ScopeResponse>(routes.scopes.byId(scopeId), {
         withCredentials: true,
       })
-      .pipe(map((acc) => new Space(acc)));
+      .pipe(map((acc) => new Scope(acc)));
   }
 }

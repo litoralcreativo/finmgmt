@@ -8,6 +8,7 @@ import { SkeletonLoaderDirective } from './directives/skeleton-loader.directive'
 import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
 import { NumericInputDirective } from './directives/numeric-input.directive';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 @NgModule({
   declarations: [
     SkeletonLoaderDirective,
@@ -29,5 +30,6 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
     HttpClientModule,
     SkeletonLoaderDirective,
   ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
 })
 export class SharedModule {}

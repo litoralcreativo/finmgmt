@@ -1,0 +1,16 @@
+<mat-card class="scope-card" (click)="goToAccount()">
+  <mat-card-title class="row-flex"
+    ><mat-icon>{{ scope.data.icon }}</mat-icon> {{ scope.data.name }}
+  </mat-card-title>
+  <mat-card-subtitle>
+    {{ scope.data.categories.length }} categories
+  </mat-card-subtitle>
+  <mat-card-content></mat-card-content>
+  <mat-card-footer>
+    <mat-toolbar *ngIf="!scope.data.shared">private</mat-toolbar>
+    <mat-toolbar *ngIf="scope.data.shared"
+      >shared with {{ scope.data.users.length - 1 }} users</mat-toolbar
+    >
+  </mat-card-footer>
+  <div matRipple></div>
+</mat-card>

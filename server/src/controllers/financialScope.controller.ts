@@ -1,26 +1,26 @@
 import { Request, Response } from "express";
 import { Filter } from "mongodb";
 import { DbManager } from "../../bdd/db";
-import { FinancialSpace } from "../models/financialSpace.model";
-import { FinancialSpaceService } from "../services/financialSpace.service";
+import { FinancialScope } from "../models/financialScope.model";
+import { FinancialScopeService } from "../services/financialScope.service";
 
-let financialSpace: FinancialSpaceService;
+let financialScope: FinancialScopeService;
 DbManager.getInstance().subscribe((x) => {
-  if (x) financialSpace = new FinancialSpaceService(x);
+  if (x) financialScope = new FinancialScopeService(x);
 });
 
-export const getAllSpaces = (req: Request, res: Response) => {
-  const filter: Filter<FinancialSpace> = {
+export const getAllScope = (req: Request, res: Response) => {
+  const filter: Filter<FinancialScope> = {
     users: { $eq: (req?.user as any).id },
   };
-  financialSpace.getAll(undefined, filter).subscribe((val) => {
+  financialScope.getAll(undefined, filter).subscribe((val) => {
     return res.json(val);
   });
 };
 
-export const getSpaceById = (req: Request, res: Response) => {
+export const getScopeById = (req: Request, res: Response) => {
   const id = req.params.id;
-  financialSpace.getById(id).subscribe((val) => {
+  financialScope.getById(id).subscribe((val) => {
     if (!val) {
       res.status(404).json({ message: "Item not found" });
     } else {
@@ -31,7 +31,7 @@ export const getSpaceById = (req: Request, res: Response) => {
 
 /* export const createMovement = (req: Request, res: Response) => {
   const dto: MovementRequestDTO = req.body;
-  financialSpace
+  financialScope
     .createOne(dto)
     .subscribe((val: any) => res.status(200).send(val));
 };
@@ -44,7 +44,7 @@ export const updateMovementById = (req: Request, res: Response) => {
       .status(400)
       .json({ message: "Including _id in the request body is not allowed" });
   }
-  financialSpace.updateOneById(id, dto).subscribe((result) => {
+  financialScope.updateOneById(id, dto).subscribe((result) => {
     if (!result.acknowledged) {
       res
         .status(500)
@@ -61,7 +61,7 @@ export const updateMovementById = (req: Request, res: Response) => {
 
 export const deleteMovementById = (req: Request, res: Response) => {
   const id = req.params.id;
-  financialSpace.deleteOne(id).subscribe((result) => {
+  financialScope.deleteOne(id).subscribe((result) => {
     if (!result.acknowledged) {
       res
         .status(500)

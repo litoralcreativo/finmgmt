@@ -1,7 +1,16 @@
-mat-card.space-card {
+mat-card.scope-card {
   -webkit-user-select: none;
   user-select: none;
+  cursor: pointer;
   overflow: hidden;
+
+  .mat-ripple {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
 
   mat-card-footer {
     mat-toolbar {

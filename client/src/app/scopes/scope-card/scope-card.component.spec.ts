@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SpacesComponent } from './spaces.component';
+import { ScopeCardComponent } from './scope-card.component';
 
-describe('SpacesComponent', () => {
-  let component: SpacesComponent;
-  let fixture: ComponentFixture<SpacesComponent>;
+describe('ScopeCardComponent', () => {
+  let component: ScopeCardComponent;
+  let fixture: ComponentFixture<ScopeCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SpacesComponent ]
-    })
-    .compileComponents();
+      declarations: [ScopeCardComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SpacesComponent);
+    fixture = TestBed.createComponent(ScopeCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

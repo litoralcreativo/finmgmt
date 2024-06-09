@@ -1,9 +1,9 @@
-<mat-card class="space-card" *ngIf="space">
+<mat-card class="scope-card" *ngIf="scope">
   <mat-card-title class="row-flex"
-    ><mat-icon>{{ space.data.icon }}</mat-icon> {{ space.data.name }}
+    ><mat-icon>{{ scope.data.icon }}</mat-icon> {{ scope.data.name }}
   </mat-card-title>
   <mat-card-subtitle>
-    {{ space.data.categories.length }} categories
+    {{ scope.data.categories.length }} categories
   </mat-card-subtitle>
   <mat-card-content>
     <mat-chip-list #chipList aria-label="Category selection" multiple>
@@ -11,7 +11,7 @@
         #chipItem="matChip"
         *ngFor="let category of fixed"
         color="{{ category.fixed ? 'primary' : 'accent' }}"
-        (click)="chipItem.selected ? chipItem.deselect() : chipItem.select()"
+        selected
       >
         <mat-icon>{{ category.icon }}</mat-icon
         >&nbsp;{{ category.name }}
@@ -23,7 +23,7 @@
         #chipItem="matChip"
         *ngFor="let category of variable"
         color="{{ category.fixed ? 'primary' : 'accent' }}"
-        (click)="chipItem.selected ? chipItem.deselect() : chipItem.select()"
+        selected
       >
         <mat-icon>{{ category.icon }}</mat-icon
         >&nbsp;{{ category.name }}
@@ -31,9 +31,12 @@
     </mat-chip-list>
   </mat-card-content>
   <mat-card-footer>
-    <mat-toolbar *ngIf="!space.data.shared">private</mat-toolbar>
-    <mat-toolbar *ngIf="space.data.shared"
-      >shared with {{ space.data.users.length - 1 }} users</mat-toolbar
+    <mat-toolbar *ngIf="!scope.data.shared">private</mat-toolbar>
+    <mat-toolbar *ngIf="scope.data.shared"
+      >shared with {{ scope.data.users.length - 1 }} users</mat-toolbar
     >
   </mat-card-footer>
 </mat-card>
+
+<!-- (click)="chipItem.selected ? chipItem.deselect() : chipItem.select()"
+ -->
