@@ -4,6 +4,7 @@ export type FinancialSpace = {
   _id: ObjectIdType;
   creator: string;
   users: string[];
+  icon: string;
   name: string;
   shared: boolean;
   cateogries: Category;
@@ -11,12 +12,8 @@ export type FinancialSpace = {
 
 export type Category = {
   name: string;
-  subcategories: Subcategory[];
-};
-
-export type Subcategory = {
-  fixed: string[];
-  variable: string[];
+  icon: string;
+  fixed: boolean;
 };
 
 export type FinancialSpaceRequestDTO = {

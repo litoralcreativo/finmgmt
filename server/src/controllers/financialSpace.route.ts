@@ -1,14 +1,14 @@
 import express from "express";
 import validatePagination from "../middlewares/pagination.middleware";
-import { getAllSpaces } from "./financialSpace.controller";
+import { getAllSpaces, getSpaceById } from "./financialSpace.controller";
 
 const router = express.Router();
 
 router.get("/", validatePagination, getAllSpaces);
 
-/* router.get("/:id", getMovementById);
+router.get("/:id", getSpaceById);
 
-router.post("/", createMovement);
+/* router.post("/", createMovement);
 
 router.put("/:id", updateMovementById);
 

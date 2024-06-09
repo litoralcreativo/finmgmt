@@ -18,7 +18,7 @@ export const getAllSpaces = (req: Request, res: Response) => {
   });
 };
 
-/* export const getMovementById = (req: Request, res: Response) => {
+export const getSpaceById = (req: Request, res: Response) => {
   const id = req.params.id;
   financialSpace.getById(id).subscribe((val) => {
     if (!val) {
@@ -29,7 +29,7 @@ export const getAllSpaces = (req: Request, res: Response) => {
   });
 };
 
-export const createMovement = (req: Request, res: Response) => {
+/* export const createMovement = (req: Request, res: Response) => {
   const dto: MovementRequestDTO = req.body;
   financialSpace
     .createOne(dto)

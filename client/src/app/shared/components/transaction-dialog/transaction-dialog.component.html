@@ -17,7 +17,7 @@
 </div>
 
 <div mat-dialog-content>
-  <form [formGroup]="form">
+  <!-- <form [formGroup]="form">
     <mat-stepper linear #stepper [orientation]="'vertical'">
       <mat-step [editable]="true" [stepControl]="form.controls.amount">
         <ng-template matStepLabel>Set the amount</ng-template>
@@ -38,12 +38,29 @@
             />
           </mat-form-field>
         </div>
-        <!-- <div>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="amount-form-control">
+            <mat-label>Amount</mat-label>
+            <input
+              [class.negative]="type === 'outgoing'"
+              [class.positive]="type === 'incoming'"
+              class="transaction-amount"
+              matInput
+              formControlName="amount"
+              title="amount"
+              prefix="{{ type === 'outgoing' ? '-' : '' }}$ "
+              mask="separator.2"
+              thousandSeparator=","
+              value="0"
+            />
+          </mat-form-field>
+        </div>
+        <div>
           <button mat-button mat-dialog-close [disabled]="fetching">
             Close
           </button>
           <button mat-button matStepperNext>Next</button>
-        </div> -->
+        </div>
       </mat-step>
       <mat-step [editable]="true" [stepControl]="form.controls.categories">
         <ng-template matStepLabel>Choose a category</ng-template>
@@ -91,13 +108,13 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
-        <!-- <div>
+        <div>
           <button mat-button mat-dialog-close [disabled]="fetching">
             Close
           </button>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button (click)="stepper.reset()">Reset</button>
-        </div> -->
+        </div>
       </mat-step>
       <mat-step
         [editable]="true"
@@ -115,18 +132,18 @@
             >
           </mat-form-field>
         </div>
-        <!-- <div>
+        <div>
           <button mat-button mat-dialog-close [disabled]="fetching">
             Close
           </button>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
-        </div> -->
+        </div>
       </mat-step>
     </mat-stepper>
-  </form>
+  </form> -->
 
-  <!-- <form [formGroup]="form">
+  <form [formGroup]="form">
     <div class="form-row">
       <mat-form-field appearance="outline" class="amount-form-control">
         <mat-label>Amount</mat-label>
@@ -198,7 +215,7 @@
         </mat-autocomplete>
       </mat-form-field>
     </div>
-  </form> -->
+  </form>
 </div>
 <!-- <div mat-dialog-actions align="end">
   <button mat-button mat-dialog-close [disabled]="fetching">Close</button>

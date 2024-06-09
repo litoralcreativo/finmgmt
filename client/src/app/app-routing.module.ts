@@ -24,7 +24,7 @@ const routes: Routes = [
     path: 'spaces',
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('./accounts/accounts.module').then((m) => m.AccountsModule),
+      import('./spaces/spaces.module').then((m) => m.SpacesModule),
   },
 ];
 

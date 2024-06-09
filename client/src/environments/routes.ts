@@ -21,4 +21,8 @@ export const routes = {
     byId: (id: string) => `${environment.apiUrl}/account/${id}`,
     setFavorite: (id: string) => `${environment.apiUrl}/account/fav/${id}`,
   },
+  spaces: {
+    all: `${environment.apiUrl}/spaces`,
+    byId: (id: string) => `${environment.apiUrl}/spaces/${id}`,
+  },
 };

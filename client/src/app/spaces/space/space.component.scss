@@ -1,0 +1,12 @@
+mat-card.space-card {
+  -webkit-user-select: none;
+  user-select: none;
+  overflow: hidden;
+
+  mat-card-footer {
+    mat-toolbar {
+      height: auto;
+      font-size: 1em;
+    }
+  }
+}
