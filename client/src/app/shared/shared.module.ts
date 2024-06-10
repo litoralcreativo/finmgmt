@@ -9,11 +9,13 @@ import { TransactionDialogComponent } from './components/transaction-dialog/tran
 import { NumericInputDirective } from './directives/numeric-input.directive';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { FavComponent } from './components/fav/fav.component';
 @NgModule({
   declarations: [
     SkeletonLoaderDirective,
     TransactionDialogComponent,
     NumericInputDirective,
+    FavComponent,
   ],
   imports: [
     CommonModule,

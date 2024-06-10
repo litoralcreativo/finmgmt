@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import { router as authRouter } from "./controllers/auth.routes";
 import { router as accountRouter } from "./controllers/account.routes";
-import { router as movementRouter } from "./controllers/movement.routes";
+import { router as transactionRouter } from "./controllers/transaction.routes";
 import { router as scopeRouter } from "./controllers/financialScope.route";
 import { swaggerSpec } from "./swagger";
 import { requireAuth } from "./middlewares/autenticate.middleware";
@@ -41,7 +41,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/auth", authRouter);
 app.use("/account", accountRouter);
-app.use("/movement", requireAuth, movementRouter);
+app.use("/transaction", requireAuth, transactionRouter);
 app.use("/scopes", requireAuth, scopeRouter);
 
 app.all("*", (req, res) => {

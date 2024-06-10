@@ -8,10 +8,4 @@ router.get("/", validatePagination, getAllScope);
 
 router.get("/:id", getScopeById);
 
-/* router.post("/", createMovement);
-
-router.put("/:id", updateMovementById);
-
-router.delete("/:id", deleteMovementById); */
-
 export { router };

@@ -7,7 +7,7 @@ export type FinancialScope = {
   icon: string;
   name: string;
   shared: boolean;
-  cateogries: Category;
+  categories: Category[];
 };
 
 export type Category = {
