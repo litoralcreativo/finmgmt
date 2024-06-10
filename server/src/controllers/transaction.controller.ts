@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Filter, ObjectId } from "mongodb";
+import { Filter, ObjectId, SortDirection } from "mongodb";
 import { DbManager } from "../../bdd/db";
 import {
   Transaction,
@@ -17,6 +17,7 @@ import {
   throwError,
 } from "rxjs";
 import { AccountService } from "../services/account.service";
+import { Account } from "../models/account.model";
 
 let transactionService: TransactionService;
 DbManager.getInstance().subscribe((x) => {
@@ -84,13 +85,18 @@ export const getPaginatedTransactionByAccountId = (
       };
     }
 
+    let dateDirection: SortDirection = -1;
+    let idDirection: SortDirection = -1;
+    const sort = { date: dateDirection, _id: idDirection }; // Ordenar por fecha descendente
+
     transactionService
       .getAll(
         {
           page: parseInt(page as string),
           pageSize: parseInt(pageSize as string),
         },
-        filter
+        filter,
+        sort
       )
       .subscribe((val) => res.json(val));
   } catch (error: any) {
@@ -140,9 +146,16 @@ export const createTransaction = async (req: Request, res: Response) => {
     const $getAccount = accountService.getById(account_id);
     const $getScope = financialScope.getById(scopeId);
 
+    let account: Account;
+
     await firstValueFrom($getAccount)
-      .then((res) => {
-        insertion.account_id = account_id;
+      .then((result) => {
+        if (result) {
+          insertion.account_id = account_id;
+          account = result;
+        } else {
+          Responses.BadRequest(res, "The account doesn't exist");
+        }
       })
       .catch((err) => Responses.BadRequest(res, "The account doesn't exist"));
 
@@ -175,48 +188,31 @@ export const createTransaction = async (req: Request, res: Response) => {
       })
       .catch((err) => Responses.BadRequest(res, err.message));
 
-    transactionService.createOne(insertion);
+    /* await firstValueFrom(transactionService.createOne(insertion))
+      .then((val) => {})
+      .catch((err) => Responses.BadRequest(res, "Not inserted")); */
 
-    /* $getScope
-      .pipe(
-        switchMap((scopeData) => {
-          if (!scopeData) {
-            return throwError(() => new Error("The scope doesn't exist"));
-          }
+    await firstValueFrom(transactionService.createOne(insertion))
+      .then((val) => {
+        if (!val) {
+          return res.status(404).json({ message: "Not inserted" });
+        }
+      })
+      .catch((err) => Responses.BadRequest(res, err.message));
 
-          const category = scopeData.categories.find(
-            (x) => x.name === categoryName
-          );
+    const acountAmount = await firstValueFrom(
+      transactionService.getAccountAmount(account_id)
+    );
 
-          if (!category) {
-            return throwError(
-              () => new Error("The category doesn't exist in the scope")
-            );
-          }
+    const updated = await firstValueFrom(
+      accountService.updateOneById(account_id, {
+        amount: acountAmount.totalAmount,
+      })
+    );
 
-          insertion.scope = {
-            _id: scopeId,
-            name: scopeData.name,
-            icon: scopeData.icon,
-            category: {
-              name: category.name,
-              icon: category.icon,
-              fixed: category.fixed,
-            },
-          };
-
-          return transactionService.createOne(insertion);
-        }),
-        catchError((error) => {
-          return throwError(
-            () => new Error(error.message || "An error occurred")
-          );
-        })
-      )
-      .subscribe({
-        next: (val: any) => res.status(200).send(val),
-        error: (error) => Responses.BadRequest(res, error.message),
-      }); */
+    return res.status(200).json({
+      ...new ResponseStrategy(200, "inserted"),
+    });
   } catch (error: any) {
     res.status(500).json({
       ...new ResponseStrategy(500, error.toString()),
@@ -247,7 +243,7 @@ export const createTransaction = async (req: Request, res: Response) => {
   });
 }; */
 
-export const deleteTransactionById = (req: Request, res: Response) => {
+/* export const deleteTransactionById = (req: Request, res: Response) => {
   const id = req.params.id;
   transactionService.deleteOne(id).subscribe((result) => {
     if (!result.acknowledged) {
@@ -262,4 +258,4 @@ export const deleteTransactionById = (req: Request, res: Response) => {
       }
     }
   });
-};
+}; */

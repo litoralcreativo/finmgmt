@@ -20,6 +20,8 @@
     "@angular/platform-browser": "~12.2.0",
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
+    "@types/date-fns": "^2.6.0",
+    "date-fns": "^3.6.0",
     "lito-fr": "^0.0.2",
     "ngx-mask": "^13.2.2",
     "rxjs": "~6.6.0",

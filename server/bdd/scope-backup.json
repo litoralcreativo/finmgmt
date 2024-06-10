@@ -1,0 +1,87 @@
+{
+  "_id": {
+    "$oid": "6667279d54f92ff170372f34"
+  },
+  "creator": "6657d60bf9528798a3b520c8",
+  "users": ["6657d60bf9528798a3b520c8"],
+  "icon": "home",
+  "name": "Hogar",
+  "shared": true,
+  "categories": [
+    {
+      "name": "Luz",
+      "icon": "electrical_services",
+      "fixed": true
+    },
+    {
+      "name": "Gas",
+      "icon": "local_fire_department",
+      "fixed": true
+    },
+    {
+      "name": "Impuestos municipal",
+      "icon": "receipt_long",
+      "fixed": true
+    },
+    {
+      "name": "Impuesto provincial",
+      "icon": "receipt_long",
+      "fixed": true
+    },
+    {
+      "name": "Monica",
+      "icon": "person",
+      "fixed": true
+    },
+    {
+      "name": "Internet",
+      "icon": "cloud",
+      "fixed": true
+    },
+    {
+      "name": "Comida",
+      "icon": "restaurant",
+      "fixed": false
+    },
+    {
+      "name": "Supermercado",
+      "icon": "shopping_cart",
+      "fixed": false
+    },
+    {
+      "name": "Arreglos",
+      "icon": "construction",
+      "fixed": false
+    },
+    {
+      "name": "Suscripciones",
+      "icon": "subscriptions",
+      "fixed": false
+    },
+    {
+      "name": "Comida mascotas",
+      "icon": "pets",
+      "fixed": false
+    },
+    {
+      "name": "OS Mascotas",
+      "icon": "pets",
+      "fixed": false
+    },
+    {
+      "name": "Delivery",
+      "icon": "takeout_dining",
+      "fixed": false
+    },
+    {
+      "name": "Club",
+      "icon": "groups",
+      "fixed": false
+    },
+    {
+      "name": "Otro",
+      "icon": "more_horiz",
+      "fixed": false
+    }
+  ]
+}

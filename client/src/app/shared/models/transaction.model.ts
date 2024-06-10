@@ -1,17 +1,36 @@
+import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 import {
   Account,
   AccountData,
   AccountType,
   ACCOUNT_TYPES,
 } from './accountData.model';
+import { Category } from './category.model';
+import { Scope } from './scope.model';
 
 export type TransactionType = 'incoming' | 'outgoing' | undefined;
 
 export abstract class Transaction {
+  private _scope: Scope;
+  public get scope(): Scope {
+    return this._scope;
+  }
+
+  private _category: Category;
+  public get category(): Category {
+    return this._category;
+  }
+
   private _description: string;
   public get description(): string {
     return this._description;
   }
+
+  private _date: Date;
+  public get date(): Date {
+    return this._date;
+  }
+
   private _amount: number;
   public get amount(): number {
     return this._amount;
@@ -48,6 +67,7 @@ export abstract class Transaction {
     this.destination = account;
     return true;
   }
+
   /**
    * Set the account from where the transaction will be carried out
    * @param account the origin account
@@ -68,11 +88,31 @@ export abstract class Transaction {
   setDescription(description: string) {
     this._description = description;
   }
+
   setAmount(amount: number) {
-    // If is an outgoing transaction and the value is positive, change the sign
-    // because is a transaction where the origin is sending some money
-    if (this.type === 'outgoing' && amount > 0) amount *= -1;
+    if (typeof amount !== 'number') throw new Error('Amount must be a number');
+
+    if (this.type === 'outgoing' && amount > 0)
+      // If is an outgoing transaction and the value is positive, change the sign
+      // because is a transaction where the origin is sending some money
+      amount *= -1;
     this._amount = amount;
+  }
+
+  setDate(date: Date) {
+    if (!(date instanceof Date) || isNaN(date.getTime()))
+      throw new Error('parameter must be a date');
+
+    this._date = date;
+  }
+
+  setScope(scope: Scope) {
+    if (!(scope instanceof Scope)) throw new Error('parameter must be a scope');
+    this._scope = scope;
+  }
+
+  setCategory(category: Category) {
+    this._category = category;
   }
 
   get symbol(): string {
@@ -85,6 +125,27 @@ export abstract class Transaction {
     if (this.origin && !this.destination) return 'outgoing';
     if (!this.origin && this.destination) return 'incoming';
     return undefined;
+  }
+
+  generateRequest(): TransactionRequestDTO {
+    if (!this.origin && !this.destination)
+      throw new Error('No origin or destination set');
+
+    const accountId = this.origin?.data._id || this.destination?.data._id;
+
+    let tranReq: TransactionRequestDTO = {
+      account_id: accountId,
+      amount: this.amount,
+      description: this.description ?? 'generic transaction',
+      date: this.date.toISOString(),
+      scope: {
+        _id: this.scope.data._id,
+        category: {
+          name: this.category.name,
+        },
+      },
+    };
+    return tranReq;
   }
 }
 
@@ -101,3 +162,35 @@ export class IncomingTransaction extends Transaction {
     this.destination = destination;
   }
 }
+
+export type TransactionResponse = {
+  _id: string;
+  user_id: string;
+  account_id: string;
+  amount: number;
+  description: string;
+  date: Date;
+  scope: {
+    _id: string;
+    name: string;
+    icon: string;
+    category: {
+      name: string;
+      icon: string;
+      fixed: boolean;
+    };
+  };
+};
+
+export type TransactionRequestDTO = {
+  account_id: string;
+  amount: number;
+  description: string;
+  date: string;
+  scope: {
+    _id: string;
+    category: {
+      name: string;
+    };
+  };
+};

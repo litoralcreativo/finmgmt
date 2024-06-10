@@ -12,9 +12,6 @@ section.account-container {
     "center center"
     "left right";
 
-  .grid-area {
-  }
-
   .grid-top {
     grid-area: top;
   }
@@ -46,12 +43,13 @@ section.account-container {
   }
 }
 
-.movements-list-container {
+.transactions-list-container {
   padding: 0;
   -moz-user-select: none;
+  -webkit-user-select: none;
   user-select: none;
 
-  .movements-list-title {
+  .transactions-list-title {
     padding: 1rem 1rem 0 1rem;
   }
 
@@ -60,13 +58,16 @@ section.account-container {
       padding: 0.5rem 1rem;
     }
     width: 100%;
-    .movement-light {
+    .transaction-light {
       color: #999;
     }
-    .movement-left {
+    .transaction-left {
+      margin-right: 1rem;
+    }
+    .transaction-main {
       flex-grow: 1;
     }
-    .movement-right {
+    .transaction-right {
       margin-left: 1rem;
       > * {
         text-align: end;
@@ -83,7 +84,7 @@ section.account-container {
   }
 }
 
-::ng-deep .movements-search-bar {
+::ng-deep .transactions-search-bar {
   padding: 1rem;
   padding-bottom: 0;
   mat-form-field {
@@ -107,5 +108,19 @@ section.account-container {
   gap: 1rem;
   button {
     flex-grow: 1;
+  }
+}
+
+.transaction-scope-category {
+  mat-chip {
+    min-height: auto;
+    padding: 0.8rem;
+    font-size: 18px;
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 18px;
+    }
   }
 }

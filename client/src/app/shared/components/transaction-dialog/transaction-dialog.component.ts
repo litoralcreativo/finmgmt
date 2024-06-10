@@ -16,6 +16,7 @@ import { combineLatest, forkJoin, Observable } from 'rxjs';
 import { Scope } from '../../models/scope.model';
 import { ScopeService } from '../../services/scope.service';
 import { Category } from '../../models/category.model';
+import { TransactionService } from '../../services/transaction.service';
 
 @Component({
   selector: 'app-transaction-dialog',
@@ -39,6 +40,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     public dialogRef: MatDialogRef<TransactionDialogComponent>,
     private accService: AccountService,
     private scopeService: ScopeService,
+    private tranService: TransactionService,
     @Inject(MAT_DIALOG_DATA) public data: Transaction
   ) {
     super();
@@ -101,9 +103,28 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
   }
 
   commit() {
-    const { amount, description } = this.form.value;
+    const { amount, description, date, scope, category } =
+      this.form.getRawValue();
     this.data.setAmount(amount);
     this.data.setDescription(description);
-    this.dialogRef.close();
+    this.data.setDate(date);
+    this.data.setScope(scope);
+    this.data.setCategory(category);
+    const request = this.data.generateRequest();
+
+    this.fetching = true;
+    this.tranService
+      .createTransaction(request)
+      .subscribe({
+        next: (x) => {
+          this.dialogRef.close(true);
+        },
+        error: (err) => {
+          const a = err;
+        },
+      })
+      .add(() => {
+        this.fetching = true;
+      });
   }
 }

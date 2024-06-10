@@ -4,10 +4,16 @@ import { DbManager } from "../../bdd/db";
 import { Account, AccountRequestDTO } from "../models/account.model";
 import { ResponseStrategy } from "../models/response.model";
 import { AccountService } from "../services/account.service";
+import { TransactionService } from "../services/transaction.service";
 
 let accountService: AccountService;
 DbManager.getInstance().subscribe((x) => {
   if (x) accountService = new AccountService(x);
+});
+
+let transactionService: TransactionService;
+DbManager.getInstance().subscribe((x) => {
+  if (x) transactionService = new TransactionService(x);
 });
 
 export const getByUser = (req: Request, res: Response) => {
@@ -110,3 +116,18 @@ export const setFavorite = (req: Request, res: Response) => {
     });
   }
 };
+
+/* export const getAccountAmount = (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    transactionService.getAccountAmount(id).subscribe((result) => {
+      return res.status(200).send(result);
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Internal server error"),
+    });
+  }
+}; */

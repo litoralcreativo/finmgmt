@@ -1,7 +1,13 @@
 import express from "express";
 import { requireAuth } from "../middlewares/autenticate.middleware";
 import validatePagination from "../middlewares/pagination.middleware";
-import { create, getById, getByUser, setFavorite } from "./account.controller";
+import {
+  create,
+  /* getAccountAmount, */
+  getById,
+  getByUser,
+  setFavorite,
+} from "./account.controller";
 import { getPaginatedTransactionByAccountId } from "./transaction.controller";
 
 const router = express.Router();
@@ -16,5 +22,7 @@ router.get(
   validatePagination,
   getPaginatedTransactionByAccountId
 );
+
+/* router.get("/:id/amount", requireAuth, getAccountAmount); */
 
 export { router };

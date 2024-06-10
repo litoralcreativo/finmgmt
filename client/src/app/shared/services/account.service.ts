@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
 import { Account, AccountData } from '../models/accountData.model';
+import { SspResponse } from '../models/sspdata.model';
+import { TransactionResponse } from '../models/transaction.model';
 
 @Injectable({
   providedIn: 'root',
@@ -24,12 +26,6 @@ export class AccountService {
       .subscribe((res) => {
         this.$account.next(res.map((x) => new Account(x)));
       });
-
-    /* return this.http
-      .get<AccountData[]>(routes.account.all, {
-        withCredentials: true,
-      })
-      .pipe(map((accs) => accs.map((acc) => new Account(acc)))); */
   }
 
   createAccount(account: Partial<AccountData>): Observable<any> {
@@ -56,5 +52,22 @@ export class AccountService {
         withCredentials: true,
       }
     );
+  }
+
+  getAccountTransactions(
+    accountId: string
+  ): Observable<SspResponse<TransactionResponse>> {
+    return this.http.get<SspResponse<TransactionResponse>>(
+      routes.account.transactions(accountId),
+      { withCredentials: true }
+    );
+  }
+
+  getAccountAmount(accountId: string): Observable<number> {
+    return this.http
+      .get<{ totalAmount: number }>(routes.account.amount(accountId), {
+        withCredentials: true,
+      })
+      .pipe(map((x) => x.totalAmount));
   }
 }

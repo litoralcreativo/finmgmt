@@ -10,12 +10,14 @@ import { NumericInputDirective } from './directives/numeric-input.directive';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { FavComponent } from './components/fav/fav.component';
+import { FormatDatePipe } from './pipes/format-date.pipe';
 @NgModule({
   declarations: [
     SkeletonLoaderDirective,
     TransactionDialogComponent,
     NumericInputDirective,
     FavComponent,
+    FormatDatePipe,
   ],
   imports: [
     CommonModule,
@@ -31,6 +33,7 @@ import { FavComponent } from './components/fav/fav.component';
     ReactiveFormsModule,
     HttpClientModule,
     SkeletonLoaderDirective,
+    FormatDatePipe,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
 })

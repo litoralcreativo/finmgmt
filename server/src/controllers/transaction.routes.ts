@@ -5,7 +5,7 @@ import {
   getTransactionById,
   createTransaction,
   /* updateTransactionById, */
-  deleteTransactionById,
+  /* deleteTransactionById, */
 } from "./transaction.controller";
 
 const router = express.Router();
@@ -18,6 +18,6 @@ router.post("/", createTransaction);
 
 /* router.put("/:id", updateTransactionById); */
 
-router.delete("/:id", deleteTransactionById);
+/* router.delete("/:id", deleteTransactionById); */
 
 export { router };

@@ -5,6 +5,7 @@ import {
   DeleteResult,
   Filter,
   ObjectId,
+  SortDirection,
   UpdateResult,
 } from "mongodb";
 import { forkJoin, from, map, Observable } from "rxjs";
@@ -24,7 +25,8 @@ export abstract class Crud<T extends BSON.Document> {
 
   public getAll(
     pagination?: PaginationRequest,
-    filter?: Filter<T>
+    filter?: Filter<T>,
+    sort: { [key: string]: SortDirection } = {}
   ): Observable<PaginatedType<T> | CountedList<T>> {
     const query = (filter || {}) as Filter<BSON.Document>;
 
@@ -50,7 +52,12 @@ export abstract class Crud<T extends BSON.Document> {
     const limit = pagination ? pagination.pageSize : 10;
 
     getElements$ = from(
-      this.collection.find<T>(query).skip(skip).limit(limit).toArray()
+      this.collection
+        .find<T>(query)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .toArray()
     );
 
     const getCount$ = from(this.collection.countDocuments(query));

@@ -1,0 +1,77 @@
+{
+  "_id": {
+    "$oid": "6667279d54f92ff170372f34"
+  },
+  "creator": "6657d60bf9528798a3b520c8",
+  "users": ["6657d60bf9528798a3b520c8"],
+  "icon": "person",
+  "name": "Personal",
+  "shared": false,
+  "categories": [
+    {
+      "name": "Celular",
+      "icon": "smartphone",
+      "fixed": true
+    },
+    {
+      "name": "Tarjetas",
+      "icon": "credit_card",
+      "fixed": true
+    },
+    {
+      "name": "Actividades",
+      "icon": "fitness_center",
+      "fixed": false
+    },
+    {
+      "name": "Educacion",
+      "icon": "school",
+      "fixed": false
+    },
+    {
+      "name": "Salidas",
+      "icon": "lunch_dining",
+      "fixed": false
+    },
+    {
+      "name": "Salud",
+      "icon": "medication_liquid",
+      "fixed": false
+    },
+    {
+      "name": "Donaciones",
+      "icon": "volunteer_activism",
+      "fixed": false
+    },
+    {
+      "name": "Regalos",
+      "icon": "redeem",
+      "fixed": false
+    },
+    {
+      "name": "Indumentaria",
+      "icon": "checkroom",
+      "fixed": false
+    },
+    {
+      "name": "Lapachales",
+      "icon": "agriculture",
+      "fixed": false
+    },
+    {
+      "name": "Inversiones",
+      "icon": "ssid_chart",
+      "fixed": false
+    },
+    {
+      "name": "Ahorro",
+      "icon": "savings",
+      "fixed": false
+    },
+    {
+      "name": "Otro",
+      "icon": "more_horiz",
+      "fixed": false
+    }
+  ]
+}

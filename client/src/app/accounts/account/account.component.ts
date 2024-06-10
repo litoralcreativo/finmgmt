@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionDialogComponent } from 'src/app/shared/components/transaction-dialog/transaction-dialog.component';
 import { Account, AccountData } from 'src/app/shared/models/accountData.model';
-import { Movement } from 'src/app/shared/models/movement.model';
 import {
   IncomingTransaction,
   OutgoingTransaction,
   Transaction,
+  TransactionResponse,
 } from 'src/app/shared/models/transaction.model';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
@@ -20,15 +20,16 @@ import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 export class AccountComponent extends FetchingFlag implements OnInit {
   accountId: string;
   account: Account;
-  movimientos: ({ type: string } & Movement)[];
+  transactions: TransactionResponse[];
 
   constructor(
+    private router: Router,
     private aRoute: ActivatedRoute,
     private accService: AccountService,
     private dialog: MatDialog
   ) {
     super();
-    this.movimientos = [
+    /* this.movimientos = [
       {
         description: 'Cadete',
         type: 'Outgoing transfer',
@@ -89,7 +90,7 @@ export class AccountComponent extends FetchingFlag implements OnInit {
         date: new Date(),
         amount: 27500.67,
       },
-    ];
+    ]; */
   }
 
   ngOnInit(): void {
@@ -98,9 +99,24 @@ export class AccountComponent extends FetchingFlag implements OnInit {
       if (!id) throw new Error('No accountId provided');
 
       this.accountId = id;
-      this.accService.getById(this.accountId).subscribe((acc) => {
-        this.account = acc;
-      });
+      this.getAccountData();
+      this.getAccountTransactions();
+    });
+  }
+
+  getAccountData() {
+    if (!this.accountId) throw new Error('No account id provided');
+
+    this.accService.getById(this.accountId).subscribe((acc) => {
+      this.account = acc;
+    });
+  }
+
+  getAccountTransactions() {
+    if (!this.accountId) throw new Error('No account id provided');
+
+    this.accService.getAccountTransactions(this.accountId).subscribe((res) => {
+      this.transactions = res.elements;
     });
   }
 
@@ -123,9 +139,30 @@ export class AccountComponent extends FetchingFlag implements OnInit {
         transaction = new OutgoingTransaction(this.account);
         break;
     }
-    this.dialog.open<TransactionDialogComponent>(TransactionDialogComponent, {
-      data: transaction,
-      width: '500px',
+    this.dialog
+      .open<TransactionDialogComponent>(TransactionDialogComponent, {
+        data: transaction,
+        width: '500px',
+      })
+      .afterClosed()
+      .subscribe((mustUpdate) => {
+        if (mustUpdate) {
+          this.getAccountData();
+          this.getAccountTransactions();
+          this.accService.getAccounts();
+        }
+      });
+  }
+
+  goToHistory() {
+    this.router.navigate(['history'], {
+      relativeTo: this.aRoute,
+    });
+  }
+
+  navigateBack() {
+    this.router.navigate(['..'], {
+      relativeTo: this.aRoute,
     });
   }
 }

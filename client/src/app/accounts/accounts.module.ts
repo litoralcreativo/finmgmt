@@ -8,6 +8,7 @@ import { AccountCardComponent } from './account-card/account-card.component';
 import { AccountListComponent } from './account-list/account-list.component';
 import { AccountManagmentDialogComponent } from './account-managment-dialog/account-managment-dialog.component';
 import { AccountComponent } from './account/account.component';
+import { AccountHistoryComponent } from './account-history/account-history.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { AccountComponent } from './account/account.component';
     AccountListComponent,
     AccountManagmentDialogComponent,
     AccountComponent,
+    AccountHistoryComponent,
   ],
   imports: [CommonModule, AccountsRoutingModule, SharedModule],
 })

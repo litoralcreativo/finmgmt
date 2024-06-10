@@ -24,6 +24,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -53,6 +54,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatStepperModule,
     MatAutocompleteModule,
     MatDatepickerModule,
+    MatTooltipModule,
   ],
 })
 export class MaterialModule {}

@@ -1,6 +1,10 @@
 <section class="account-container">
   <div class="account-grid">
-    <div class="grid-area grid-top"></div>
+    <div class="grid-area grid-top">
+      <button mat-button (click)="navigateBack()" color="primary">
+        <mat-icon>chevron_left</mat-icon> BACK TO ACCOUNTS
+      </button>
+    </div>
     <div class="grid-area grid-left">
       <mat-card *ngIf="account">
         <mat-card-title
@@ -46,42 +50,57 @@
       </div>
     </div>
     <div class="grid-area grid-right">
-      <div class="mat-card movements-list-container">
-        <h2 class="movements-list-title">Your activity</h2>
+      <div class="mat-card transactions-list-container">
+        <h2 class="transactions-list-title">Your activity</h2>
         <mat-divider></mat-divider>
-        <div class="movements-search-bar">
+        <div class="transactions-search-bar">
           <mat-form-field appearance="outline">
             <mat-label>Search</mat-label>
-            <input matInput />
+            <input matInput title="search" />
             <span matSuffix><mat-icon>search</mat-icon></span>
           </mat-form-field>
         </div>
-        <mat-action-list class="movement-list">
-          <mat-list-item *ngFor="let movimiento of movimientos">
-            <div class="movement-left">
-              <div mat-line>{{ movimiento.description }}</div>
-              <div class="movement-light mat-caption">
-                {{ movimiento.type }}
+        <mat-action-list class="transaction-list">
+          <mat-list-item *ngFor="let transaction of transactions">
+            <div
+              class="transaction-left"
+              matTooltip="{{ transaction.scope.name }}"
+            >
+              <mat-icon class="transaction-scope">{{
+                transaction.scope.icon
+              }}</mat-icon>
+            </div>
+            <div class="transaction-main">
+              <div mat-line>{{ transaction.description }}</div>
+              <div class="transaction-light mat-caption row-flex">
+                <span class="mat-caption">{{
+                  transaction.scope.category.name
+                }}</span>
               </div>
             </div>
-            <div class="movement-right">
+            <div class="transaction-right">
               <div
                 mat-line
-                class="movement-amount"
-                [class.positive]="movimiento.amount > 0"
-                [class.bold]="movimiento.amount > 0"
+                class="transaction-amount"
+                [class.positive]="transaction.amount > 0"
+                [class.bold]="transaction.amount > 0"
               >
-                {{ movimiento.amount > 0 ? "+" : ""
-                }}{{ movimiento.amount | currency : "USD" : "$ " }}
+                {{ transaction.amount > 0 ? "+ " : ""
+                }}{{ transaction.amount | currency : "USD" : "$ " }}
               </div>
-              <div class="movement-date movement-light mat-caption">
-                {{ movimiento.date | date }}
+              <div class="transaction-date transaction-light mat-caption">
+                {{ transaction.date | formatDate }}
               </div>
             </div>
             <mat-divider></mat-divider>
           </mat-list-item>
         </mat-action-list>
-        <button mat-button class="activity-history" color="primary">
+        <button
+          mat-button
+          class="activity-history"
+          color="primary"
+          (click)="goToHistory()"
+        >
           <span>ACTIVITY HISTORY</span>
         </button>
       </div>
