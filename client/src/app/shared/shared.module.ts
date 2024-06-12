@@ -13,6 +13,8 @@ import { FavComponent } from './components/fav/fav.component';
 import { FormatDatePipe } from './pipes/format-date.pipe';
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { MonthlyCategoriesComponent } from './components/monthly-categories/monthly-categories.component';
+import { CategoryDetailModalComponent } from './components/category-detail-modal/category-detail-modal.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     FavComponent,
     FormatDatePipe,
     PieChartComponent,
+    MonthlyCategoriesComponent,
+    CategoryDetailModalComponent,
   ],
   imports: [
     CommonModule,
@@ -40,6 +44,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     SkeletonLoaderDirective,
     FormatDatePipe,
     PieChartComponent,
+    MonthlyCategoriesComponent,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
 })

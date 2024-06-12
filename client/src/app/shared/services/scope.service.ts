@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
 import { Scope, ScopeResponse } from '../models/scope.model';
+import { ScopeAcumulator } from '../models/scopeAcumulator.model';
 
 @Injectable({
   providedIn: 'root',
@@ -38,5 +39,18 @@ export class ScopeService {
         withCredentials: true,
       })
       .pipe(map((acc) => new Scope(acc)));
+  }
+
+  getCategoriesAmount(
+    scopeId: string,
+    year: number,
+    month: number
+  ): Observable<ScopeAcumulator> {
+    return this.http.get<ScopeAcumulator>(
+      `${routes.scopes.categoriesAmount(scopeId)}?year=${year}&month=${month}`,
+      {
+        withCredentials: true,
+      }
+    );
   }
 }

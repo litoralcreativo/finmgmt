@@ -26,6 +26,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [],
@@ -57,6 +58,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatDatepickerModule,
     MatTooltipModule,
     MatPaginatorModule,
+    MatProgressBarModule,
   ],
 })
 export class MaterialModule {}

@@ -86,7 +86,12 @@
     </mat-card>
   </div>
   <div class="grid-area grid-left">
-    <app-pie-chart></app-pie-chart>
+    <!-- <app-pie-chart></app-pie-chart> -->
+    <app-monthly-categories
+      *ngIf="acumulator"
+      [acumulator]="acumulator"
+      (go)="goToMonth($event)"
+    ></app-monthly-categories>
   </div>
   <div class="grid-area grid-right"></div>
 </div>

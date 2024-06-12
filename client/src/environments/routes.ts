@@ -23,10 +23,14 @@ export const routes = {
       `${environment.apiUrl}/account/${id}/transactions`,
     setFavorite: (id: string) => `${environment.apiUrl}/account/fav/${id}`,
     amount: (id: string) => `${environment.apiUrl}/account/${id}/amount`,
+    categoriesAmount: (id: string) =>
+      `${environment.apiUrl}/account/${id}/categories`,
   },
   scopes: {
     all: `${environment.apiUrl}/scopes`,
     byId: (id: string) => `${environment.apiUrl}/scopes/${id}`,
+    categoriesAmount: (id: string) =>
+      `${environment.apiUrl}/scopes/${id}/categories`,
   },
   transactions: {
     all: `${environment.apiUrl}/transaction`,

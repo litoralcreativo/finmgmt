@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionDialogComponent } from 'src/app/shared/components/transaction-dialog/transaction-dialog.component';
+import { AccountAcumulator } from 'src/app/shared/models/accountAcumulator.model';
 import { Account, AccountData } from 'src/app/shared/models/accountData.model';
 import {
   IncomingTransaction,
@@ -21,6 +22,9 @@ export class AccountComponent extends FetchingFlag implements OnInit {
   accountId: string;
   account: Account;
   transactions: TransactionResponse[];
+  acumulator: AccountAcumulator;
+  year: number;
+  month: number;
 
   constructor(
     private router: Router,
@@ -29,71 +33,13 @@ export class AccountComponent extends FetchingFlag implements OnInit {
     private dialog: MatDialog
   ) {
     super();
-    /* this.movimientos = [
-      {
-        description: 'Cadete',
-        type: 'Outgoing transfer',
-        date: new Date(),
-        amount: -2700,
-      },
-      {
-        description: 'Vianda',
-        type: 'Outgoing transfer',
-        date: new Date(),
-        amount: -32400,
-      },
-      {
-        description: 'Rendimientos del día',
-        type: 'Profits',
-        date: new Date(),
-        amount: 24.49,
-      },
-      {
-        description: 'Jornalero',
-        type: 'Outgoing transfer',
-        date: new Date(),
-        amount: -40000,
-      },
-      {
-        description: 'Devolucion elo',
-        type: 'Outgoing transfer',
-        date: new Date(),
-        amount: -30000,
-      },
-      {
-        description: 'Prestamo lari',
-        type: 'Incoming transfer',
-        date: new Date(),
-        amount: 163510.08,
-      },
-      {
-        description: 'Rendimientos del día',
-        type: 'Profits',
-        date: new Date(),
-        amount: 122.01,
-      },
-      {
-        description: 'Devolucion picada con agus',
-        type: 'Incoming transfer',
-        date: new Date(),
-        amount: 4000,
-      },
-      {
-        description: 'Panadería',
-        type: 'QR Payment',
-        date: new Date(),
-        amount: -3300,
-      },
-      {
-        description: 'Saldo previo',
-        type: 'other',
-        date: new Date(),
-        amount: 27500.67,
-      },
-    ]; */
   }
 
   ngOnInit(): void {
+    const date = new Date();
+    this.year = date.getFullYear();
+    this.month = date.getMonth();
+
     this.aRoute.paramMap.subscribe((params) => {
       const id = params.get('accountId');
       if (!id) throw new Error('No accountId provided');
@@ -101,7 +47,16 @@ export class AccountComponent extends FetchingFlag implements OnInit {
       this.accountId = id;
       this.getAccountData();
       this.getAccountTransactions();
+      this.getAcumulator();
     });
+  }
+
+  getAcumulator() {
+    this.accService
+      .getCategoriesAmount(this.accountId, this.year, this.month)
+      .subscribe((res) => {
+        this.acumulator = res;
+      });
   }
 
   getAccountData() {
@@ -117,7 +72,7 @@ export class AccountComponent extends FetchingFlag implements OnInit {
 
     this.accService
       .getAccountTransactions(this.accountId, {
-        paginator: { pageIndex: 0, pageSize: 5 },
+        paginator: { pageIndex: 0, pageSize: 10 },
       })
       .subscribe((res) => {
         this.transactions = res.elements;
@@ -168,5 +123,13 @@ export class AccountComponent extends FetchingFlag implements OnInit {
     this.router.navigate(['..'], {
       relativeTo: this.aRoute,
     });
+  }
+
+  goToMonth(direction: -1 | 1) {
+    const date: Date = new Date(this.year, this.month + direction);
+    this.year = date.getFullYear();
+    this.month = date.getMonth();
+
+    this.getAcumulator();
   }
 }

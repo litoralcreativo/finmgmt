@@ -3,7 +3,7 @@ import { requireAuth } from "../middlewares/autenticate.middleware";
 import validatePagination from "../middlewares/pagination.middleware";
 import {
   create,
-  /* getAccountAmount, */
+  getAccountAmountsByCategory,
   getById,
   getByUser,
   setFavorite,
@@ -22,7 +22,6 @@ router.get(
   validatePagination,
   getPaginatedTransactionByAccountId
 );
-
-/* router.get("/:id/amount", requireAuth, getAccountAmount); */
+router.get("/:id/categories", requireAuth, getAccountAmountsByCategory);
 
 export { router };

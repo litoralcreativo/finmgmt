@@ -10,7 +10,6 @@ import { router as scopeRouter } from "./controllers/financialScope.route";
 import { swaggerSpec } from "./swagger";
 import { requireAuth } from "./middlewares/autenticate.middleware";
 import "./auth";
-/* import MongoStore from "connect-mongo"; */
 
 const app = express();
 const PORT = 3000;
@@ -18,7 +17,7 @@ const PORT = 3000;
 // cors config
 app.use(
   cors({
-    origin: "http://localhost:4200",
+    origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -32,10 +31,6 @@ app.use(
     resave: false,
     saveUninitialized: false,
     name: "app-auth",
-    /* store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      ttl: 24 * 60 * 60, // Tiempo de vida de la sesión en segundos (opcional)
-    }), */
   })
 );
 app.use(passport.initialize());

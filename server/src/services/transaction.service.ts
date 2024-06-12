@@ -39,4 +39,59 @@ export class TransactionService extends Crud<Transaction> {
       })
     );
   }
+
+  getCategoryAmountsByAccount(
+    account_id: string,
+    range: { from: Date; to: Date }
+  ) {
+    const pipeline: Document[] = [
+      {
+        $match: {
+          account_id: account_id,
+          date: {
+            $gte: range.from,
+            $lte: range.to,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$scope",
+          total: { $sum: "$amount" },
+        },
+      },
+    ];
+
+    return from(this.collection.aggregate<any>(pipeline).toArray()).pipe(
+      map((x) => {
+        return x;
+      })
+    );
+  }
+
+  getCategoryAmountsByScope(scope_id: string, range: { from: Date; to: Date }) {
+    const pipeline: Document[] = [
+      {
+        $match: {
+          "scope._id": scope_id,
+          date: {
+            $gte: range.from,
+            $lte: range.to,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$scope.category",
+          total: { $sum: "$amount" },
+        },
+      },
+    ];
+
+    return from(this.collection.aggregate<any>(pipeline).toArray()).pipe(
+      map((x) => {
+        return x;
+      })
+    );
+  }
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
+import { AccountAcumulator } from '../models/accountAcumulator.model';
 import { Account, AccountData } from '../models/accountData.model';
 import { SspPayload, SspResponse } from '../models/sspdata.model';
 import { TransactionResponse } from '../models/transaction.model';
@@ -75,6 +76,21 @@ export class AccountService {
         withCredentials: true,
       })
       .pipe(map((x) => x.totalAmount));
+  }
+
+  getCategoriesAmount(
+    accountId: string,
+    year: number,
+    month: number
+  ): Observable<AccountAcumulator> {
+    return this.http.get<AccountAcumulator>(
+      `${routes.account.categoriesAmount(
+        accountId
+      )}?year=${year}&month=${month}`,
+      {
+        withCredentials: true,
+      }
+    );
   }
 }
 

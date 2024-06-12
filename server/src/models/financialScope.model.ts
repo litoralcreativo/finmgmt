@@ -2,10 +2,10 @@ import { ObjectIdType } from "./objectid.model";
 
 export type FinancialScope = {
   _id: ObjectIdType;
-  creator: string;
-  users: string[];
   icon: string;
   name: string;
+  creator: string;
+  users: string[];
   shared: boolean;
   categories: Category[];
 };

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { BSON, Filter, ObjectId } from "mongodb";
 import { DbManager } from "../../bdd/db";
 import { Account, AccountRequestDTO } from "../models/account.model";
+import { AccountAcumulator } from "../models/accountAcumulator.model";
 import { ResponseStrategy } from "../models/response.model";
 import { AccountService } from "../services/account.service";
 import { TransactionService } from "../services/transaction.service";
@@ -117,17 +118,61 @@ export const setFavorite = (req: Request, res: Response) => {
   }
 };
 
-/* export const getAccountAmount = (req: Request, res: Response) => {
+export const getAccountAmountsByCategory = (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const { year, month } = req.query;
+    let from: Date = new Date();
+    let to: Date = new Date();
 
-    transactionService.getAccountAmount(id).subscribe((result) => {
-      return res.status(200).send(result);
-    });
+    //#region DateRange validations
+    let intYear = parseInt(year as string);
+    if (!year) throw new TypeError("year is not defined");
+    if (isNaN(intYear)) throw new TypeError("year is not a number");
+    if (intYear < 1900 || intYear > 2100)
+      throw new TypeError("year must be between 1900 and 2100");
+
+    let intMonth = parseInt(month as string);
+    if (!month) throw new TypeError("month is not defined");
+    if (isNaN(intMonth)) throw new TypeError("month is not a number");
+    if (intYear < 1900 || intYear > 2100)
+      throw new TypeError("month must be between 0 and 11");
+    //#endregion
+
+    from = new Date(intYear, intMonth);
+    to = new Date(intYear, intMonth + 1);
+    to.setMinutes(to.getMinutes() - 1);
+
+    transactionService
+      .getCategoryAmountsByAccount(id, { from: from, to: to })
+      .subscribe((result) => {
+        const mapped: AccountAcumulator = {
+          year: intYear,
+          month: intMonth,
+          groups: result.map((group) => {
+            return {
+              category: group._id.category,
+              amount: group.total,
+              scope: {
+                _id: group._id._id,
+                icon: group._id.icon,
+                name: group._id.name,
+              },
+            };
+          }),
+        };
+        return res.status(200).send(mapped);
+      });
   } catch (error) {
-    console.error(error);
+    if (error instanceof TypeError) {
+      res.status(400).json({
+        ...new ResponseStrategy(400, error.message),
+      });
+      return;
+    }
+
     res.status(500).json({
       ...new ResponseStrategy(500, "Internal server error"),
     });
   }
-}; */
+};

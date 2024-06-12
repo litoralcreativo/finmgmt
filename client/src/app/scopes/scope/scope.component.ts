@@ -1,7 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AccountAcumulator } from 'src/app/shared/models/accountAcumulator.model';
 import { Category } from 'src/app/shared/models/category.model';
 import { Scope } from 'src/app/shared/models/scope.model';
+import { ScopeAcumulator } from 'src/app/shared/models/scopeAcumulator.model';
 import { ScopeService } from 'src/app/shared/services/scope.service';
 
 @Component({
@@ -15,6 +23,10 @@ export class ScopeComponent implements OnInit {
   scopeCategories: Category[];
   fixed: Category[] = [];
   variable: Category[] = [];
+  acumulator: ScopeAcumulator;
+  year: number;
+  month: number;
+  canGoFoward: boolean = false;
 
   constructor(
     private aRoute: ActivatedRoute,
@@ -22,6 +34,10 @@ export class ScopeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const date = new Date();
+    this.year = date.getFullYear();
+    this.month = date.getMonth();
+
     this.aRoute.paramMap.subscribe((params) => {
       const id = params.get('scopeId');
       if (!id) throw new Error('No accountId provided');
@@ -33,6 +49,23 @@ export class ScopeComponent implements OnInit {
         this.fixed = this.scopeCategories.filter((x) => x.fixed);
         this.variable = this.scopeCategories.filter((x) => !x.fixed);
       });
+      this.getAcumulator();
     });
+  }
+
+  getAcumulator() {
+    this.scopeService
+      .getCategoriesAmount(this.scopeId, this.year, this.month)
+      .subscribe((res) => {
+        this.acumulator = res;
+      });
+  }
+
+  goToMonth(direction: -1 | 1) {
+    const date: Date = new Date(this.year, this.month + direction);
+    this.year = date.getFullYear();
+    this.month = date.getMonth();
+
+    this.getAcumulator();
   }
 }

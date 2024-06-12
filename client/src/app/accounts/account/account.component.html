@@ -48,6 +48,11 @@
           OUTGOING $
         </button>
       </div>
+      <app-monthly-categories
+        *ngIf="acumulator"
+        [acumulator]="acumulator"
+        (go)="goToMonth($event)"
+      ></app-monthly-categories>
     </div>
     <div class="grid-area grid-right">
       <div class="mat-card transactions-list-container">
