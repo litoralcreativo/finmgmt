@@ -11,6 +11,9 @@ import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { FavComponent } from './components/fav/fav.component';
 import { FormatDatePipe } from './pipes/format-date.pipe';
+import { PieChartComponent } from './components/pie-chart/pie-chart.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+
 @NgModule({
   declarations: [
     SkeletonLoaderDirective,
@@ -18,6 +21,7 @@ import { FormatDatePipe } from './pipes/format-date.pipe';
     NumericInputDirective,
     FavComponent,
     FormatDatePipe,
+    PieChartComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +30,7 @@ import { FormatDatePipe } from './pipes/format-date.pipe';
     ReactiveFormsModule,
     HttpClientModule,
     NgxMaskModule.forRoot(),
+    NgApexchartsModule,
   ],
   exports: [
     MaterialModule,
@@ -34,6 +39,7 @@ import { FormatDatePipe } from './pipes/format-date.pipe';
     HttpClientModule,
     SkeletonLoaderDirective,
     FormatDatePipe,
+    PieChartComponent,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
 })

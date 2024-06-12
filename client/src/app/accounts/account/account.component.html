@@ -61,7 +61,10 @@
           </mat-form-field>
         </div>
         <mat-action-list class="transaction-list">
-          <mat-list-item *ngFor="let transaction of transactions">
+          <mat-list-item
+            *ngFor="let transaction of transactions"
+            class="transaction-item"
+          >
             <div
               class="transaction-left"
               matTooltip="{{ transaction.scope.name }}"

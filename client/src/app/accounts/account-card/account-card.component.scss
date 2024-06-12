@@ -16,3 +16,7 @@ mat-card {
     float: right;
   }
 }
+
+::ng-deep mat-card-content.mat-card-content-account {
+  margin-bottom: 0;
+}

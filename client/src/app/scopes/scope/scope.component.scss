@@ -10,3 +10,30 @@ mat-card.scope-card {
     }
   }
 }
+
+.scope-grid {
+  display: grid;
+  grid-gap: 24px;
+  grid-template-columns: 23.125em 1fr;
+  grid-template-areas:
+    "top top"
+    "center center"
+    "left right";
+
+  .grid-top {
+    grid-area: top;
+  }
+  .grid-left {
+    grid-area: left;
+    grid-auto-rows: max-content;
+    grid-gap: 24px;
+    display: grid;
+  }
+  .grid-right {
+    grid-area: right;
+    grid-auto-rows: max-content;
+  }
+  .grid-bottom {
+    grid-area: bottom;
+  }
+}

@@ -10,7 +10,6 @@ import { routes } from 'src/environments/routes';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000';
   private _userData = new BehaviorSubject<PublicUserData | undefined>(
     undefined
   );

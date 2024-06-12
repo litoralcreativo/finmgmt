@@ -53,11 +53,12 @@ section.account-container {
     padding: 1rem 1rem 0 1rem;
   }
 
-  mat-list-item {
+  mat-list-item.transaction-item {
+    width: 100%;
+
     .mat-list-item-content {
       padding: 0.5rem 1rem;
     }
-    width: 100%;
     .transaction-light {
       color: #999;
     }
@@ -65,7 +66,11 @@ section.account-container {
       margin-right: 1rem;
     }
     .transaction-main {
+      width: 0;
       flex-grow: 1;
+      .mat-line {
+        width: 100%;
+      }
     }
     .transaction-right {
       margin-left: 1rem;

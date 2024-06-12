@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
 import { Account, AccountData } from '../models/accountData.model';
-import { SspResponse } from '../models/sspdata.model';
+import { SspPayload, SspResponse } from '../models/sspdata.model';
 import { TransactionResponse } from '../models/transaction.model';
 
 @Injectable({
@@ -55,10 +55,16 @@ export class AccountService {
   }
 
   getAccountTransactions(
-    accountId: string
+    accountId: string,
+    ssp?: SspPayload<TransactionResponse>
   ): Observable<SspResponse<TransactionResponse>> {
+    let sspQuery = '';
+    if (ssp) {
+      sspQuery = '?';
+      sspQuery += generateSspQuery(ssp);
+    }
     return this.http.get<SspResponse<TransactionResponse>>(
-      routes.account.transactions(accountId),
+      routes.account.transactions(accountId) + sspQuery,
       { withCredentials: true }
     );
   }
@@ -70,4 +76,11 @@ export class AccountService {
       })
       .pipe(map((x) => x.totalAmount));
   }
+}
+
+function generateSspQuery(ssp: SspPayload<TransactionResponse>): string {
+  let result = '';
+  result += `page=${ssp.paginator.pageIndex}`;
+  result += `&pageSize=${ssp.paginator.pageSize}`;
+  return result;
 }

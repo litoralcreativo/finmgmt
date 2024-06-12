@@ -1,3 +1,64 @@
 <button mat-button (click)="navigateBack()" color="primary">
   <mat-icon>chevron_left</mat-icon> BACK TO THE ACCOUNT
 </button>
+
+<div class="mat-card transactions-list-container">
+  <h2 class="transactions-list-title">Your activity</h2>
+  <mat-divider></mat-divider>
+  <div class="transactions-search-bar">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input matInput title="search" />
+      <span matSuffix><mat-icon>search</mat-icon></span>
+    </mat-form-field>
+  </div>
+  <mat-action-list class="transaction-list">
+    <mat-list-item
+      *ngFor="let transaction of transactions"
+      class="transaction-item"
+    >
+      <div class="transaction-left" matTooltip="{{ transaction.scope.name }}">
+        <mat-icon class="transaction-scope">{{
+          transaction.scope.icon
+        }}</mat-icon>
+      </div>
+      <div class="transaction-main">
+        <div mat-line>{{ transaction.description }}</div>
+        <div class="transaction-light mat-caption row-flex">
+          <span class="mat-caption">{{ transaction.scope.category.name }}</span>
+        </div>
+      </div>
+      <div class="transaction-right">
+        <div
+          mat-line
+          class="transaction-amount"
+          [class.positive]="transaction.amount > 0"
+          [class.bold]="transaction.amount > 0"
+        >
+          {{ transaction.amount > 0 ? "+ " : ""
+          }}{{ transaction.amount | currency : "USD" : "$ " }}
+        </div>
+        <div class="transaction-date transaction-light mat-caption">
+          {{ transaction.date | formatDate }}
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+    <mat-paginator
+      [length]="0"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page"
+      (page)="onPaginatorChante($event)"
+    >
+    </mat-paginator>
+  </mat-action-list>
+  <!-- <button
+          mat-button
+          class="activity-history"
+          color="primary"
+          (click)="goToHistory()"
+        >
+          <span>ACTIVITY HISTORY</span>
+        </button> -->
+</div>

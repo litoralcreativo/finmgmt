@@ -115,9 +115,13 @@ export class AccountComponent extends FetchingFlag implements OnInit {
   getAccountTransactions() {
     if (!this.accountId) throw new Error('No account id provided');
 
-    this.accService.getAccountTransactions(this.accountId).subscribe((res) => {
-      this.transactions = res.elements;
-    });
+    this.accService
+      .getAccountTransactions(this.accountId, {
+        paginator: { pageIndex: 0, pageSize: 5 },
+      })
+      .subscribe((res) => {
+        this.transactions = res.elements;
+      });
   }
 
   toogleFavorite() {
