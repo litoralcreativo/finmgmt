@@ -28,7 +28,6 @@ export namespace DbManager {
           _instance.next(db);
         },
         error: (err) => {
-          console.log(process.env.MONGODB_URI);
           console.error("Error connecting to MongoDB:", err);
           throw err;
         },

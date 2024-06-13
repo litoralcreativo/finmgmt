@@ -1,9 +1,11 @@
 import passport from "passport";
+import { Strategy as JwtStrategy } from "passport-jwt";
+import { ExtractJwt } from "passport-jwt";
 import { Strategy as LocalStrategy } from "passport-local";
+import bcrypt from "bcrypt";
 import { lastValueFrom } from "rxjs";
 import { DbManager } from "../bdd/db";
 import { UserService } from "./services/user.service";
-import bcrypt from "bcrypt";
 import { User } from "./models/user.model";
 
 let userService: UserService;
@@ -28,10 +30,27 @@ passport.use(
   )
 );
 
-passport.serializeUser((user, done) => {
-  done(null, (user as User)._id);
-});
+const JWT_SECRET = "your_jwt_secret"; // Cambia esto por una clave secreta segura
 
-passport.deserializeUser((id: string, done) => {
-  done(null, { id: id });
-});
+// Estrategia JWT
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: JWT_SECRET,
+};
+
+passport.use(
+  new JwtStrategy(opts, async (jwt_payload, done) => {
+    try {
+      const user = await userService.getById(jwt_payload.id);
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false);
+      }
+    } catch (error) {
+      return done(error, false);
+    }
+  })
+);
+
+module.exports = passport;

@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 import { finalize, tap, switchMap, map } from 'rxjs/operators';
 import { PublicUserData } from '../models/userdata.model';
 import { routes } from 'src/environments/routes';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,16 @@ export class AuthService {
   }
   fetching: boolean;
 
-  constructor(private http: HttpClient, private router: Router) {
+  private authStatusListener: BehaviorSubject<boolean>;
+
+  constructor(
+    private tokenService: TokenService,
+    private http: HttpClient,
+    private router: Router
+  ) {
+    this.authStatusListener = new BehaviorSubject<boolean>(
+      this.tokenService.isAuthenticated()
+    );
     this.fetchUserInfo(true).subscribe();
   }
 
@@ -31,21 +41,20 @@ export class AuthService {
         { withCredentials: true }
       )
       .pipe(
-        finalize(() => {
+        tap((response) => {
           this.fetching = false;
+          const token = (response as any).token;
+          if (token) localStorage.setItem('token', token);
+          this.authStatusListener.next(true);
         })
       );
   }
 
   logout(): void {
-    this.fetching = true;
-    this.http
-      .post(routes.auth.logout, {}, { withCredentials: true })
-      .subscribe((x) => {
-        this.router.navigate(['/']);
-        this.userData.next(undefined);
-        this.fetching = false;
-      });
+    localStorage.removeItem('token');
+    this.authStatusListener.next(false);
+    this.router.navigate(['/']);
+    this.userData.next(undefined);
   }
 
   register(data: {
@@ -60,6 +69,16 @@ export class AuthService {
   fetchUserInfo(
     checkIsAuth: boolean = false
   ): Observable<PublicUserData | undefined> {
+    return this.http
+      .get<PublicUserData>(routes.auth.user, {
+        withCredentials: true,
+      })
+      .pipe(
+        tap((userdata) => {
+          this._userData.next(userdata);
+        })
+      );
+
     const authCheck$ = checkIsAuth
       ? this.http
           .get<boolean>(routes.auth.authenticated, {

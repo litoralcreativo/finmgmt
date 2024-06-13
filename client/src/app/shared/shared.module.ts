@@ -14,7 +14,7 @@ import { FormatDatePipe } from './pipes/format-date.pipe';
 import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MonthlyCategoriesComponent } from './components/monthly-categories/monthly-categories.component';
-import { CategoryDetailModalComponent } from './components/category-detail-modal/category-detail-modal.component';
+import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { CategoryDetailModalComponent } from './components/category-detail-modal
     FormatDatePipe,
     PieChartComponent,
     MonthlyCategoriesComponent,
-    CategoryDetailModalComponent,
+    CategoryDetailComponent,
   ],
   imports: [
     CommonModule,

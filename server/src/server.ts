@@ -24,17 +24,7 @@ app.use(
   })
 );
 
-// session config
-app.use(
-  session({
-    secret: "your_secret_key",
-    resave: false,
-    saveUninitialized: false,
-    name: "app-auth",
-  })
-);
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
