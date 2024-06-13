@@ -1,4 +1,4 @@
-const API_URL: string = 'https://finmgmtapi.vercel.app';
+const API_URL: string = 'https://finmgmt-lhio.onrender.com';
 
 export const environment = {
   production: true,
