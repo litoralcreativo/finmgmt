@@ -1,7 +1,13 @@
 import { Request, Response } from "express";
 import { Filter } from "mongodb";
+import { ZodError } from "zod";
 import { DbManager } from "../../bdd/db";
-import { FinancialScope } from "../models/financialScope.model";
+import { typeValidationCatch } from "../../utils/typeValidationCatch";
+import {
+  FinancialScope,
+  FinancialScopeDTO,
+  FinancialScopeDTOSchema,
+} from "../models/financialScope.model";
 import { ResponseStrategy } from "../models/response.model";
 import {
   ScopeAcumulator,
@@ -92,5 +98,30 @@ export const getScopeAmountsByCategory = (req: Request, res: Response) => {
     res.status(500).json({
       ...new ResponseStrategy(500, "Internal server error"),
     });
+  }
+};
+
+export const createScope = (req: Request, res: Response) => {
+  try {
+    const userId = (req?.user as any).id;
+    const dto: FinancialScopeDTO = req.body;
+
+    const parsed = FinancialScopeDTOSchema.parse(req.body);
+
+    const toBeCreated: Partial<FinancialScope> = {
+      ...dto,
+      creator: userId,
+      users: [userId],
+      categories: [],
+    };
+
+    financialScope.createOne(toBeCreated).subscribe((val: any) => {
+      return res.status(200).json({
+        ...new ResponseStrategy(200, "Successfuly registered"),
+        val,
+      });
+    });
+  } catch (err) {
+    typeValidationCatch(err as Error, res);
   }
 };

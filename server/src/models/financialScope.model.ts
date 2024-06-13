@@ -1,4 +1,5 @@
 import { ObjectIdType } from "./objectid.model";
+import { z } from "zod";
 
 export type FinancialScope = {
   _id: ObjectIdType;
@@ -16,8 +17,10 @@ export type Category = {
   fixed: boolean;
 };
 
-export type FinancialScopeRequestDTO = {
-  account_id: string;
-  amount: number;
-  name: string;
-};
+export const FinancialScopeDTOSchema = z.object({
+  name: z.string(),
+  icon: z.string(),
+  shared: z.boolean(),
+});
+
+export type FinancialScopeDTO = z.infer<typeof FinancialScopeDTOSchema>;
