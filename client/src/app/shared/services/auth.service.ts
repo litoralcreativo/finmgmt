@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { finalize, tap, switchMap, map } from 'rxjs/operators';
+import { finalize, tap, switchMap, map, catchError } from 'rxjs/operators';
 import { PublicUserData } from '../models/userdata.model';
 import { routes } from 'src/environments/routes';
 import { TokenService } from './token.service';
@@ -29,7 +29,7 @@ export class AuthService {
     this.authStatusListener = new BehaviorSubject<boolean>(
       this.tokenService.isAuthenticated()
     );
-    this.fetchUserInfo(true).subscribe();
+    this.fetchUserInfo();
   }
 
   login(username: string, password: string): Observable<any> {
@@ -41,11 +41,20 @@ export class AuthService {
         { withCredentials: true }
       )
       .pipe(
-        tap((response) => {
+        tap((response: any) => {
           this.fetching = false;
           const token = (response as any).token;
           if (token) localStorage.setItem('token', token);
           this.authStatusListener.next(true);
+          this.fetchUserInfo();
+
+          if (response.redirectTo) {
+            this.router.navigate([response.redirectTo]);
+          }
+        }),
+        catchError((err) => {
+          this.fetching = false;
+          throw err;
         })
       );
   }
@@ -63,51 +72,33 @@ export class AuthService {
     firstName: string;
     lastName: string;
   }): Observable<any> {
-    return this.http.post(routes.auth.register, data);
+    return this.http.post(routes.auth.register, data).pipe(
+      tap((response: any) => {
+        this.fetching = false;
+      }),
+      catchError((err) => {
+        this.fetching = false;
+        throw err;
+      })
+    );
   }
 
-  fetchUserInfo(
-    checkIsAuth: boolean = false
-  ): Observable<PublicUserData | undefined> {
-    return this.http
+  private fetchUserInfo() {
+    if (!this.tokenService.getToken()) return;
+
+    this.http
       .get<PublicUserData>(routes.auth.user, {
         withCredentials: true,
       })
-      .pipe(
-        tap((userdata) => {
+      .subscribe({
+        next: (userdata) => {
           this._userData.next(userdata);
-        })
-      );
-
-    const authCheck$ = checkIsAuth
-      ? this.http
-          .get<boolean>(routes.auth.authenticated, {
-            withCredentials: true,
-          })
-          .pipe(
-            map((x: any) => {
-              return x.isAuth;
-            })
-          )
-      : of(true); // We assume the user is autenticated, to try to get its data
-
-    return authCheck$
-      .pipe(
-        switchMap((isAuthenticated) => {
-          if (isAuthenticated) {
-            return this.http.get<PublicUserData>(routes.auth.user, {
-              withCredentials: true,
-            });
-          } else {
-            return of(undefined);
+        },
+        error: (err) => {
+          if (err.error?.logout) {
+            this.logout();
           }
-        })
-      )
-      .pipe(
-        tap((res) => {
-          this.router.navigate(['/dashboard']);
-          this._userData.next(res);
-        })
-      );
+        },
+      });
   }
 }

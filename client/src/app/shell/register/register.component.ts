@@ -27,7 +27,9 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.updateFormDisableState();
+  }
 
   register() {
     if (this.form.invalid) return;
@@ -35,13 +37,18 @@ export class RegisterComponent implements OnInit {
     this.authService
       .register({ email, password, firstName, lastName })
       .subscribe((x) => {
-        if (x.redirectTo) {
-          this.authService.fetchUserInfo().subscribe((user) => {
-            this.router.navigate([x.redirectTo]);
-          });
-        }
         this.dialogRef.close(true);
-      });
+      })
+      .add(() => this.updateFormDisableState());
+    this.updateFormDisableState();
+  }
+
+  updateFormDisableState() {
+    if (this.fetching && this.form.enabled) {
+      this.form.disable();
+    } else if (!this.fetching && this.form.disabled) {
+      this.form.enable();
+    }
   }
 
   changeToLogin() {
@@ -53,6 +60,6 @@ export class RegisterComponent implements OnInit {
   }
 
   public get fetching(): boolean {
-    return this.authService.fetching;
+    return !this.authService.fetching;
   }
 }

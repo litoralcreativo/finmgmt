@@ -1,6 +1,6 @@
 <div class="mat-dialog-title-login" mat-dialog-title>
   <span class="mat-h1" cdkTrapFocus>Login</span>
-  <button mat-icon-button (click)="close()">
+  <button mat-icon-button (click)="close()" [disabled]="fetching">
     <mat-icon>close</mat-icon>
   </button>
 </div>
@@ -40,11 +40,20 @@
     (click)="login()"
     color="primary"
     class="login-btn expand"
+    [disabled]="fetching"
   >
     Sign In
   </button>
   <div class="text-align-center expand">
     Not a member yet?
-    <button mat-button (click)="changeToRegister()">Sign Up</button>
+    <button mat-button (click)="changeToRegister()" [disabled]="fetching">
+      Sign Up
+    </button>
   </div>
 </div>
+
+<ng-container *ngIf="fetching"
+  ><app-loading-panel theme="light" [spinner]="true" [spinnerSize]="40"
+    >Logging</app-loading-panel
+  ></ng-container
+>

@@ -111,7 +111,7 @@ export class ShellComponent implements OnInit {
 
   openLoginDialog() {
     this.dialog
-      .open(LoginComponent, { width: '400px' })
+      .open(LoginComponent, { width: '400px', disableClose: true })
       .afterClosed()
       .subscribe((result) => {
         switch (result) {
@@ -129,7 +129,7 @@ export class ShellComponent implements OnInit {
 
   openRegisterDialog() {
     this.dialog
-      .open(RegisterComponent, { width: '450px' })
+      .open(RegisterComponent, { width: '450px', disableClose: true })
       .afterClosed()
       .subscribe((result) => {
         switch (result) {

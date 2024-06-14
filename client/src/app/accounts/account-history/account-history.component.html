@@ -17,15 +17,21 @@
       *ngFor="let transaction of transactions"
       class="transaction-item"
     >
-      <div class="transaction-left" matTooltip="{{ transaction.scope.name }}">
+      <div
+        class="transaction-left"
+        matTooltip="{{ transaction.scope.category.name }}"
+      >
         <mat-icon class="transaction-scope">{{
-          transaction.scope.icon
+          transaction.scope.category.icon
         }}</mat-icon>
       </div>
       <div class="transaction-main">
         <div mat-line>{{ transaction.description }}</div>
         <div class="transaction-light mat-caption row-flex">
-          <span class="mat-caption">{{ transaction.scope.category.name }}</span>
+          <span class="mat-caption"
+            >{{ transaction.scope.name | uppercase }} -
+            {{ transaction.scope.category.name }}</span
+          >
         </div>
       </div>
       <div class="transaction-right">

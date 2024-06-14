@@ -73,7 +73,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {
   try {
-    res.clearCookie("app-auth");
+    // res.clearCookie("app-auth");
     res.status(200).json({
       timestamp: Date.now(),
       msg: "Logged out successfully",

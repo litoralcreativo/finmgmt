@@ -25,19 +25,28 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.updateFormDisableState();
+  }
 
   login() {
     if (this.form.invalid) return;
     const { username, password } = this.form.value;
-    this.authService.login(username, password).subscribe((x) => {
-      if (x.redirectTo) {
-        this.authService.fetchUserInfo().subscribe((user) => {
-          this.router.navigate([x.redirectTo]);
-        });
-      }
-      this.dialogRef.close('ok');
-    });
+    this.authService
+      .login(username, password)
+      .subscribe((x) => {
+        this.dialogRef.close('ok');
+      })
+      .add(() => this.updateFormDisableState());
+    this.updateFormDisableState();
+  }
+
+  updateFormDisableState() {
+    if (this.fetching && this.form.enabled) {
+      this.form.disable();
+    } else if (!this.fetching && this.form.disabled) {
+      this.form.enable();
+    }
   }
 
   changeToRegister() {

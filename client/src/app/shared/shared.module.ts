@@ -15,6 +15,7 @@ import { PieChartComponent } from './components/pie-chart/pie-chart.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MonthlyCategoriesComponent } from './components/monthly-categories/monthly-categories.component';
 import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
+import { LoadingPanelComponent } from './components/loading-panel/loading-panel.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { CategoryDetailComponent } from './components/category-detail/category-d
     PieChartComponent,
     MonthlyCategoriesComponent,
     CategoryDetailComponent,
+    LoadingPanelComponent,
   ],
   imports: [
     CommonModule,
@@ -45,6 +47,7 @@ import { CategoryDetailComponent } from './components/category-detail/category-d
     FormatDatePipe,
     PieChartComponent,
     MonthlyCategoriesComponent,
+    LoadingPanelComponent,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
 })

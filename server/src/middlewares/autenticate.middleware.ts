@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
+import e, { Request, Response, NextFunction } from "express";
 import { ResponseStrategy } from "../models/response.model";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 
 const secretKey = process.env.JWT_SECRET || "your-secret-key";
 
@@ -22,10 +22,18 @@ export const requireAuth = (
 
   jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return res.status(403).json({
-        code: 403,
-        msg: "Access denied",
-      });
+      if (err instanceof TokenExpiredError) {
+        return res.status(401).json({
+          code: 401,
+          msg: "Session expired",
+          logout: true,
+        });
+      } else {
+        return res.status(403).json({
+          code: 403,
+          msg: "Access denied",
+        });
+      }
     }
 
     // Attach the decoded user info to the request object
