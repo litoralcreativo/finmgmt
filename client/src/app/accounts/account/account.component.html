@@ -6,8 +6,8 @@
       </button>
     </div>
     <div class="grid-area grid-left">
-      <mat-card *ngIf="account">
-        <mat-card-title
+      <mat-card *ngIf="!fetchingAccount; else fetchingAccountCard">
+        <mat-card-title style="width: 100%"
           ><span>{{ account.data.name }}</span>
           <span>
             <mat-icon
@@ -22,10 +22,10 @@
         <mat-card-subtitle>{{ account.data.type }}</mat-card-subtitle>
         <mat-card-content>
           <h2
-            [class.positive]="account.data.amount > 0"
-            [class.bluish]="account.data.symbol === 'USD'"
-            [class.negative]="account.data.amount < 0"
-            [class.zerotive]="account.data.amount == 0"
+            [class.positive]="!fetchingAccount && account.data.amount > 0"
+            [class.bluish]="!fetchingAccount && account.data.symbol === 'USD'"
+            [class.negative]="!fetchingAccount && account.data.amount < 0"
+            [class.zerotive]="!fetchingAccount && account.data.amount == 0"
           >
             {{ account.data.amount | currency }}
             <span class="mat-caption">{{ account.data.symbol }}</span>
@@ -35,27 +35,34 @@
       <div class="account-card-actions">
         <button
           mat-button
-          class="mat-elevation-z1 positive"
+          class="mat-elevation-z1"
           (click)="openTransactionDialog('in')"
+          [disabled]="fetchingAccount"
+          [class.positive]="!fetchingAccount"
         >
           INCOMING $
         </button>
         <button
           mat-button
-          class="mat-elevation-z1 negative"
+          class="mat-elevation-z1"
           (click)="openTransactionDialog('out')"
+          [disabled]="fetchingAccount"
+          [class.negative]="!fetchingAccount"
         >
           OUTGOING $
         </button>
       </div>
       <app-monthly-categories
-        *ngIf="acumulator"
+        *ngIf="acumulator && !fetchingAcumulator; else fetchingAcumulatorCard"
         [acumulator]="acumulator"
         (go)="goToMonth($event)"
       ></app-monthly-categories>
     </div>
     <div class="grid-area grid-right">
-      <div class="mat-card transactions-list-container">
+      <div
+        class="mat-card transactions-list-container"
+        *ngIf="!fetchingTransactions; else fetchingTransactionsCard"
+      >
         <h2 class="transactions-list-title">Your activity</h2>
         <mat-divider></mat-divider>
         <div class="transactions-search-bar">
@@ -117,3 +124,52 @@
     <div class="grid-area grid-bottom"></div>
   </div>
 </section>
+
+<ng-template #fetchingAccountCard>
+  <mat-card [appSkeletonLoader]="true">
+    <mat-card-title>
+      <span>Placeholder</span>
+    </mat-card-title>
+    <mat-card-subtitle>placeholder</mat-card-subtitle>
+    <mat-card-content>
+      <h2>
+        {{ 100000.55 | currency }}
+        <span class="mat-caption">USD</span>
+      </h2>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+
+<ng-template #fetchingAcumulatorCard>
+  <div [appSkeletonLoader]="true">
+    <h1>Placeholder</h1>
+    <p style="width: fit-content">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis, quae
+      architecto optio sapiente aperiam in sequi, laboriosam, expedita
+      doloremque adipisci pariatur distinctio et? Nisi, dignissimos provident
+      modi consequatur eum quod.
+    </p>
+    <p>Lorem ipsum dolor</p>
+    <p>Lorem ipsum</p>
+    <p>Lorem ipsum dolor sit amet</p>
+  </div>
+</ng-template>
+
+<ng-template #fetchingTransactionsCard>
+  <mat-card>
+    <mat-card-title [appSkeletonLoader]="true">
+      <h1>Placeholder</h1>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <br />
+    <mat-card-content>
+      <div
+        *ngFor="let transaction of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]"
+        [appSkeletonLoader]="true"
+      >
+        <h1>Lorem ipsum dolor sit amet consectetur adipisicing</h1>
+        <p>Placeholder placeholder</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

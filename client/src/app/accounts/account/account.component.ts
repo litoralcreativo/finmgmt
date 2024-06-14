@@ -3,7 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionDialogComponent } from 'src/app/shared/components/transaction-dialog/transaction-dialog.component';
 import { AccountAcumulator } from 'src/app/shared/models/accountAcumulator.model';
-import { Account, AccountData } from 'src/app/shared/models/accountData.model';
+import {
+  Account,
+  AccountData,
+  AccountType,
+} from 'src/app/shared/models/accountData.model';
 import {
   IncomingTransaction,
   OutgoingTransaction,
@@ -18,7 +22,7 @@ import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
 })
-export class AccountComponent extends FetchingFlag implements OnInit {
+export class AccountComponent implements OnInit {
   accountId: string;
   account: Account;
   transactions: TransactionResponse[];
@@ -26,14 +30,16 @@ export class AccountComponent extends FetchingFlag implements OnInit {
   year: number;
   month: number;
 
+  fetchingAccount: boolean = false;
+  fetchingAcumulator: boolean = false;
+  fetchingTransactions: boolean = false;
+
   constructor(
     private router: Router,
     private aRoute: ActivatedRoute,
     private accService: AccountService,
     private dialog: MatDialog
-  ) {
-    super();
-  }
+  ) {}
 
   ngOnInit(): void {
     const date = new Date();
@@ -52,31 +58,39 @@ export class AccountComponent extends FetchingFlag implements OnInit {
   }
 
   getAcumulator() {
+    this.fetchingAcumulator = true;
     this.accService
       .getCategoriesAmount(this.accountId, this.year, this.month)
       .subscribe((res) => {
         this.acumulator = res;
-      });
+      })
+      .add(() => (this.fetchingAcumulator = false));
   }
 
   getAccountData() {
     if (!this.accountId) throw new Error('No account id provided');
 
-    this.accService.getById(this.accountId).subscribe((acc) => {
-      this.account = acc;
-    });
+    this.fetchingAccount = true;
+    this.accService
+      .getById(this.accountId)
+      .subscribe((acc) => {
+        this.account = acc;
+      })
+      .add(() => (this.fetchingAccount = false));
   }
 
   getAccountTransactions() {
     if (!this.accountId) throw new Error('No account id provided');
 
+    this.fetchingTransactions = true;
     this.accService
       .getAccountTransactions(this.accountId, {
         paginator: { pageIndex: 0, pageSize: 10 },
       })
       .subscribe((res) => {
         this.transactions = res.elements;
-      });
+      })
+      .add(() => (this.fetchingTransactions = false));
   }
 
   toogleFavorite() {

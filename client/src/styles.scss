@@ -96,3 +96,28 @@ body {
     filter: grayscale(1) !important;
   }
 }
+
+.skeleton-loader {
+  -webkit-user-select: none;
+  user-select: none;
+  background-color: #eee;
+  border-radius: 4px !important;
+  display: block !important;
+  line-height: 1 !important;
+  animation: skeleton-loading 1.2s infinite ease-in-out !important;
+  color: transparent !important;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: #eee;
+  }
+  50% {
+    background-color: #ddd;
+  }
+  100% {
+    background-color: #eee;
+  }
+}

@@ -20,18 +20,24 @@ export class SymbolChangeService {
   }
 
   fetchCurrencyData() {
-    this.http.get<SymbolChangeResponse>(routes.currency.mep).subscribe((x) => {
-      this.prices.set('MEP', {
-        compra: parseFloat(x.compra.replace(',', '.')),
-        venta: parseFloat(x.venta.replace(',', '.')),
-        fecha: new Date(x.fecha.replace(' ', '')),
-        variacion: parseFloat(x.variacion.replace(',', '.')),
-        'class-variacion': x['class-variacion'],
+    this.http
+      .get<SymbolChangeResponse>(routes.currency.mep, {
+        headers: { 'on-error': 'skip-notify' },
+      })
+      .subscribe((x) => {
+        this.prices.set('MEP', {
+          compra: parseFloat(x.compra.replace(',', '.')),
+          venta: parseFloat(x.venta.replace(',', '.')),
+          fecha: new Date(x.fecha.replace(' ', '')),
+          variacion: parseFloat(x.variacion.replace(',', '.')),
+          'class-variacion': x['class-variacion'],
+        });
       });
-    });
 
     this.http
-      .get<SymbolChangeResponse>(routes.currency.cripto)
+      .get<SymbolChangeResponse>(routes.currency.cripto, {
+        headers: { 'on-error': 'skip-notify' },
+      })
       .subscribe((x) => {
         this.prices.set('CRIPTO', {
           compra: parseFloat(x.compra.replace(',', '.')),
@@ -43,7 +49,9 @@ export class SymbolChangeService {
       });
 
     this.http
-      .get<SymbolChangeResponse>(routes.currency.informal)
+      .get<SymbolChangeResponse>(routes.currency.informal, {
+        headers: { 'on-error': 'skip-notify' },
+      })
       .subscribe((x) => {
         this.prices.set('INFORMAL', {
           compra: parseFloat(x.compra.replace(',', '.')),

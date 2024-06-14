@@ -1,6 +1,7 @@
 import {
   Directive,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   Renderer2,
@@ -11,11 +12,20 @@ import {
 })
 export class SkeletonLoaderDirective implements OnInit, OnDestroy {
   private skeletonClass = 'skeleton-loader';
+  @Input() appSkeletonLoader: boolean = true;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
   ngOnInit() {
     this.addSkeletonClass();
+  }
+
+  ngOnChanges() {
+    if (this.appSkeletonLoader) {
+      this.addSkeletonClass();
+    } else {
+      this.removeSkeletonClass();
+    }
   }
 
   ngOnDestroy() {

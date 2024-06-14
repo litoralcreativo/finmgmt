@@ -34,7 +34,7 @@
 <ng-template #fetchingTemplate>
   <div class="account-group">
     <div class="acounts-grid">
-      <mat-card appSkeletonLoader>
+      <mat-card [appSkeletonLoader]="true">
         <mat-card-title>Skeleton card</mat-card-title>
         <mat-card-subtitle>example</mat-card-subtitle>
         <mat-card-content>

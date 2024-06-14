@@ -35,6 +35,8 @@ export class AuthInterceptor implements HttpInterceptor {
           return res;
         },
         error: (errorResponse: HttpErrorResponse) => {
+          const onError = req.headers.get('on-error');
+          if (onError === 'skip-notify') return;
           this._snackBar.open(`${errorResponse.error.msg}`, '✖', {
             horizontalPosition: 'start',
             verticalPosition: 'bottom',
