@@ -15,11 +15,14 @@
               *ngFor="let category of fixed"
               color="{{ category.fixed ? 'primary' : 'accent' }}"
               selected
+              (click)="editCategory(category)"
             >
               <mat-icon>{{ category.icon }}</mat-icon
               >&nbsp;{{ category.name }}
             </mat-chip>
-            <button mat-icon-button><mat-icon>add</mat-icon></button>
+            <button mat-icon-button (click)="addCategory(true)">
+              <mat-icon>add</mat-icon>
+            </button>
           </mat-chip-list>
           <mat-divider inset></mat-divider>
           <mat-chip-list #chipList aria-label="Category selection" multiple>
@@ -28,10 +31,14 @@
               *ngFor="let category of variable"
               color="{{ category.fixed ? 'primary' : 'accent' }}"
               selected
+              (click)="editCategory(category)"
             >
               <mat-icon>{{ category.icon }}</mat-icon
               >&nbsp;{{ category.name }}
             </mat-chip>
+            <button mat-icon-button (click)="addCategory(false)">
+              <mat-icon>add</mat-icon>
+            </button>
           </mat-chip-list>
         </div>
 

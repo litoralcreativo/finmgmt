@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
+import { Category } from '../models/category.model';
 import { Scope, ScopeResponse } from '../models/scope.model';
 import { ScopeAcumulator } from '../models/scopeAcumulator.model';
 
@@ -52,5 +53,13 @@ export class ScopeService {
         withCredentials: true,
       }
     );
+  }
+
+  editCategory(scopeId: string, categoryName: string, category: Category) {
+    throw new Error('Method not implemented.');
+  }
+
+  createCategory(scopeId: string, category: Category) {
+    throw new Error('Method not implemented.');
   }
 }

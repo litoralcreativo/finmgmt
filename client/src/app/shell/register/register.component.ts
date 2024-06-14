@@ -60,6 +60,6 @@ export class RegisterComponent implements OnInit {
   }
 
   public get fetching(): boolean {
-    return !this.authService.fetching;
+    return this.authService.fetching;
   }
 }

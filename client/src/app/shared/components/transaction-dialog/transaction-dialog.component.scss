@@ -1,28 +1,6 @@
-form {
-  /* display: flex; */
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  flex-wrap: wrap;
-
-  .form-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    gap: 0.5rem;
-    width: 100%;
-    flex-wrap: wrap;
-  }
-
-  mat-form-field {
-    flex-grow: 1;
-
-    &.transaction-date {
-      width: 150px;
-      flex-basis: 0;
-    }
-  }
+.transaction-date {
+  width: 150px;
+  flex-basis: 0;
 }
 
 .transaction-amount {

@@ -5,7 +5,9 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { CategoryDetailComponent } from 'src/app/shared/components/category-detail/category-detail.component';
 import { AccountAcumulator } from 'src/app/shared/models/accountAcumulator.model';
 import { Category } from 'src/app/shared/models/category.model';
 import { Scope } from 'src/app/shared/models/scope.model';
@@ -30,7 +32,8 @@ export class ScopeComponent implements OnInit {
 
   constructor(
     private aRoute: ActivatedRoute,
-    private scopeService: ScopeService
+    private scopeService: ScopeService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -67,5 +70,38 @@ export class ScopeComponent implements OnInit {
     this.month = date.getMonth();
 
     this.getAcumulator();
+  }
+
+  editCategory(category: Category) {
+    this.dialog
+      .open(CategoryDetailComponent, {
+        disableClose: true,
+        width: '450px',
+        data: {
+          scope: this.scope,
+          category: category,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+        }
+      });
+  }
+
+  addCategory(fixed: boolean) {
+    this.dialog
+      .open(CategoryDetailComponent, {
+        disableClose: true,
+        width: '400px',
+        data: {
+          scope: this.scope,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+        }
+      });
   }
 }
