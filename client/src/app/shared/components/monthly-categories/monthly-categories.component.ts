@@ -31,6 +31,8 @@ export class MonthlyCategoriesComponent implements OnInit {
   totalPositive: number;
   @Output('go') go: EventEmitter<-1 | 1> = new EventEmitter();
   firstDayOfMonth: Date;
+  today: Date = new Date();
+  nextMonth: Date;
 
   constructor() {}
 
@@ -75,6 +77,12 @@ export class MonthlyCategoriesComponent implements OnInit {
     this.year = this.acumulator.year;
     this.month = this.acumulator.month;
     this.firstDayOfMonth = new Date(this.year, this.month);
+    this.nextMonth = new Date(this.year, this.month);
+    this.nextMonth.setMonth(this.nextMonth.getMonth() + 1);
+  }
+
+  get disableNext(): boolean {
+    return this.today < this.nextMonth;
   }
 
   goToMonth(direction: -1 | 1) {

@@ -22,7 +22,7 @@ export class SymbolChangeService {
   fetchCurrencyData() {
     this.http
       .get<SymbolChangeResponse>(routes.currency.mep, {
-        headers: { 'on-error': 'skip-notify' },
+        headers: { 'on-error': 'skip-notify', 'skip-auth': 'skipit' },
       })
       .subscribe((x) => {
         this.prices.set('MEP', {
@@ -36,7 +36,7 @@ export class SymbolChangeService {
 
     this.http
       .get<SymbolChangeResponse>(routes.currency.cripto, {
-        headers: { 'on-error': 'skip-notify' },
+        headers: { 'on-error': 'skip-notify', 'skip-auth': 'skipit' },
       })
       .subscribe((x) => {
         this.prices.set('CRIPTO', {
@@ -50,7 +50,7 @@ export class SymbolChangeService {
 
     this.http
       .get<SymbolChangeResponse>(routes.currency.informal, {
-        headers: { 'on-error': 'skip-notify' },
+        headers: { 'on-error': 'skip-notify', 'skip-auth': 'skipit' },
       })
       .subscribe((x) => {
         this.prices.set('INFORMAL', {

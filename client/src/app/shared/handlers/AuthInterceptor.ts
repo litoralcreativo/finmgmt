@@ -23,13 +23,31 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const token = this.tokenService.getToken();
-    let authReq = req;
-    if (token) {
-      authReq = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`),
+    const onError = req.headers.get('on-error');
+    const skipAuth = req.headers.get('skip-auth');
+
+    let modifiedReq = req.clone();
+
+    if (onError) {
+      // take out the header
+      modifiedReq = modifiedReq.clone({
+        headers: modifiedReq.headers.delete('on-error'),
       });
     }
-    return next.handle(authReq).pipe(
+
+    if (token) {
+      if (skipAuth) {
+        modifiedReq = modifiedReq.clone({
+          headers: modifiedReq.headers.delete('skip-auth'),
+        });
+      } else {
+        modifiedReq = modifiedReq.clone({
+          headers: modifiedReq.headers.set('Authorization', `Bearer ${token}`),
+        });
+      }
+    }
+
+    return next.handle(modifiedReq).pipe(
       tap({
         next: (res) => {
           return res;

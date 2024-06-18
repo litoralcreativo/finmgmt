@@ -3,7 +3,7 @@
     <mat-icon>chevron_left</mat-icon>
   </button>
   <div class="month-label">{{ firstDayOfMonth | date : "MMMM" }}</div>
-  <button mat-icon-button (click)="goToMonth(1)">
+  <button mat-icon-button (click)="goToMonth(1)" [disabled]="disableNext">
     <mat-icon>chevron_right</mat-icon>
   </button>
 </div>
