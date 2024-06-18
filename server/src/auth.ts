@@ -4,7 +4,7 @@ import { ExtractJwt } from "passport-jwt";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcrypt";
 import { lastValueFrom } from "rxjs";
-import { DbManager } from "../bdd/db";
+import { DbManager } from "./bdd/db";
 import { UserService } from "./services/user.service";
 import { User } from "./models/user.model";
 

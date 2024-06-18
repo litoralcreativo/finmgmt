@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
-import { DbManager } from "../../bdd/db";
+import { DbManager } from "../bdd/db";
 import { ResponseStrategy } from "../models/response.model";
 import { User } from "../models/user.model";
 import { UserService } from "../services/user.service";

@@ -1,6 +1,6 @@
 import { ZodError } from "zod";
 import { Response } from "express";
-import { ResponseStrategy } from "../src/models/response.model";
+import { ResponseStrategy } from "../models/response.model";
 
 export const typeValidationCatch = <T extends Error>(err: T, res: Response) => {
   if (err instanceof ZodError) {

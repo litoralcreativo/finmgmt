@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { BSON, Filter, ObjectId } from "mongodb";
-import { DbManager } from "../../bdd/db";
+import { DbManager } from "../bdd/db";
 import { Account, AccountRequestDTO } from "../models/account.model";
 import { AccountAcumulator } from "../models/accountAcumulator.model";
 import { ResponseStrategy } from "../models/response.model";

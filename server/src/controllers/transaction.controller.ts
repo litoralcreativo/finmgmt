@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Filter, ObjectId, SortDirection } from "mongodb";
-import { DbManager } from "../../bdd/db";
+import { DbManager } from "../bdd/db";
 import {
   Transaction,
   TransactionRequestDTO,

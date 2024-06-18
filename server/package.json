@@ -8,7 +8,8 @@
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc",
     "start": "node dist/src/server.js",
-    "vercel-build": "echo vercel-build"
+    "build:netlify": "tsc --outDir functions && netlify-lambda build src",
+    "start:netlify": "tsc --outDir functions && netlify-lambda serve src"
   },
   "keywords": [],
   "author": "",
@@ -24,10 +25,12 @@
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.6.2",
+    "netlify-lambda": "^2.0.16",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "rxjs": "^7.8.1",
+    "serverless-http": "^3.2.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "typescript": "^5.4.5",

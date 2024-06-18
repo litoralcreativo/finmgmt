@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { Filter } from "mongodb";
 import { ZodError } from "zod";
-import { DbManager } from "../../bdd/db";
-import { typeValidationCatch } from "../../utils/typeValidationCatch";
+import { DbManager } from "../bdd/db";
+import { typeValidationCatch } from "../utils/typeValidationCatch";
 import {
   FinancialScope,
   FinancialScopeDTO,
