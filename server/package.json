@@ -7,9 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc",
-    "start": "node dist/src/server.js",
-    "build:netlify": "tsc --outDir functions && netlify-lambda build src",
-    "start:netlify": "tsc --outDir functions && netlify-lambda serve src"
+    "start": "node dist/src/server.js"
   },
   "keywords": [],
   "author": "",
