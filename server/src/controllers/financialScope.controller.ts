@@ -4,6 +4,7 @@ import { ZodError } from "zod";
 import { DbManager } from "../bdd/db";
 import { typeValidationCatch } from "../utils/typeValidationCatch";
 import {
+  Category,
   FinancialScope,
   FinancialScopeDTO,
   FinancialScopeDTOSchema,
@@ -121,6 +122,54 @@ export const createScope = (req: Request, res: Response) => {
         val,
       });
     });
+  } catch (err) {
+    typeValidationCatch(err as Error, res);
+  }
+};
+
+export const createCategoryForScope = (req: Request, res: Response) => {
+  try {
+    const dto: Category = req.body;
+    const id = req.params.id;
+
+    financialScope.addCategory(id, dto).subscribe((val: any) => {
+      if (val.modifiedCount !== 0) {
+        return res.status(200).json({
+          ...new ResponseStrategy(200, "Successfuly registered"),
+          val,
+        });
+      } else {
+        return res.status(400).json({
+          ...new ResponseStrategy(
+            400,
+            "Category name for this scope already exist"
+          ),
+          val,
+        });
+      }
+    });
+  } catch (err) {
+    typeValidationCatch(err as Error, res);
+  }
+};
+
+export const updateCategoryForScope = (req: Request, res: Response) => {
+  try {
+    const dto: Category = req.body;
+    const scopeId = req.params.id;
+    const categoryName = req.params.catname;
+
+    financialScope
+      .updateCategory(scopeId, categoryName, dto)
+      .subscribe((val: any) => {
+        return res.status(200).json({
+          ...new ResponseStrategy(
+            200,
+            val.matchedCount !== 0 ? "Successfuly updated" : "Nothing updated"
+          ),
+          val,
+        });
+      });
   } catch (err) {
     typeValidationCatch(err as Error, res);
   }
