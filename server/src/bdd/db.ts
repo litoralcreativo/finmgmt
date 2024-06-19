@@ -6,7 +6,7 @@ const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/";
 const dbName = process.env.DB_NAME || "finmgmt";
 
 const client = new MongoClient(uri, {
-  serverSelectionTimeoutMS: 5000,
+  serverSelectionTimeoutMS: 30000,
   tls: true,
   tlsAllowInvalidCertificates: true,
 });
