@@ -2,21 +2,15 @@
 <div mat-dialog-content>
   <form [formGroup]="form">
     <div class="form-row">
-      <mat-form-field appearance="standard">
-        <mat-label>Icon</mat-label>
-        <mat-select formControlName="icon">
-          <mat-select-trigger>
-            <div class="row-flex">
-              <mat-icon *ngIf="this.form.controls.icon.value">{{
-                this.form.controls.icon.value
-              }}</mat-icon>
-            </div>
-          </mat-select-trigger>
-          <mat-option *ngFor="let icon of icons" [value]="icon">
-            <mat-icon>{{ icon }}</mat-icon>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <button
+        mat-icon-button
+        (click)="iconSelectorOpen = !iconSelectorOpen"
+        type="button"
+        cdkOverlayOrigin
+        #trigger="cdkOverlayOrigin"
+      >
+        <mat-icon>{{ form.controls.icon.value }}</mat-icon>
+      </button>
       <mat-form-field appearance="standard">
         <mat-label>Name</mat-label>
         <input
@@ -29,6 +23,7 @@
           This field is required
         </mat-error>
       </mat-form-field>
+      <mat-checkbox formControlName="fixed" color="primary">fixed</mat-checkbox>
     </div>
   </form>
 </div>
@@ -38,9 +33,27 @@
     mat-flat-button
     color="primary"
     (click)="confirm()"
-    [disabled]="fetching"
+    [disabled]="fetching || form.invalid"
     type="submit"
   >
     Confirm
   </button>
 </div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="iconSelectorOpen"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  (backdropClick)="iconSelectorOpen = !iconSelectorOpen"
+>
+  <mat-card class="icons-container">
+    <button
+      mat-icon-button
+      *ngFor="let icon of icons"
+      (click)="changeIcon(icon)"
+    >
+      <mat-icon>{{ icon }}</mat-icon>
+    </button>
+  </mat-card>
+</ng-template>

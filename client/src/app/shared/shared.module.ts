@@ -16,6 +16,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { MonthlyCategoriesComponent } from './components/monthly-categories/monthly-categories.component';
 import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
 import { LoadingPanelComponent } from './components/loading-panel/loading-panel.component';
+import { IconSelectorComponent } from './components/icon-selector/icon-selector.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { LoadingPanelComponent } from './components/loading-panel/loading-panel.
     MonthlyCategoriesComponent,
     CategoryDetailComponent,
     LoadingPanelComponent,
+    IconSelectorComponent,
   ],
   imports: [
     CommonModule,

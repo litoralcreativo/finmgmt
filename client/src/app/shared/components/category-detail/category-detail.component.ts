@@ -17,6 +17,7 @@ export type CategoryDialogDataModel = {
   styleUrls: ['./category-detail.component.scss'],
 })
 export class CategoryDetailComponent extends FetchingFlag implements OnInit {
+  iconSelectorOpen: boolean = false;
   category: Category;
   icons: string[] = [
     'more_horiz',
@@ -35,6 +36,19 @@ export class CategoryDetailComponent extends FetchingFlag implements OnInit {
     'show_chart',
     'savings',
     'luggage',
+    'electrical_services',
+    'local_fire_department',
+    'receipt_long',
+    'cloud',
+    'person',
+    'restaurant',
+    'shopping_cart',
+    'construction',
+    'subscriptions',
+    'pets',
+    'takeout_dining',
+    'groups',
+    'kitchen',
     'swap_horiz',
   ];
 
@@ -68,6 +82,12 @@ export class CategoryDetailComponent extends FetchingFlag implements OnInit {
   }
 
   confirm() {
+    this.category = {
+      name: this.form.controls.name.value,
+      icon: this.form.controls.icon.value,
+      fixed: this.form.controls.fixed.value,
+    };
+
     if (this.data.category) {
       // edit
       this.scopeService.editCategory(
@@ -80,5 +100,10 @@ export class CategoryDetailComponent extends FetchingFlag implements OnInit {
       this.scopeService.createCategory(this.data.scope.data._id, this.category);
     }
     this.dialogRef.close();
+  }
+
+  changeIcon(icon: string) {
+    this.form.controls.icon.setValue(icon);
+    this.iconSelectorOpen = false;
   }
 }
