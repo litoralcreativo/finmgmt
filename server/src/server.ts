@@ -49,6 +49,4 @@ app.listen(PORT, () => {
   console.log(`Server is running...`);
 });
 
-export default app;
-
-module.exports.handler = ServerlessHttp(app);
+export const handler = ServerlessHttp(app);
