@@ -7,6 +7,8 @@ const dbName = process.env.DB_NAME || "finmgmt";
 
 const client = new MongoClient(uri, {
   serverSelectionTimeoutMS: 5000,
+  tls: true,
+  tlsAllowInvalidCertificates: true,
 });
 
 export namespace DbManager {
