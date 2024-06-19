@@ -31,6 +31,10 @@ export const routes = {
     byId: (id: string) => `${environment.apiUrl}/scopes/${id}`,
     categoriesAmount: (id: string) =>
       `${environment.apiUrl}/scopes/${id}/categories`,
+    createCategory: (id: string) =>
+      `${environment.apiUrl}/scopes/${id}/category`,
+    updateCategory: (scopeId: string, catName: string) =>
+      `${environment.apiUrl}/scopes/${scopeId}/category/${catName}`,
   },
   transactions: {
     all: `${environment.apiUrl}/transaction`,

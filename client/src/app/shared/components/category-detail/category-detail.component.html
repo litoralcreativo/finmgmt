@@ -8,6 +8,7 @@
         type="button"
         cdkOverlayOrigin
         #trigger="cdkOverlayOrigin"
+        [disabled]="fetching"
       >
         <mat-icon>{{ form.controls.icon.value }}</mat-icon>
       </button>

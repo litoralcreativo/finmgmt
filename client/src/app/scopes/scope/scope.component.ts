@@ -46,13 +46,17 @@ export class ScopeComponent implements OnInit {
       if (!id) throw new Error('No accountId provided');
 
       this.scopeId = id;
-      this.scopeService.getById(this.scopeId).subscribe((scope) => {
-        this.scope = scope;
-        this.scopeCategories = scope.getCategories();
-        this.fixed = this.scopeCategories.filter((x) => x.fixed);
-        this.variable = this.scopeCategories.filter((x) => !x.fixed);
-      });
+      this.getScope();
       this.getAcumulator();
+    });
+  }
+
+  getScope() {
+    this.scopeService.getById(this.scopeId).subscribe((scope) => {
+      this.scope = scope;
+      this.scopeCategories = scope.getCategories();
+      this.fixed = this.scopeCategories.filter((x) => x.fixed);
+      this.variable = this.scopeCategories.filter((x) => !x.fixed);
     });
   }
 
@@ -85,6 +89,7 @@ export class ScopeComponent implements OnInit {
       .afterClosed()
       .subscribe((res) => {
         if (res) {
+          this.getScope();
         }
       });
   }
@@ -101,6 +106,7 @@ export class ScopeComponent implements OnInit {
       .afterClosed()
       .subscribe((res) => {
         if (res) {
+          this.getScope();
         }
       });
   }

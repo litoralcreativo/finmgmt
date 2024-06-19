@@ -56,10 +56,13 @@ export class ScopeService {
   }
 
   editCategory(scopeId: string, categoryName: string, category: Category) {
-    throw new Error('Method not implemented.');
+    return this.http.patch(
+      routes.scopes.updateCategory(scopeId, categoryName),
+      category
+    );
   }
 
   createCategory(scopeId: string, category: Category) {
-    throw new Error('Method not implemented.');
+    return this.http.post(routes.scopes.createCategory(scopeId), category);
   }
 }

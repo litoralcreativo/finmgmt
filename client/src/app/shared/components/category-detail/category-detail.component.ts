@@ -88,18 +88,36 @@ export class CategoryDetailComponent extends FetchingFlag implements OnInit {
       fixed: this.form.controls.fixed.value,
     };
 
+    this.fetching = true;
+    this.form.disable();
+
     if (this.data.category) {
       // edit
-      this.scopeService.editCategory(
-        this.data.scope.data._id,
-        this.data.category.name,
-        this.category
-      );
+      this.scopeService
+        .editCategory(
+          this.data.scope.data._id,
+          this.data.category.name,
+          this.category
+        )
+        .subscribe((res) => {
+          this.dialogRef.close(true);
+        })
+        .add(() => {
+          this.fetching = false;
+          this.form.enable();
+        });
     } else {
       // create
-      this.scopeService.createCategory(this.data.scope.data._id, this.category);
+      this.scopeService
+        .createCategory(this.data.scope.data._id, this.category)
+        .subscribe((res) => {
+          this.dialogRef.close(true);
+        })
+        .add(() => {
+          this.fetching = false;
+          this.form.enable();
+        });
     }
-    this.dialogRef.close();
   }
 
   changeIcon(icon: string) {
