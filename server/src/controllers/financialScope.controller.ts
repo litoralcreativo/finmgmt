@@ -167,7 +167,7 @@ export const updateCategoryForScope = (req: Request, res: Response) => {
             200,
             val.matchedCount !== 0 ? "Successfuly updated" : "Nothing updated"
           ),
-          val,
+          result: val,
         });
       });
   } catch (err) {

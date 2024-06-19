@@ -3,12 +3,20 @@ import {
   Db,
   Document,
   ObjectId,
+  Transaction,
   UpdateFilter,
   UpdateResult,
 } from "mongodb";
-import { from, Observable, switchMap } from "rxjs";
+import { from, map, mergeMap, Observable, switchMap } from "rxjs";
+import { DbManager } from "../bdd/db";
 import { Crud } from "../models/crud.model";
 import { Category, FinancialScope } from "../models/financialScope.model";
+import { TransactionService } from "./transaction.service";
+
+let transactionService: TransactionService;
+DbManager.getInstance().subscribe((x) => {
+  if (x) transactionService = new TransactionService(x);
+});
 
 export class FinancialScopeService extends Crud<FinancialScope> {
   constructor(db: Db) {
@@ -44,7 +52,10 @@ export class FinancialScopeService extends Crud<FinancialScope> {
     scopeId: string,
     categoryName: string,
     newCategory: Category
-  ): Observable<UpdateResult<FinancialScope>> {
+  ): Observable<{
+    category: UpdateResult<FinancialScope>;
+    transactions?: UpdateResult<Transaction>;
+  }> {
     return from(
       this.collection.updateOne(
         {
@@ -59,6 +70,21 @@ export class FinancialScopeService extends Crud<FinancialScope> {
           },
         }
       )
+    ).pipe(
+      mergeMap((categoryUpdateResult) => {
+        if (categoryUpdateResult.modifiedCount > 0) {
+          return transactionService
+            .updateTransactionsCategory(scopeId, categoryName, newCategory)
+            .pipe(
+              map((transactionsUpdateResult) => ({
+                category: categoryUpdateResult,
+                transactions: transactionsUpdateResult,
+              }))
+            );
+        } else {
+          return from([{ category: categoryUpdateResult }]);
+        }
+      })
     );
   }
 }

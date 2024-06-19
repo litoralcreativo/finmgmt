@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Category } from '../../models/category.model';
 import { Scope } from '../../models/scope.model';
 import { ScopeService } from '../../services/scope.service';
@@ -61,7 +62,8 @@ export class CategoryDetailComponent extends FetchingFlag implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<CategoryDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CategoryDialogDataModel,
-    public scopeService: ScopeService
+    public scopeService: ScopeService,
+    private snackbar: MatSnackBar
   ) {
     super();
   }
@@ -99,7 +101,21 @@ export class CategoryDetailComponent extends FetchingFlag implements OnInit {
           this.data.category.name,
           this.category
         )
-        .subscribe((res) => {
+        .subscribe((res: any) => {
+          if (res.result?.category?.modifiedCount > 0) {
+            let categoriesCount: number = res.result?.category?.modifiedCount;
+            let transactionsCount: number =
+              res.result?.transactions?.modifiedCount;
+            this.snackbar.open(
+              `Update ${categoriesCount} category and ${transactionsCount} transactions`,
+              '✖',
+              {
+                horizontalPosition: 'start',
+                verticalPosition: 'bottom',
+                panelClass: 'matsnack-error',
+              }
+            );
+          }
           this.dialogRef.close(true);
         })
         .add(() => {

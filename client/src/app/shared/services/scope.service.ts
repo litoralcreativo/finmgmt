@@ -55,7 +55,11 @@ export class ScopeService {
     );
   }
 
-  editCategory(scopeId: string, categoryName: string, category: Category) {
+  editCategory(
+    scopeId: string,
+    categoryName: string,
+    category: Category
+  ): Observable<any> {
     return this.http.patch(
       routes.scopes.updateCategory(scopeId, categoryName),
       category

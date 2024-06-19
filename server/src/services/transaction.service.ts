@@ -1,6 +1,7 @@
-import { Db, Document } from "mongodb";
+import { Db, Document, ObjectId, UpdateResult } from "mongodb";
 import { from, map, Observable } from "rxjs";
 import { Crud } from "../models/crud.model";
+import { Category } from "../models/financialScope.model";
 import { Transaction } from "../models/transaction.model";
 
 export class TransactionService extends Crud<Transaction> {
@@ -92,6 +93,28 @@ export class TransactionService extends Crud<Transaction> {
       map((x) => {
         return x;
       })
+    );
+  }
+
+  updateTransactionsCategory(
+    scopeId: string,
+    categoryName: string,
+    newCategory: Category
+  ): Observable<UpdateResult<Transaction>> {
+    return from(
+      this.collection.updateMany(
+        {
+          "scope._id": scopeId,
+          "scope.category.name": categoryName,
+        },
+        {
+          $set: {
+            "scope.category.name": newCategory.name,
+            "scope.category.icon": newCategory.icon,
+            "scope.category.fixed": newCategory.fixed,
+          },
+        }
+      )
     );
   }
 }

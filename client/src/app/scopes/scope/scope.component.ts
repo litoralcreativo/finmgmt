@@ -6,6 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryDetailComponent } from 'src/app/shared/components/category-detail/category-detail.component';
 import { AccountAcumulator } from 'src/app/shared/models/accountAcumulator.model';
@@ -90,6 +91,7 @@ export class ScopeComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.getScope();
+          this.getAcumulator();
         }
       });
   }
