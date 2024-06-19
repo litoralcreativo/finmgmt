@@ -5,7 +5,9 @@ require("dotenv").config();
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/";
 const dbName = process.env.DB_NAME || "finmgmt";
 
-const client = new MongoClient(uri);
+const client = new MongoClient(uri, {
+  serverSelectionTimeoutMS: 5000,
+});
 
 export namespace DbManager {
   const _instance: BehaviorSubject<Db | null> = new BehaviorSubject<Db | null>(
@@ -19,6 +21,7 @@ export namespace DbManager {
     from(client.connect())
       .pipe(
         map((con) => {
+          console.log("Connecting to MongoDB");
           return client.db(dbName);
         })
       )
@@ -28,7 +31,6 @@ export namespace DbManager {
           _instance.next(db);
         },
         error: (err) => {
-          console.error(uri);
           console.error("Error connecting to MongoDB:", err);
           throw err;
         },
