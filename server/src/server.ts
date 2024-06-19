@@ -41,7 +41,7 @@ app.all("*", (req, res) => {
   res.status(404).json({
     timestamp: Date.now(),
     msg: "No route matches your request",
-    req: req.baseUrl,
+    req: req.url,
     code: 404,
   });
 });

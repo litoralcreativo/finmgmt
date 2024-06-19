@@ -21,7 +21,7 @@ export namespace DbManager {
     from(client.connect())
       .pipe(
         map((con) => {
-          console.log("Connecting to MongoDB");
+          console.log("Connecting to MongoDB", uri);
           return client.db(dbName);
         })
       )
