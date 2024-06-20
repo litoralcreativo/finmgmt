@@ -29,6 +29,7 @@ export const routes = {
   scopes: {
     all: `${environment.apiUrl}/scopes`,
     byId: (id: string) => `${environment.apiUrl}/scopes/${id}`,
+    create: `${environment.apiUrl}/scopes`,
     categoriesAmount: (id: string) =>
       `${environment.apiUrl}/scopes/${id}/categories`,
     createCategory: (id: string) =>

@@ -105,12 +105,11 @@ export const getScopeAmountsByCategory = (req: Request, res: Response) => {
 export const createScope = (req: Request, res: Response) => {
   try {
     const userId = (req?.user as any).id;
-    const dto: FinancialScopeDTO = req.body;
 
     const parsed = FinancialScopeDTOSchema.parse(req.body);
 
     const toBeCreated: Partial<FinancialScope> = {
-      ...dto,
+      ...parsed,
       creator: userId,
       users: [userId],
       categories: [],

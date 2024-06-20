@@ -35,3 +35,9 @@ export class Scope {
     return category;
   }
 }
+
+export type ScopeDTO = {
+  icon: string;
+  name: string;
+  shared: boolean;
+};

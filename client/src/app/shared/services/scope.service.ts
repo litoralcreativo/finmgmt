@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
 import { Category } from '../models/category.model';
-import { Scope, ScopeResponse } from '../models/scope.model';
+import { Scope, ScopeDTO, ScopeResponse } from '../models/scope.model';
 import { ScopeAcumulator } from '../models/scopeAcumulator.model';
 
 @Injectable({
@@ -42,6 +42,10 @@ export class ScopeService {
       .pipe(map((acc) => new Scope(acc)));
   }
 
+  createScope(scope: ScopeDTO): Observable<any> {
+    return this.http.post(routes.scopes.create, scope);
+  }
+
   getCategoriesAmount(
     scopeId: string,
     year: number,
@@ -66,7 +70,7 @@ export class ScopeService {
     );
   }
 
-  createCategory(scopeId: string, category: Category) {
+  createCategory(scopeId: string, category: Category): Observable<any> {
     return this.http.post(routes.scopes.createCategory(scopeId), category);
   }
 }

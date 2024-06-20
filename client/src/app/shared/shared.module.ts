@@ -50,6 +50,7 @@ import { IconSelectorComponent } from './components/icon-selector/icon-selector.
     PieChartComponent,
     MonthlyCategoriesComponent,
     LoadingPanelComponent,
+    IconSelectorComponent,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
 })

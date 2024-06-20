@@ -2,66 +2,49 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Category } from '../../models/category.model';
-import { Scope } from '../../models/scope.model';
-import { IconService } from '../../services/icon.service';
-import { ScopeService } from '../../services/scope.service';
-import { FetchingFlag } from '../../utils/fetching-flag';
-
-export type CategoryDialogDataModel = {
-  scope: Scope;
-  category?: Category;
-};
+import { Scope, ScopeDTO } from 'src/app/shared/models/scope.model';
+import { IconService } from 'src/app/shared/services/icon.service';
+import { ScopeService } from 'src/app/shared/services/scope.service';
+import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 
 @Component({
-  selector: 'app-category-detail',
-  templateUrl: './category-detail.component.html',
-  styleUrls: ['./category-detail.component.scss'],
+  selector: 'app-scope-managment-dialog',
+  templateUrl: './scope-managment-dialog.component.html',
+  styleUrls: ['./scope-managment-dialog.component.scss'],
 })
-export class CategoryDetailComponent extends FetchingFlag implements OnInit {
+export class ScopeManagmentDialogComponent
+  extends FetchingFlag
+  implements OnInit
+{
   iconSelectorOpen: boolean = false;
-  category: Category;
+  scopeDTO: ScopeDTO;
 
   form: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
     icon: new FormControl('more_horiz', [Validators.required]),
-    fixed: new FormControl(false),
+    shared: new FormControl(false),
   });
 
   constructor(
-    public dialogRef: MatDialogRef<CategoryDetailComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: CategoryDialogDataModel,
+    public dialogRef: MatDialogRef<ScopeManagmentDialogComponent>,
     public scopeService: ScopeService,
     private snackbar: MatSnackBar
   ) {
     super();
   }
 
-  ngOnInit(): void {
-    if (!this.data) throw new Error('No category and scope data provided');
-
-    if (this.data.category) {
-      this.category = {
-        name: this.data.category.name,
-        icon: this.data.category.icon,
-        fixed: Boolean(this.data.category.fixed),
-      };
-      this.form.controls.name.setValue(this.category.name);
-      this.form.controls.icon.setValue(this.category.icon);
-      this.form.controls.fixed.setValue(this.category.fixed);
-    }
-  }
+  ngOnInit(): void {}
 
   confirm() {
-    this.category = {
+    this.scopeDTO = {
       name: this.form.controls.name.value,
       icon: this.form.controls.icon.value,
-      fixed: this.form.controls.fixed.value,
+      shared: this.form.controls.shared.value,
     };
 
     this.fetching = true;
     this.form.disable();
-
+    /* 
     if (this.data.category) {
       // edit
       this.scopeService
@@ -102,7 +85,17 @@ export class CategoryDetailComponent extends FetchingFlag implements OnInit {
           this.fetching = false;
           this.form.enable();
         });
-    }
+    } */
+
+    this.scopeService
+      .createScope(this.scopeDTO)
+      .subscribe((res) => {
+        this.dialogRef.close(true);
+      })
+      .add(() => {
+        this.fetching = false;
+        this.form.enable();
+      });
   }
 
   changeIcon(icon: string) {
