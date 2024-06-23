@@ -17,6 +17,7 @@ import { MonthlyCategoriesComponent } from './components/monthly-categories/mont
 import { CategoryDetailComponent } from './components/category-detail/category-detail.component';
 import { LoadingPanelComponent } from './components/loading-panel/loading-panel.component';
 import { IconSelectorComponent } from './components/icon-selector/icon-selector.component';
+import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { IconSelectorComponent } from './components/icon-selector/icon-selector.
     CategoryDetailComponent,
     LoadingPanelComponent,
     IconSelectorComponent,
+    ConfirmationComponent,
   ],
   imports: [
     CommonModule,

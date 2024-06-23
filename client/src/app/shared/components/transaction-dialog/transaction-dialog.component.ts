@@ -7,7 +7,11 @@ import {
 } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { Account, AccountData } from '../../models/accountData.model';
 import { Transaction, TransactionType } from '../../models/transaction.model';
 import { AccountService } from '../../services/account.service';
@@ -17,6 +21,7 @@ import { Scope, ScopedCategory } from '../../models/scope.model';
 import { ScopeService } from '../../services/scope.service';
 import { Category } from '../../models/category.model';
 import { TransactionService } from '../../services/transaction.service';
+import { ConfirmationComponent } from '../confirmation/confirmation.component';
 
 @Component({
   selector: 'app-transaction-dialog',
@@ -41,7 +46,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     private accService: AccountService,
     private scopeService: ScopeService,
     private tranService: TransactionService,
-    @Inject(MAT_DIALOG_DATA) public data: Transaction
+    @Inject(MAT_DIALOG_DATA) public data: Transaction,
+    private dialog: MatDialog
   ) {
     super();
   }
@@ -133,21 +139,27 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     this.data.setCategory(category);
 
     if (this.hasOriginal) {
-      const request = this.data.generateModificationRequest();
-
-      this.fetching = true;
-      this.tranService
-        .updateTransaction(this.data.madeTransaction!._id, request)
-        .subscribe({
-          next: (x) => {
-            this.dialogRef.close(true);
-          },
-          error: (err) => {
-            const a = err;
-          },
-        })
-        .add(() => {
-          this.fetching = true;
+      this.dialog
+        .open(ConfirmationComponent)
+        .afterClosed()
+        .subscribe((res) => {
+          if (res) {
+            const request = this.data.generateModificationRequest();
+            this.fetching = true;
+            this.tranService
+              .updateTransaction(this.data.madeTransaction!._id, request)
+              .subscribe({
+                next: (x) => {
+                  this.dialogRef.close(true);
+                },
+                error: (err) => {
+                  const a = err;
+                },
+              })
+              .add(() => {
+                this.fetching = true;
+              });
+          }
         });
     } else {
       const request = this.data.generateRequest();
