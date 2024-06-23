@@ -6,13 +6,15 @@ import {
   ACCOUNT_TYPES,
 } from './accountData.model';
 import { Category } from './category.model';
-import { Scope } from './scope.model';
+import { Scope, ScopedCategory } from './scope.model';
 
 export type TransactionType = 'incoming' | 'outgoing' | undefined;
 
 export abstract class Transaction {
-  private _scope: Scope;
-  public get scope(): Scope {
+  madeTransaction?: TransactionResponse;
+
+  private _scope: ScopedCategory;
+  public get scope(): ScopedCategory {
     return this._scope;
   }
 
@@ -106,8 +108,7 @@ export abstract class Transaction {
     this._date = date;
   }
 
-  setScope(scope: Scope) {
-    if (!(scope instanceof Scope)) throw new Error('parameter must be a scope');
+  setScope(scope: ScopedCategory) {
     this._scope = scope;
   }
 
@@ -139,13 +140,26 @@ export abstract class Transaction {
       description: this.description ?? 'generic transaction',
       date: this.date.toISOString(),
       scope: {
-        _id: this.scope.data._id,
+        _id: this.scope._id,
         category: {
           name: this.category.name,
         },
       },
     };
     return tranReq;
+  }
+
+  generateModificationRequest(): ModifiedTransactionRequestDTO {
+    return {
+      amount: this.amount,
+      description: this.description ?? 'generic transaction',
+      scope: {
+        _id: this.scope._id,
+        category: {
+          name: this.category.name,
+        },
+      },
+    };
   }
 }
 
@@ -170,16 +184,7 @@ export type TransactionResponse = {
   amount: number;
   description: string;
   date: Date;
-  scope: {
-    _id: string;
-    name: string;
-    icon: string;
-    category: {
-      name: string;
-      icon: string;
-      fixed: boolean;
-    };
-  };
+  scope: ScopedCategory;
 };
 
 export type TransactionRequestDTO = {
@@ -187,6 +192,17 @@ export type TransactionRequestDTO = {
   amount: number;
   description: string;
   date: string;
+  scope: {
+    _id: string;
+    category: {
+      name: string;
+    };
+  };
+};
+
+export type ModifiedTransactionRequestDTO = {
+  amount: number;
+  description: string;
   scope: {
     _id: string;
     category: {

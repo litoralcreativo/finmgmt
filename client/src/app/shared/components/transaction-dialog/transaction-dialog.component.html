@@ -25,12 +25,12 @@
   <button mat-button mat-dialog-close [disabled]="fetching">Close</button>
   <button
     mat-flat-button
-    color="primary"
+    [color]="hasOriginal ? 'warn' : 'primary'"
     (click)="commit()"
-    [disabled]="!form.valid || fetching"
+    [disabled]="!form.valid || fetching || (hasOriginal && !originalChanged)"
     type="submit"
   >
-    Commit
+    {{ hasOriginal ? "Apply change" : "Commit" }}
   </button>
 </div>
 
@@ -71,7 +71,11 @@
           title="date"
           formControlName="date"
         />
-        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="dp3"
+          *ngIf="!hasOriginal"
+        ></mat-datepicker-toggle>
         <mat-datepicker #dp3 disabled="false"></mat-datepicker>
       </mat-form-field>
     </div>

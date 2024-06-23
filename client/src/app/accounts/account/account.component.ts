@@ -8,6 +8,7 @@ import {
   AccountData,
   AccountType,
 } from 'src/app/shared/models/accountData.model';
+import { Scope } from 'src/app/shared/models/scope.model';
 import {
   IncomingTransaction,
   OutgoingTransaction,
@@ -102,7 +103,10 @@ export class AccountComponent implements OnInit {
       });
   }
 
-  openTransactionDialog(type: 'in' | 'out') {
+  openTransactionDialog(
+    type: 'in' | 'out',
+    madeTransaction?: TransactionResponse
+  ) {
     let transaction: Transaction;
     switch (type) {
       case 'in':
@@ -112,6 +116,14 @@ export class AccountComponent implements OnInit {
         transaction = new OutgoingTransaction(this.account);
         break;
     }
+
+    if (madeTransaction) {
+      transaction.madeTransaction = madeTransaction;
+      transaction.setAmount(madeTransaction.amount);
+      transaction.setDescription(madeTransaction.description);
+      transaction.setScope(madeTransaction.scope);
+    }
+
     this.dialog
       .open<TransactionDialogComponent>(TransactionDialogComponent, {
         data: transaction,
@@ -146,5 +158,12 @@ export class AccountComponent implements OnInit {
     this.month = date.getMonth();
 
     this.getAcumulator();
+  }
+
+  onTransactionClick(transaction: TransactionResponse) {
+    this.openTransactionDialog(
+      transaction.amount > 0 ? 'in' : 'out',
+      transaction
+    );
   }
 }

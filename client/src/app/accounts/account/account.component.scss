@@ -1,6 +1,9 @@
 @import "../../../styles.scss";
 
-section.account-container {
+::ng-deep .account-card {
+  .card-title {
+    width: 100%;
+  }
 }
 
 .account-grid {

@@ -4,6 +4,7 @@ import {
   getAllPaginatedTransaction,
   getTransactionById,
   createTransaction,
+  updateTransactionById,
   /* updateTransactionById, */
   /* deleteTransactionById, */
 } from "./transaction.controller";
@@ -16,7 +17,7 @@ router.get("/:id", getTransactionById);
 
 router.post("/", createTransaction);
 
-/* router.put("/:id", updateTransactionById); */
+router.patch("/:id", updateTransactionById);
 
 /* router.delete("/:id", deleteTransactionById); */
 

@@ -36,3 +36,10 @@ export type ScopeDTO = {
   name: string;
   shared: boolean;
 };
+
+export type ScopedCategory = {
+  _id: string;
+  name: string;
+  icon: string;
+  category: Category;
+};

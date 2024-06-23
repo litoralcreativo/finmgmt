@@ -13,7 +13,7 @@ import { Transaction, TransactionType } from '../../models/transaction.model';
 import { AccountService } from '../../services/account.service';
 import { FetchingFlag } from '../../utils/fetching-flag';
 import { combineLatest, forkJoin, Observable } from 'rxjs';
-import { Scope } from '../../models/scope.model';
+import { Scope, ScopedCategory } from '../../models/scope.model';
 import { ScopeService } from '../../services/scope.service';
 import { Category } from '../../models/category.model';
 import { TransactionService } from '../../services/transaction.service';
@@ -50,9 +50,9 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     this.type = this.data.type;
 
     this.form = new FormGroup({
-      amount: new FormControl(null, [Validators.required]),
-      description: new FormControl(''),
-      date: new FormControl(new Date(), []),
+      amount: new FormControl(this.data.amount, [Validators.required]),
+      description: new FormControl(this.data.description),
+      date: new FormControl(this.data.date ?? new Date(), []),
       origin: new FormControl(this.data.origin ?? null),
       destination: new FormControl(this.data.destination ?? null),
       scope: new FormControl(null, [Validators.required]),
@@ -60,8 +60,6 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     });
     this.form.get('date')?.disable();
     this.form.get('category')?.disable();
-
-    this.fetchLists();
 
     this.form.get('scope')?.valueChanges.subscribe((scope: Scope) => {
       if (scope) {
@@ -72,6 +70,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
         this.form.get('category')?.disable();
       }
     });
+
+    this.fetchLists();
   }
 
   fetchLists() {
@@ -100,6 +100,20 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
         .get('category')
         ?.setValue(firstPrivateScope.getDefaultCategory());
     }
+
+    const prefixedScope = this.userScopes.find(
+      (x) => x.data._id === this.data.scope?._id
+    );
+    if (prefixedScope) {
+      const prefixedCategory = prefixedScope
+        .getCategories()
+        .find((x) => x.name === this.data.scope?.category.name);
+
+      if (prefixedCategory) {
+        this.form.get('scope')?.setValue(prefixedScope);
+        this.form.get('category')?.setValue(prefixedCategory);
+      }
+    }
   }
 
   commit() {
@@ -108,23 +122,68 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     this.data.setAmount(amount);
     this.data.setDescription(description);
     this.data.setDate(date);
-    this.data.setScope(scope);
-    this.data.setCategory(category);
-    const request = this.data.generateRequest();
 
-    this.fetching = true;
-    this.tranService
-      .createTransaction(request)
-      .subscribe({
-        next: (x) => {
-          this.dialogRef.close(true);
-        },
-        error: (err) => {
-          const a = err;
-        },
-      })
-      .add(() => {
-        this.fetching = true;
-      });
+    let scopedCat: ScopedCategory = {
+      _id: scope.data._id,
+      name: scope.data.name,
+      icon: scope.data.icon,
+      category: category,
+    };
+    this.data.setScope(scopedCat);
+    this.data.setCategory(category);
+
+    if (this.hasOriginal) {
+      const request = this.data.generateModificationRequest();
+
+      this.fetching = true;
+      this.tranService
+        .updateTransaction(this.data.madeTransaction!._id, request)
+        .subscribe({
+          next: (x) => {
+            this.dialogRef.close(true);
+          },
+          error: (err) => {
+            const a = err;
+          },
+        })
+        .add(() => {
+          this.fetching = true;
+        });
+    } else {
+      const request = this.data.generateRequest();
+      this.fetching = true;
+      this.tranService
+        .createTransaction(request)
+        .subscribe({
+          next: (x) => {
+            this.dialogRef.close(true);
+          },
+          error: (err) => {
+            const a = err;
+          },
+        })
+        .add(() => {
+          this.fetching = true;
+        });
+    }
+  }
+
+  get hasOriginal(): boolean {
+    return Boolean(this.data.madeTransaction);
+  }
+
+  get originalChanged(): boolean {
+    if (this.data.madeTransaction) {
+      const { amount, description, date, scope, category } =
+        this.form.getRawValue();
+
+      if (this.data.madeTransaction.description !== description) return true;
+      if (Math.abs(this.data.madeTransaction.amount) !== Math.abs(amount))
+        return true;
+      if (this.data.madeTransaction.scope._id !== scope.data?._id) return true;
+      if (this.data.madeTransaction.scope.category.name !== category?.name)
+        return true;
+    }
+    return false;
   }
 }

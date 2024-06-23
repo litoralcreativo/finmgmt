@@ -6,8 +6,11 @@
       </button>
     </div>
     <div class="grid-area grid-left">
-      <mat-card *ngIf="!fetchingAccount; else fetchingAccountCard">
-        <mat-card-title style="width: 100%"
+      <mat-card
+        *ngIf="!fetchingAccount; else fetchingAccountCard"
+        class="account-card"
+      >
+        <mat-card-title class="card-title"
           ><span>{{ account.data.name }}</span>
           <span>
             <mat-icon
@@ -76,6 +79,7 @@
           <mat-list-item
             *ngFor="let transaction of transactions"
             class="transaction-item"
+            (click)="onTransactionClick(transaction)"
           >
             <div
               class="transaction-left"

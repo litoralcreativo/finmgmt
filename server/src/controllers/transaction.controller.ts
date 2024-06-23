@@ -188,10 +188,6 @@ export const createTransaction = async (req: Request, res: Response) => {
       })
       .catch((err) => Responses.BadRequest(res, err.message));
 
-    /* await firstValueFrom(transactionService.createOne(insertion))
-      .then((val) => {})
-      .catch((err) => Responses.BadRequest(res, "Not inserted")); */
-
     await firstValueFrom(transactionService.createOne(insertion))
       .then((val) => {
         if (!val) {
@@ -220,28 +216,93 @@ export const createTransaction = async (req: Request, res: Response) => {
   }
 };
 
-/* export const updateTransactionById = (req: Request, res: Response) => {
-  const id = req.params.id;
-  const dto: TransactionRequestDTO = req.body;
-  if (req.body._id) {
-    return res
-      .status(400)
-      .json({ message: "Including _id in the request body is not allowed" });
-  }
-  transactionService.updateOneById(id, dto).subscribe((result) => {
-    if (!result.acknowledged) {
-      res
-        .status(500)
-        .json({ message: "The DB culden't confirm the modification" });
-    } else {
-      if (result.matchedCount === 0) {
-        res.status(404).json({ message: "Item not found" });
-      } else {
-        res.status(200).send(result.modifiedCount.toString());
+export const updateTransactionById = async (req: Request, res: Response) => {
+  const transactionId = req.params.id;
+  const { amount, description } = req.body;
+  const scopeId = req.body.scope?._id;
+  const categoryName = req.body.scope?.category?.name;
+
+  //#region validations
+  if (!amount) return Responses.BadRequest(res, "The amount is missing");
+  if (!scopeId) return Responses.BadRequest(res, "The scope id is missing");
+  if (!categoryName)
+    return Responses.BadRequest(res, "The categoryName is missing");
+  //#endregion
+
+  const $getTransaction = transactionService.getById(transactionId);
+  const $getScope = financialScope.getById(scopeId);
+
+  let updated: Partial<Transaction> = {
+    amount,
+    description,
+    scope: undefined,
+  };
+
+  let account_id: string;
+
+  await firstValueFrom($getTransaction)
+    .then((transaction) => {
+      if (!transaction) {
+        return throwError(() => new Error("The transaction doesn't exist"));
       }
-    }
+
+      account_id = transaction.account_id;
+    })
+    .catch((err) => Responses.BadRequest(res, err.message));
+
+  if (account_id! === undefined) throw new Error("No account id");
+
+  await firstValueFrom($getScope)
+    .then((scopeData) => {
+      if (!scopeData) {
+        return throwError(() => new Error("The scope doesn't exist"));
+      }
+
+      const category = scopeData.categories.find(
+        (x) => x.name === categoryName
+      );
+
+      if (!category) {
+        return throwError(
+          () => new Error("The category doesn't exist in the scope")
+        );
+      }
+
+      updated.scope = {
+        _id: scopeId,
+        name: scopeData.name,
+        icon: scopeData.icon,
+        category: {
+          name: category.name,
+          icon: category.icon,
+          fixed: category.fixed,
+        },
+      };
+    })
+    .catch((err) => Responses.BadRequest(res, err.message));
+
+  await firstValueFrom(transactionService.updateOneById(transactionId, updated))
+    .then((val) => {
+      if (!val) {
+        return res.status(404).json({ message: "Not modified" });
+      }
+    })
+    .catch((err) => Responses.BadRequest(res, err.message));
+
+  const acountAmount = await firstValueFrom(
+    transactionService.getAccountAmount(account_id)
+  );
+
+  const updatedAccount = await firstValueFrom(
+    accountService.updateOneById(account_id, {
+      amount: acountAmount.totalAmount,
+    })
+  );
+
+  return res.status(200).json({
+    ...new ResponseStrategy(200, "updated"),
   });
-}; */
+};
 
 /* export const deleteTransactionById = (req: Request, res: Response) => {
   const id = req.params.id;
