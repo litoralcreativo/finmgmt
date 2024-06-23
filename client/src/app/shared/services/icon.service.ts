@@ -58,6 +58,9 @@ export class IconService {
 
     this.catIcons.set('money', [
       'attach_money',
+      'paid',
+      'currency_exchange',
+      'payments',
       'credit_card',
       'ssid_chart',
       'show_chart',

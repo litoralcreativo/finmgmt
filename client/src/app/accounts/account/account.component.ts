@@ -121,6 +121,7 @@ export class AccountComponent implements OnInit {
       .subscribe((mustUpdate) => {
         if (mustUpdate) {
           this.getAccountData();
+          this.getAcumulator();
           this.getAccountTransactions();
           this.accService.getAccounts();
         }

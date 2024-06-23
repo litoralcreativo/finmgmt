@@ -15,24 +15,19 @@ export class Scope {
 
   constructor(init: ScopeResponse) {
     this.data = init;
+    if (this.data.categories) {
+      this.data.categories.sort(
+        (a, b) => Number(a.default ?? false) - Number(b.default ?? false)
+      );
+    }
   }
 
   getCategories(): Category[] {
     return this.data?.categories ?? [];
   }
 
-  getDefaultCategory(): Category {
-    if (this.data.categories && this.data.categories.length > 0) {
-      const catLengt = this.data?.categories.length;
-      return this.data?.categories[catLengt - 1];
-    }
-
-    const category: Category = {
-      name: 'misc',
-      icon: 'more_horiz',
-      fixed: false,
-    };
-    return category;
+  getDefaultCategory(): Category | undefined {
+    return this.data.categories.find((x) => x.default);
   }
 }
 

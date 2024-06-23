@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { first, map, tap } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
 import { Category } from '../models/category.model';
 import { Scope, ScopeDTO, ScopeResponse } from '../models/scope.model';
@@ -17,7 +17,7 @@ export class ScopeService {
     this.getScopes();
   }
 
-  getScopes() {
+  getScopes(): void {
     this.http
       .get<{ total: number; elements: ScopeResponse[] }>(routes.scopes.all, {
         withCredentials: true,
@@ -64,13 +64,20 @@ export class ScopeService {
     categoryName: string,
     category: Category
   ): Observable<any> {
-    return this.http.patch(
-      routes.scopes.updateCategory(scopeId, categoryName),
-      category
-    );
+    return this.http
+      .patch(routes.scopes.updateCategory(scopeId, categoryName), category)
+      .pipe(
+        tap((res: any) => {
+          if (res.result?.category?.modifiedCount) this.getScopes();
+        })
+      );
   }
 
   createCategory(scopeId: string, category: Category): Observable<any> {
-    return this.http.post(routes.scopes.createCategory(scopeId), category);
+    return this.http.post(routes.scopes.createCategory(scopeId), category).pipe(
+      tap((res: any) => {
+        this.getScopes();
+      })
+    );
   }
 }

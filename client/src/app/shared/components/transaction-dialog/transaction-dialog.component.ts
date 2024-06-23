@@ -92,8 +92,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
   setDefaultScopeAndCat() {
     const firstPrivateScope = this.userScopes.find((x) => !x.data.shared);
-    this.form.get('scope')?.setValue(firstPrivateScope);
     if (firstPrivateScope) {
+      this.form.get('scope')?.setValue(firstPrivateScope);
       this.form.get('category')?.enable();
       this.categories = firstPrivateScope.getCategories();
       this.form
