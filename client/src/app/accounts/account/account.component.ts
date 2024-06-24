@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TransactionDialogComponent } from 'src/app/shared/components/transaction-dialog/transaction-dialog.component';
@@ -34,6 +35,8 @@ export class AccountComponent implements OnInit {
   fetchingAccount: boolean = false;
   fetchingAcumulator: boolean = false;
   fetchingTransactions: boolean = false;
+
+  searchFormControl: FormControl = new FormControl('');
 
   constructor(
     private router: Router,
@@ -140,9 +143,12 @@ export class AccountComponent implements OnInit {
       });
   }
 
-  goToHistory() {
+  goToHistory(search?: string) {
+    const queryParams = search ? { search } : {};
+
     this.router.navigate(['history'], {
       relativeTo: this.aRoute,
+      queryParams: queryParams,
     });
   }
 
@@ -165,5 +171,12 @@ export class AccountComponent implements OnInit {
       transaction.amount > 0 ? 'in' : 'out',
       transaction
     );
+  }
+
+  onSearch() {
+    const search = this.searchFormControl.value;
+    if (search) {
+      this.goToHistory(search);
+    }
   }
 }

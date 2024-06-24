@@ -12,6 +12,9 @@ import {
   TransactionResponse,
 } from 'src/app/shared/models/transaction.model';
 import { AccountService } from 'src/app/shared/services/account.service';
+import { combineLatest } from 'rxjs';
+import { tap, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-account-history',
@@ -22,8 +25,11 @@ export class AccountHistoryComponent implements OnInit {
   transactions: TransactionResponse[];
   accountId: any;
   account: Account;
+  searchFormControl: FormControl = new FormControl('');
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  typing: boolean;
+  fetching: boolean;
 
   constructor(
     private router: Router,
@@ -33,21 +39,62 @@ export class AccountHistoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.aRoute.paramMap.subscribe((params) => {
-      const id = params.get('accountId');
-      if (!id) throw new Error('No accountId provided');
+    combineLatest([this.aRoute.paramMap, this.aRoute.queryParams])
+      .pipe(
+        map(([params, queryParams]) => {
+          const id = params.get('accountId');
+          const search = queryParams['search'] || null;
 
-      this.accountId = id;
-      const ssp: SspPayload<TransactionResponse> = {
-        paginator: {
-          pageIndex: 0,
-          pageSize: 5,
-        },
-      };
-      this.getAccountTransactions(ssp);
-      this.accService
-        .getById(this.accountId)
-        .subscribe((x) => (this.account = x));
+          if (!id) throw new Error('No accountId provided');
+
+          return { id, search };
+        })
+      )
+      .subscribe(({ id, search }) => {
+        this.accountId = id;
+
+        const ssp: SspPayload<TransactionResponse> = {
+          paginator: {
+            pageIndex: 0,
+            pageSize: 5,
+          },
+        };
+
+        if (search) {
+          this.searchFormControl.setValue(search);
+          ssp.filter = {
+            filterOptions: ['description'],
+            filterValue: search,
+          };
+        }
+
+        this.getAccountTransactions(ssp);
+
+        if (!this.account) {
+          this.accService
+            .getById(this.accountId)
+            .subscribe((x) => (this.account = x));
+        }
+      });
+
+    this.searchFormControl.valueChanges
+      .pipe(
+        tap((val) => (this.typing = true)),
+        debounceTime(1000),
+        tap((val) => (this.typing = false)),
+        distinctUntilChanged(),
+        tap((val) => (this.fetching = true))
+      )
+      .subscribe((res) => {
+        this.updateQueryParam(res);
+        this.fetching = false;
+      });
+  }
+
+  updateQueryParam(value: string) {
+    this.router.navigate([], {
+      queryParams: { search: value },
+      queryParamsHandling: 'merge', // Para mantener otros parámetros de consulta intactos
     });
   }
 
@@ -71,6 +118,15 @@ export class AccountHistoryComponent implements OnInit {
         pageSize: event.pageSize,
       },
     };
+
+    const search = this.searchFormControl.value;
+    if (search) {
+      this.searchFormControl.setValue(search);
+      ssp.filter = {
+        filterOptions: ['description'],
+        filterValue: search,
+      };
+    }
     this.getAccountTransactions(ssp);
   }
 

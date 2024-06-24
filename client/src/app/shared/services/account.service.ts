@@ -98,5 +98,12 @@ function generateSspQuery(ssp: SspPayload<TransactionResponse>): string {
   let result = '';
   result += `page=${ssp.paginator.pageIndex}`;
   result += `&pageSize=${ssp.paginator.pageSize}`;
+
+  if (ssp.filter) {
+    ssp.filter.filterOptions.forEach((option) => {
+      result += `&${option}=${ssp.filter?.filterValue}`;
+    });
+  }
+
   return result;
 }

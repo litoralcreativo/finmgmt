@@ -8,7 +8,7 @@
   <div class="transactions-search-bar">
     <mat-form-field appearance="outline">
       <mat-label>Search</mat-label>
-      <input matInput title="search" />
+      <input matInput title="search" [formControl]="searchFormControl" />
       <span matSuffix><mat-icon>search</mat-icon></span>
     </mat-form-field>
   </div>
