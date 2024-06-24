@@ -45,6 +45,10 @@ export class AuthInterceptor implements HttpInterceptor {
           headers: modifiedReq.headers.set('Authorization', `Bearer ${token}`),
         });
       }
+    } else if (skipAuth) {
+      modifiedReq = modifiedReq.clone({
+        headers: modifiedReq.headers.delete('skip-auth'),
+      });
     }
 
     return next.handle(modifiedReq).pipe(

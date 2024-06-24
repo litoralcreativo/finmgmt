@@ -2,8 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TransactionDialogComponent } from 'src/app/shared/components/transaction-dialog/transaction-dialog.component';
+import { Account } from 'src/app/shared/models/accountData.model';
 import { SspPayload } from 'src/app/shared/models/sspdata.model';
 import {
+  IncomingTransaction,
+  OutgoingTransaction,
   Transaction,
   TransactionResponse,
 } from 'src/app/shared/models/transaction.model';
@@ -17,6 +21,7 @@ import { AccountService } from 'src/app/shared/services/account.service';
 export class AccountHistoryComponent implements OnInit {
   transactions: TransactionResponse[];
   accountId: any;
+  account: Account;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -40,6 +45,9 @@ export class AccountHistoryComponent implements OnInit {
         },
       };
       this.getAccountTransactions(ssp);
+      this.accService
+        .getById(this.accountId)
+        .subscribe((x) => (this.account = x));
     });
   }
 
@@ -56,7 +64,7 @@ export class AccountHistoryComponent implements OnInit {
       });
   }
 
-  onPaginatorChante(event: PageEvent) {
+  onPaginatorChange(event: PageEvent) {
     const ssp: SspPayload<TransactionResponse> = {
       paginator: {
         pageIndex: event.pageIndex,
@@ -70,5 +78,33 @@ export class AccountHistoryComponent implements OnInit {
     this.router.navigate(['..'], {
       relativeTo: this.aRoute,
     });
+  }
+
+  onTransactionClick(madeTransaction: TransactionResponse) {
+    let transaction: Transaction;
+    if (!this.account) throw new Error('No account provided');
+
+    if (madeTransaction.amount > 0)
+      transaction = new IncomingTransaction(this.account);
+    else transaction = new OutgoingTransaction(this.account);
+
+    if (madeTransaction) {
+      transaction.madeTransaction = madeTransaction;
+      transaction.setAmount(madeTransaction.amount);
+      transaction.setDescription(madeTransaction.description);
+      transaction.setScope(madeTransaction.scope);
+    }
+
+    this.dialog
+      .open<TransactionDialogComponent>(TransactionDialogComponent, {
+        data: transaction,
+        width: '500px',
+      })
+      .afterClosed()
+      .subscribe((mustUpdate) => {
+        if (mustUpdate) {
+          this.accService.getAccounts();
+        }
+      });
   }
 }

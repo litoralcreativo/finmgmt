@@ -5,9 +5,9 @@ import {
   RouterStateSnapshot,
   Router,
 } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { map, take } from 'rxjs/operators';
+import { map, take, switchMap, catchError } from 'rxjs/operators';
 import { PublicUserData } from '../models/userdata.model';
 
 @Injectable({
@@ -21,12 +21,26 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.userData.pipe(
-      map((user: PublicUserData | undefined) => {
-        if (!user) {
-          this.router.navigate(['/']);
-          return false;
+      take(1),
+      switchMap((user: PublicUserData | undefined) => {
+        if (user) {
+          return of(true);
+        } else {
+          return this.authService.userInfo().pipe(
+            map((fetchedUser: PublicUserData) => {
+              if (fetchedUser) {
+                return true;
+              } else {
+                this.router.navigate(['/']);
+                return false;
+              }
+            }),
+            catchError(() => {
+              this.router.navigate(['/']);
+              return of(false);
+            })
+          );
         }
-        return true;
       })
     );
   }

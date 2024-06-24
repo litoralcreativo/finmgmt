@@ -41,16 +41,18 @@ export class AuthService {
         { withCredentials: true }
       )
       .pipe(
-        tap((response: any) => {
-          this.fetching = false;
+        switchMap((response: any) => {
           const token = (response as any).token;
           if (token) localStorage.setItem('token', token);
           this.authStatusListener.next(true);
-          this.fetchUserInfo();
-
-          if (response.redirectTo) {
-            this.router.navigate([response.redirectTo]);
-          }
+          return this.userInfo().pipe(
+            tap((userdata) => {
+              this.fetching = false;
+              if (response.redirectTo) {
+                this.router.navigate([response.redirectTo]);
+              }
+            })
+          );
         }),
         catchError((err) => {
           this.fetching = false;
@@ -86,19 +88,27 @@ export class AuthService {
   private fetchUserInfo() {
     if (!this.tokenService.getToken()) return;
 
-    this.http
+    this.userInfo().subscribe({
+      next: (userdata) => {
+        this._userData.next(userdata);
+      },
+      error: (err) => {
+        if (err.error?.logout) {
+          this.logout();
+        }
+      },
+    });
+  }
+
+  userInfo(): Observable<PublicUserData> {
+    return this.http
       .get<PublicUserData>(routes.auth.user, {
         withCredentials: true,
       })
-      .subscribe({
-        next: (userdata) => {
+      .pipe(
+        tap((userdata) => {
           this._userData.next(userdata);
-        },
-        error: (err) => {
-          if (err.error?.logout) {
-            this.logout();
-          }
-        },
-      });
+        })
+      );
   }
 }
