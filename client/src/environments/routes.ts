@@ -25,6 +25,8 @@ export const routes = {
     amount: (id: string) => `${environment.apiUrl}/account/${id}/amount`,
     categoriesAmount: (id: string) =>
       `${environment.apiUrl}/account/${id}/categories`,
+    balance: (id: string, days: number) =>
+      `${environment.apiUrl}/account/${id}/balance?days=${days}`,
   },
   scopes: {
     all: `${environment.apiUrl}/scopes`,

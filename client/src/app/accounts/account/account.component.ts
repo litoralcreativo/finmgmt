@@ -9,6 +9,7 @@ import {
   AccountData,
   AccountType,
 } from 'src/app/shared/models/accountData.model';
+import { BalanceData } from 'src/app/shared/models/balanceData.model';
 import { Scope } from 'src/app/shared/models/scope.model';
 import {
   IncomingTransaction,
@@ -35,8 +36,13 @@ export class AccountComponent implements OnInit {
   fetchingAccount: boolean = false;
   fetchingAcumulator: boolean = false;
   fetchingTransactions: boolean = false;
+  fetchingBalanceData: boolean = false;
 
   searchFormControl: FormControl = new FormControl('');
+
+  accountBalanceData: BalanceData[];
+
+  balanceDays = 7;
 
   constructor(
     private router: Router,
@@ -58,7 +64,20 @@ export class AccountComponent implements OnInit {
       this.getAccountData();
       this.getAccountTransactions();
       this.getAcumulator();
+      this.getAccountBalance();
     });
+  }
+
+  getAccountBalance() {
+    if (!this.accountId) throw new Error('No account id provided');
+
+    this.fetchingBalanceData = true;
+    this.accService
+      .getAccountBalance(this.accountId, this.balanceDays)
+      .subscribe((res) => {
+        this.accountBalanceData = res;
+      })
+      .add(() => (this.fetchingBalanceData = false));
   }
 
   getAcumulator() {
@@ -138,6 +157,7 @@ export class AccountComponent implements OnInit {
           this.getAccountData();
           this.getAcumulator();
           this.getAccountTransactions();
+          this.getAccountBalance();
           this.accService.getAccounts();
         }
       });

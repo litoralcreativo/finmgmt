@@ -18,6 +18,7 @@ import { CategoryDetailComponent } from './components/category-detail/category-d
 import { LoadingPanelComponent } from './components/loading-panel/loading-panel.component';
 import { IconSelectorComponent } from './components/icon-selector/icon-selector.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
+import { BalanceGraphComponent } from './components/balance-graph/balance-graph.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
     LoadingPanelComponent,
     IconSelectorComponent,
     ConfirmationComponent,
+    BalanceGraphComponent,
   ],
   imports: [
     CommonModule,
@@ -53,6 +55,8 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
     MonthlyCategoriesComponent,
     LoadingPanelComponent,
     IconSelectorComponent,
+    BalanceGraphComponent,
+    NgApexchartsModule,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
 })

@@ -34,7 +34,14 @@
             <span class="mat-caption">{{ account.data.symbol }}</span>
           </h2>
         </mat-card-content>
+        <mat-card-footer> </mat-card-footer>
       </mat-card>
+
+      <app-balance-graph
+        [data]="accountBalanceData"
+        (scopeChange)="balanceDays = $event; getAccountBalance()"
+      ></app-balance-graph>
+
       <div class="account-card-actions">
         <button
           mat-button

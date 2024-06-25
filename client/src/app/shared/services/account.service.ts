@@ -5,6 +5,7 @@ import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
 import { AccountAcumulator } from '../models/accountAcumulator.model';
 import { Account, AccountData } from '../models/accountData.model';
+import { BalanceData, BalanceDataDTO } from '../models/balanceData.model';
 import { SspPayload, SspResponse } from '../models/sspdata.model';
 import { TransactionResponse } from '../models/transaction.model';
 
@@ -91,6 +92,22 @@ export class AccountService {
         withCredentials: true,
       }
     );
+  }
+
+  getAccountBalance(
+    accountId: string,
+    days: number
+  ): Observable<BalanceData[]> {
+    return this.http
+      .get<BalanceDataDTO[]>(`${routes.account.balance(accountId, days)}`)
+      .pipe(
+        map((res) => {
+          return res.map((x) => ({
+            day: new Date(x.day),
+            totalAmount: Number(x.totalAmount.toFixed(2)),
+          }));
+        })
+      );
   }
 }
 

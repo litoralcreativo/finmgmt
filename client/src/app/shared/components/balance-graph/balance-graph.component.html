@@ -1,0 +1,21 @@
+<mat-form-field appearance="outline" style="width: 100%">
+  <mat-label>Scope</mat-label>
+  <mat-select [value]="7" (selectionChange)="onSelectionChange($event.value)">
+    <mat-option [value]="7">1 week</mat-option>
+    <mat-option [value]="14">2 weeks</mat-option>
+    <mat-option [value]="30">1 month</mat-option>
+    <mat-option [value]="90">3 month</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<apx-chart
+  #chart
+  [series]="chartOptions.series"
+  [chart]="chartOptions.chart"
+  [xaxis]="chartOptions.xaxis"
+  [yaxis]="chartOptions.yaxis"
+  [stroke]="chartOptions.stroke"
+  [dataLabels]="chartOptions.dataLabels"
+  [labels]="chartOptions.labels"
+  [legend]="chartOptions.legend"
+></apx-chart>
