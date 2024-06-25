@@ -4,6 +4,7 @@ import validatePagination from "../middlewares/pagination.middleware";
 import {
   create,
   getAccountAmountsByCategory,
+  getAccountBalanceById,
   getById,
   getByUser,
   setFavorite,
@@ -16,6 +17,7 @@ router.get("/", requireAuth, getByUser);
 router.post("/", requireAuth, create);
 router.patch("/fav/:id", requireAuth, setFavorite);
 router.get("/:id", requireAuth, getById);
+router.get("/:id/balance", requireAuth, getAccountBalanceById);
 router.get(
   "/:id/transactions",
   requireAuth,

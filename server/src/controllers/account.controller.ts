@@ -176,3 +176,21 @@ export const getAccountAmountsByCategory = (req: Request, res: Response) => {
     });
   }
 };
+
+export const getAccountBalanceById = (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { days } = req.query;
+
+    if (isNaN(Number(days))) throw new Error("Days must be a number");
+
+    transactionService.getAccountBalance(id, Number(days)).subscribe((val) => {
+      return res.status(200).json(val);
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Internal server error"),
+    });
+  }
+};
