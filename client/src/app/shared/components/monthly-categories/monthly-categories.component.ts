@@ -70,6 +70,13 @@ export class MonthlyCategoriesComponent implements OnInit {
     this.negative.sort((a, b) => a.amount - b.amount);
     this.positive.sort((a, b) => b.amount - a.amount);
 
+    if (this.positive.some((x) => x.category.name === 'Swap')) {
+      this.positive.sort((a, b) => (a.category.name === 'Swap' ? -1 : 1));
+    }
+    if (this.negative.some((x) => x.category.name === 'Swap')) {
+      this.negative.sort((a, b) => (a.category.name === 'Swap' ? -1 : 1));
+    }
+
     this.setMonth();
   }
 

@@ -42,7 +42,7 @@ export class AccountComponent implements OnInit {
 
   accountBalanceData: BalanceData[];
 
-  balanceDays = 7;
+  balanceDays = 30;
 
   constructor(
     private router: Router,
