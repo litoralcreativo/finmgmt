@@ -55,7 +55,10 @@
       <span matSuffix><mat-icon>search</mat-icon></span>
     </mat-form-field>
   </div>
-  <mat-action-list class="transaction-list">
+  <mat-action-list
+    class="transaction-list"
+    *ngIf="!fetching; else skeletonList"
+  >
     <mat-list-item
       *ngFor="let transaction of transactions"
       class="transaction-item"
@@ -70,8 +73,13 @@
         }}</mat-icon>
       </div>
       <div class="transaction-main">
-        <div mat-line>{{ transaction.description }}</div>
-        <div class="transaction-light mat-caption row-flex">
+        <div mat-line>
+          <span> {{ transaction.description }}</span>
+        </div>
+        <div
+          class="transaction-light mat-caption row-flex"
+          style="margin-top: 5px"
+        >
           <span class="mat-caption"
             >{{ transaction.scope.name | uppercase }} -
             {{ transaction.scope.category.name }}</span
@@ -85,11 +93,16 @@
           [class.positive]="transaction.amount > 0"
           [class.bold]="transaction.amount > 0"
         >
-          {{ transaction.amount > 0 ? "+ " : ""
-          }}{{ transaction.amount | currency : "USD" : "$ " }}
+          <span>
+            {{ transaction.amount > 0 ? "+ " : ""
+            }}{{ transaction.amount | currency : "USD" : "$ " }}
+          </span>
         </div>
-        <div class="transaction-date transaction-light mat-caption">
-          {{ transaction.date | formatDate }}
+        <div
+          class="transaction-date transaction-light mat-caption"
+          style="margin-top: 5px"
+        >
+          <span>{{ transaction.date | formatDate }}</span>
         </div>
       </div>
       <mat-divider></mat-divider>
@@ -116,4 +129,67 @@
     (categorySelection)="changeCategory($event)"
     [categories]="true"
   ></app-icon-selector>
+</ng-template>
+
+<ng-template #skeletonList>
+  <mat-action-list class="transaction-list">
+    <mat-list-item
+      *ngFor="let transaction of transactions"
+      class="transaction-item"
+      (click)="onTransactionClick(transaction)"
+    >
+      <div
+        class="transaction-left"
+        matTooltip="{{ transaction.scope.category.name }}"
+        [appSkeletonLoader]="fetching"
+      >
+        <mat-icon class="transaction-scope">{{
+          transaction.scope.category.icon
+        }}</mat-icon>
+      </div>
+      <div class="transaction-main" [appSkeletonLoader]="fetching">
+        <div mat-line>
+          <span> {{ transaction.description }}</span>
+        </div>
+        <div
+          class="transaction-light mat-caption row-flex"
+          style="margin-top: 5px"
+        >
+          <span class="mat-caption"
+            >{{ transaction.scope.name | uppercase }} -
+            {{ transaction.scope.category.name }}</span
+          >
+        </div>
+      </div>
+      <div class="transaction-right" [appSkeletonLoader]="fetching">
+        <div
+          mat-line
+          class="transaction-amount"
+          [class.positive]="transaction.amount > 0"
+          [class.bold]="transaction.amount > 0"
+        >
+          <span>
+            {{ transaction.amount > 0 ? "+ " : ""
+            }}{{ transaction.amount | currency : "USD" : "$ " }}
+          </span>
+        </div>
+        <div
+          class="transaction-date transaction-light mat-caption"
+          style="margin-top: 5px"
+        >
+          <span>{{ transaction.date | formatDate }}</span>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+    <mat-paginator
+      [length]="this.paginator?.length || 0"
+      [pageSize]="this.paginator?.pageSize || 5"
+      [pageIndex]="this.paginator?.pageIndex || 5"
+      [pageSizeOptions]="this.paginator?.pageSizeOptions || [5]"
+      aria-label="Select page"
+      [disabled]="true"
+    >
+    </mat-paginator>
+  </mat-action-list>
 </ng-template>

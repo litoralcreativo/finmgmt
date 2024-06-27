@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -35,20 +35,21 @@ export class AccountHistoryComponent implements OnInit {
   });
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  typing: boolean;
+  filtering: boolean;
   fetching: boolean;
   scopes: Scope[] = [];
   catSelectorOpen: boolean = false;
   filter: Partial<{
     [P in keyof TransactionFilterRequest]: string;
   }> = {};
+  ssp: SspPayload<TransactionResponse>;
 
   constructor(
     private router: Router,
     private aRoute: ActivatedRoute,
     private accService: AccountService,
     private scopeService: ScopeService,
-
+    private cdr: ChangeDetectorRef,
     private dialog: MatDialog
   ) {}
 
@@ -75,6 +76,8 @@ export class AccountHistoryComponent implements OnInit {
           },
         };
 
+        this.ssp = ssp;
+
         this.searchFormGroup.get('description')?.setValue(description);
         this.filter.description = description;
 
@@ -88,7 +91,7 @@ export class AccountHistoryComponent implements OnInit {
         }
         this.filter.category = category;
 
-        this.getAccountTransactions(ssp);
+        this.getAccountTransactions();
 
         if (!this.account) {
           this.accService
@@ -99,15 +102,18 @@ export class AccountHistoryComponent implements OnInit {
 
     this.searchFormGroup.valueChanges
       .pipe(
-        tap((val) => (this.typing = true)),
+        tap((val) => (this.filtering = true)),
         debounceTime(1000),
-        tap((val) => (this.typing = false)),
-        distinctUntilChanged(),
-        tap((val) => (this.fetching = true))
+        tap((val) => (this.filtering = false)),
+        distinctUntilChanged((a, b) => {
+          return (
+            a.description === b.description &&
+            a.category?.name === b.category?.name
+          );
+        })
       )
       .subscribe((res) => {
         this.updateQueryParam(res.description, res.category?.name);
-        this.fetching = false;
       });
   }
 
@@ -124,13 +130,20 @@ export class AccountHistoryComponent implements OnInit {
     });
   }
 
-  getAccountTransactions(ssp: SspPayload<TransactionResponse>) {
+  getAccountTransactions() {
     if (!this.accountId) throw new Error('No account id provided');
 
+    this.fetching = true;
+    this.searchFormGroup.controls.description.disable({
+      emitEvent: false,
+    });
     this.accService
-      .getAccountTransactions(this.accountId, ssp, this.filter)
+      .getAccountTransactions(this.accountId, this.ssp, this.filter)
       .subscribe((res) => {
+        this.fetching = false;
+        this.searchFormGroup.controls.description.enable({ emitEvent: false });
         this.transactions = res.elements;
+        this.cdr.detectChanges();
         this.paginator.pageIndex = res.page;
         this.paginator.pageSize = res.pageSize;
         this.paginator.length = res.total;
@@ -144,17 +157,8 @@ export class AccountHistoryComponent implements OnInit {
         pageSize: event.pageSize,
       },
     };
-
-    const { description } = this.searchFormGroup.value;
-    if (description) {
-      this.searchFormGroup.get('description')?.setValue(description);
-      this.filter;
-      ssp.filter = {
-        filterOptions: ['description'],
-        filterValue: description,
-      };
-    }
-    this.getAccountTransactions(ssp);
+    this.ssp = ssp;
+    this.getAccountTransactions();
   }
 
   navigateBack() {
@@ -187,7 +191,7 @@ export class AccountHistoryComponent implements OnInit {
       .afterClosed()
       .subscribe((mustUpdate) => {
         if (mustUpdate) {
-          this.accService.getAccounts();
+          this.getAccountTransactions();
         }
       });
   }

@@ -108,6 +108,8 @@ body {
   color: transparent !important;
   width: -moz-fit-content;
   width: fit-content;
+  opacity: 0.5;
+  transition: all 0.3s;
 }
 
 @keyframes skeleton-loading {
