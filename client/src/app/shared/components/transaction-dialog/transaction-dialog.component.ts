@@ -12,7 +12,11 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { Account, AccountData } from '../../models/accountData.model';
+import {
+  Account,
+  AccountData,
+  AccountType,
+} from '../../models/accountData.model';
 import { Transaction, TransactionType } from '../../models/transaction.model';
 import { AccountService } from '../../services/account.service';
 import { FetchingFlag } from '../../utils/fetching-flag';
@@ -33,10 +37,12 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
   secondFormGroup: FormGroup;
 
   form: FormGroup;
-  userAccounts: Account[] = [];
+  userAccounts: { type: AccountType; accounts: Account[] }[] = [];
   userScopes: Scope[] = [];
   type?: TransactionType;
   categories: Category[] = [];
+
+  swap: boolean = false;
 
   @ViewChild('categoriesInput') categoriesInput: ElementRef<HTMLInputElement>;
   defaultCategory: Category[];
@@ -59,8 +65,10 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
       amount: new FormControl(this.data.amount, [Validators.required]),
       description: new FormControl(this.data.description),
       date: new FormControl(this.data.date ?? new Date(), []),
-      origin: new FormControl(this.data.origin ?? null),
-      destination: new FormControl(this.data.destination ?? null),
+      origin: new FormControl(this.data.origin ?? null, [Validators.required]),
+      destination: new FormControl(this.data.destination ?? null, [
+        Validators.required,
+      ]),
       scope: new FormControl(null, [Validators.required]),
       category: new FormControl(null, [Validators.required]),
     });
@@ -78,6 +86,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     });
 
     this.fetchLists();
+    this.onSwapCheckboxChange();
   }
 
   fetchLists() {
@@ -88,7 +97,19 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
     combineLatest([$accounts, $scopes]).subscribe({
       next: ([accounts, scopes]) => {
-        this.userAccounts = accounts;
+        const groups: Set<AccountType> = new Set(
+          accounts.map((x) => x.data.type)
+        );
+
+        const groupedAccounts: { type: AccountType; accounts: Account[] }[] = [
+          ...groups,
+        ].map((group) => {
+          return {
+            type: group,
+            accounts: accounts.filter((x) => x.data.type === group),
+          };
+        });
+        this.userAccounts = groupedAccounts;
         this.userScopes = scopes;
         this.setDefaultScopeAndCat();
         this.fetching = false;
@@ -120,6 +141,19 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
         this.form.get('category')?.setValue(prefixedCategory);
       }
     }
+  }
+
+  onSwapCheckboxChange() {
+    if (this.swap) {
+      this.form.controls.origin.enable();
+      this.form.controls.destination.enable();
+      this.form.controls.scope.disable();
+    } else {
+      this.form.controls.origin.disable();
+      this.form.controls.destination.disable();
+      this.form.controls.scope.enable();
+    }
+    this.form.updateValueAndValidity();
   }
 
   commit() {
