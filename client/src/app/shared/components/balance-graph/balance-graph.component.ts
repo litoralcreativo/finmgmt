@@ -67,7 +67,7 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
         enabled: false,
       },
       stroke: {
-        curve: 'straight',
+        curve: 'smooth',
         width: 2,
       },
       title: {
