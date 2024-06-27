@@ -5,10 +5,53 @@
 <div class="mat-card transactions-list-container">
   <h2 class="transactions-list-title">Your activity</h2>
   <mat-divider></mat-divider>
-  <div class="transactions-search-bar">
+  <div class="transactions-search-bar" [formGroup]="searchFormGroup">
+    <!-- <mat-form-field appearance="outline" class="iconed-form-field">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="category">
+        <mat-select-trigger>
+          <div class="row-flex">
+            <mat-icon *ngIf="this.searchFormGroup.controls.category.value">{{
+              this.searchFormGroup.controls.category.value.icon
+            }}</mat-icon>
+            {{
+              this.searchFormGroup.controls.category.value
+                ? this.searchFormGroup.controls.category.value.name
+                : "None"
+            }}
+          </div>
+        </mat-select-trigger>
+        <mat-option [value]="null">None</mat-option>
+        <mat-optgroup *ngFor="let group of scopes" [label]="group.data.name">
+          <mat-option
+            *ngFor="let category of group.getCategories()"
+            [value]="category"
+          >
+            <mat-icon>{{ category.icon }}</mat-icon>
+            {{ category.name }}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field> -->
+    <button
+      mat-icon-button
+      (click)="catSelectorOpen = !catSelectorOpen"
+      type="button"
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+      [disabled]="fetching"
+      color="primary"
+      [matTooltip]="
+        searchFormGroup.controls.category.value?.name || 'all categories'
+      "
+    >
+      <mat-icon>{{
+        searchFormGroup.controls.category.value?.icon || "menu"
+      }}</mat-icon>
+    </button>
     <mat-form-field appearance="outline">
-      <mat-label>Search</mat-label>
-      <input matInput title="search" [formControl]="searchFormControl" />
+      <mat-label>Description</mat-label>
+      <input matInput title="search" formControlName="description" />
       <span matSuffix><mat-icon>search</mat-icon></span>
     </mat-form-field>
   </div>
@@ -60,12 +103,17 @@
     >
     </mat-paginator>
   </mat-action-list>
-  <!-- <button
-          mat-button
-          class="activity-history"
-          color="primary"
-          (click)="goToHistory()"
-        >
-          <span>ACTIVITY HISTORY</span>
-        </button> -->
 </div>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="catSelectorOpen"
+  [cdkConnectedOverlayHasBackdrop]="true"
+  (backdropClick)="catSelectorOpen = !catSelectorOpen"
+>
+  <app-icon-selector
+    (categorySelection)="changeCategory($event)"
+    [categories]="true"
+  ></app-icon-selector>
+</ng-template>

@@ -1,5 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Category } from '../../models/category.model';
+import { Scope } from '../../models/scope.model';
 import { IconService } from '../../services/icon.service';
+import { ScopeService } from '../../services/scope.service';
 
 @Component({
   selector: 'app-icon-selector',
@@ -7,19 +11,46 @@ import { IconService } from '../../services/icon.service';
   styleUrls: ['./icon-selector.component.scss'],
 })
 export class IconSelectorComponent implements OnInit {
-  icons: string[];
-  catIcons: [string, string[]][];
+  catIcons: [string, string[]][] = [];
+  scopeIcons: [string, Category[]][] = [];
 
-  @Output('selection') selection: EventEmitter<string> = new EventEmitter();
+  @Input('categories') categories: boolean = false;
 
-  constructor(private iconService: IconService) {}
+  @Output('iconSelection') iconSelection: EventEmitter<string> =
+    new EventEmitter();
+  @Output('categorySelection') categorySelection: EventEmitter<Category> =
+    new EventEmitter();
+  scopes: Scope[];
+
+  constructor(
+    private iconService: IconService,
+    private scopeService: ScopeService
+  ) {}
 
   ngOnInit(): void {
-    this.icons = [...this.iconService.icons];
     this.catIcons = Array.from(this.iconService.catIcons.entries());
+    if (this.categories) {
+      this.fetchLists();
+    }
   }
 
-  changeIcon(icon: string) {
-    this.selection.emit(icon);
+  fetchLists() {
+    const $scopes: Observable<Scope[]> = this.scopeService.$scopes;
+    $scopes.subscribe({
+      next: (scopes) => {
+        this.scopes = scopes;
+        this.scopeIcons = scopes.map((x) => {
+          return [x.data.name, x.getCategories()];
+        });
+      },
+    });
+  }
+
+  changeIcon($event: string) {
+    this.iconSelection.emit($event);
+  }
+
+  changeCategory($event?: Category) {
+    this.categorySelection.emit($event);
   }
 }

@@ -12,9 +12,12 @@ import {
   TransactionResponse,
 } from 'src/app/shared/models/transaction.model';
 import { AccountService } from 'src/app/shared/services/account.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { tap, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Category } from 'src/app/shared/models/category.model';
+import { ScopeService } from 'src/app/shared/services/scope.service';
+import { Scope } from 'src/app/shared/models/scope.model';
 
 @Component({
   selector: 'app-account-history',
@@ -25,16 +28,23 @@ export class AccountHistoryComponent implements OnInit {
   transactions: TransactionResponse[];
   accountId: any;
   account: Account;
-  searchFormControl: FormControl = new FormControl('');
+  searchFormGroup: FormGroup = new FormGroup({
+    category: new FormControl(''),
+    description: new FormControl(''),
+  });
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   typing: boolean;
   fetching: boolean;
+  scopes: Scope[] = [];
+  catSelectorOpen: boolean = false;
 
   constructor(
     private router: Router,
     private aRoute: ActivatedRoute,
     private accService: AccountService,
+    private scopeService: ScopeService,
+
     private dialog: MatDialog
   ) {}
 
@@ -42,15 +52,15 @@ export class AccountHistoryComponent implements OnInit {
     combineLatest([this.aRoute.paramMap, this.aRoute.queryParams])
       .pipe(
         map(([params, queryParams]) => {
-          const id = params.get('accountId');
-          const search = queryParams['search'] || null;
+          const id: string | null = params.get('accountId');
+          const description = queryParams['description'] || null;
 
           if (!id) throw new Error('No accountId provided');
 
-          return { id, search };
+          return { id, description };
         })
       )
-      .subscribe(({ id, search }) => {
+      .subscribe(({ id, description }) => {
         this.accountId = id;
 
         const ssp: SspPayload<TransactionResponse> = {
@@ -60,11 +70,11 @@ export class AccountHistoryComponent implements OnInit {
           },
         };
 
-        if (search) {
-          this.searchFormControl.setValue(search);
+        if (description) {
+          this.searchFormGroup.get('description')?.setValue(description);
           ssp.filter = {
             filterOptions: ['description'],
-            filterValue: search,
+            filterValue: description,
           };
         }
 
@@ -77,7 +87,7 @@ export class AccountHistoryComponent implements OnInit {
         }
       });
 
-    this.searchFormControl.valueChanges
+    this.searchFormGroup.valueChanges
       .pipe(
         tap((val) => (this.typing = true)),
         debounceTime(1000),
@@ -86,14 +96,20 @@ export class AccountHistoryComponent implements OnInit {
         tap((val) => (this.fetching = true))
       )
       .subscribe((res) => {
-        this.updateQueryParam(res);
+        this.updateQueryParam(res.description, res.category?.name);
         this.fetching = false;
       });
   }
 
-  updateQueryParam(value: string) {
+  updateQueryParam(description?: string, category?: string) {
+    if (!description || description === '') {
+      description = undefined;
+    }
+    if (!category || category === '') {
+      category = undefined;
+    }
     this.router.navigate([], {
-      queryParams: { search: value },
+      queryParams: { description: description, category: category },
       queryParamsHandling: 'merge', // Para mantener otros parámetros de consulta intactos
     });
   }
@@ -119,12 +135,12 @@ export class AccountHistoryComponent implements OnInit {
       },
     };
 
-    const search = this.searchFormControl.value;
-    if (search) {
-      this.searchFormControl.setValue(search);
+    const { description } = this.searchFormGroup.value;
+    if (description) {
+      this.searchFormGroup.get('description')?.setValue(description);
       ssp.filter = {
         filterOptions: ['description'],
-        filterValue: search,
+        filterValue: description,
       };
     }
     this.getAccountTransactions(ssp);
@@ -149,6 +165,7 @@ export class AccountHistoryComponent implements OnInit {
       transaction.setAmount(madeTransaction.amount);
       transaction.setDescription(madeTransaction.description);
       transaction.setScope(madeTransaction.scope);
+      transaction.setDate(new Date(madeTransaction.date));
     }
 
     this.dialog
@@ -162,5 +179,10 @@ export class AccountHistoryComponent implements OnInit {
           this.accService.getAccounts();
         }
       });
+  }
+
+  changeCategory(cat?: Category) {
+    this.searchFormGroup.get('category')?.setValue(cat);
+    this.catSelectorOpen = false;
   }
 }

@@ -45,8 +45,12 @@
 }
 
 ::ng-deep .transactions-search-bar {
-  padding: 1rem;
-  padding-bottom: 0;
+  padding: 1rem 1rem 0 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
   mat-form-field {
     width: 100%;
     .mat-form-field-wrapper {

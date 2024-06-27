@@ -23,6 +23,21 @@ export class IconService {
       'store',
     ]);
 
+    this.catIcons.set('transportation', [
+      'local_shipping',
+      'directions_car',
+      'flight',
+      'flight_takeoff',
+      'directions_bus',
+      'train',
+      'pedal_bike',
+      'directions_boat',
+      'two_wheeler',
+      'local_taxi',
+      'sailing',
+      'subway',
+    ]);
+
     this.catIcons.set('nature', [
       'landscape',
       'yard',
@@ -40,6 +55,7 @@ export class IconService {
       'receipt_long',
       'cloud',
       'subscriptions',
+      'shower',
     ]);
 
     this.catIcons.set('activities', [
@@ -118,6 +134,9 @@ export class IconService {
       'swap_horiz',
       'settings',
       'key',
+      'local_car_wash',
+      'shower',
+      'local_gas_station',
     ]);
   }
 }

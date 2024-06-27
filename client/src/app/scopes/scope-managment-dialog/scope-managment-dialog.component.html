@@ -50,5 +50,5 @@
   [cdkConnectedOverlayHasBackdrop]="true"
   (backdropClick)="iconSelectorOpen = !iconSelectorOpen"
 >
-  <app-icon-selector (selection)="changeIcon($event)"></app-icon-selector>
+  <app-icon-selector (iconSelection)="changeIcon($event)"></app-icon-selector>
 </ng-template>
