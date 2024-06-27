@@ -9,6 +9,7 @@ import {
   IncomingTransaction,
   OutgoingTransaction,
   Transaction,
+  TransactionFilterRequest,
   TransactionResponse,
 } from 'src/app/shared/models/transaction.model';
 import { AccountService } from 'src/app/shared/services/account.service';
@@ -38,6 +39,9 @@ export class AccountHistoryComponent implements OnInit {
   fetching: boolean;
   scopes: Scope[] = [];
   catSelectorOpen: boolean = false;
+  filter: Partial<{
+    [P in keyof TransactionFilterRequest]: string;
+  }> = {};
 
   constructor(
     private router: Router,
@@ -54,13 +58,14 @@ export class AccountHistoryComponent implements OnInit {
         map(([params, queryParams]) => {
           const id: string | null = params.get('accountId');
           const description = queryParams['description'] || null;
+          const category = queryParams['category'] || null;
 
           if (!id) throw new Error('No accountId provided');
 
-          return { id, description };
+          return { id, description, category };
         })
       )
-      .subscribe(({ id, description }) => {
+      .subscribe(({ id, description, category }) => {
         this.accountId = id;
 
         const ssp: SspPayload<TransactionResponse> = {
@@ -70,13 +75,18 @@ export class AccountHistoryComponent implements OnInit {
           },
         };
 
-        if (description) {
-          this.searchFormGroup.get('description')?.setValue(description);
-          ssp.filter = {
-            filterOptions: ['description'],
-            filterValue: description,
-          };
+        this.searchFormGroup.get('description')?.setValue(description);
+        this.filter.description = description;
+
+        if (category) {
+          const catValue = this.searchFormGroup.get('category')?.value;
+          if (!catValue) {
+            this.searchFormGroup
+              .get('category')
+              ?.setValue({ name: category, icon: 'menu' });
+          }
         }
+        this.filter.category = category;
 
         this.getAccountTransactions(ssp);
 
@@ -118,7 +128,7 @@ export class AccountHistoryComponent implements OnInit {
     if (!this.accountId) throw new Error('No account id provided');
 
     this.accService
-      .getAccountTransactions(this.accountId, ssp)
+      .getAccountTransactions(this.accountId, ssp, this.filter)
       .subscribe((res) => {
         this.transactions = res.elements;
         this.paginator.pageIndex = res.page;
@@ -138,6 +148,7 @@ export class AccountHistoryComponent implements OnInit {
     const { description } = this.searchFormGroup.value;
     if (description) {
       this.searchFormGroup.get('description')?.setValue(description);
+      this.filter;
       ssp.filter = {
         filterOptions: ['description'],
         filterValue: description,

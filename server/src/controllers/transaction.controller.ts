@@ -62,13 +62,17 @@ export const getPaginatedTransactionByAccountId = (
 ) => {
   try {
     const accountId = req.params.id;
-    let { page, pageSize, description } = req.query;
+    let { page, pageSize, description, category } = req.query;
     let { year, month } = req.query;
 
     const filter: Filter<Transaction> = {};
     filter.account_id = { $eq: accountId };
     if (typeof description === "string") {
       filter.description = { $regex: description, $options: "i" };
+    }
+
+    if (typeof category === "string") {
+      filter["scope.category.name"] = category;
     }
 
     if (year) {

@@ -7,7 +7,10 @@ import { AccountAcumulator } from '../models/accountAcumulator.model';
 import { Account, AccountData } from '../models/accountData.model';
 import { BalanceData, BalanceDataDTO } from '../models/balanceData.model';
 import { SspPayload, SspResponse } from '../models/sspdata.model';
-import { TransactionResponse } from '../models/transaction.model';
+import {
+  TransactionFilterRequest,
+  TransactionResponse,
+} from '../models/transaction.model';
 
 @Injectable({
   providedIn: 'root',
@@ -58,15 +61,21 @@ export class AccountService {
 
   getAccountTransactions(
     accountId: string,
-    ssp?: SspPayload<TransactionResponse>
+    ssp?: SspPayload<TransactionResponse>,
+    filter?: Partial<{
+      [P in keyof TransactionFilterRequest]: string;
+    }>
   ): Observable<SspResponse<TransactionResponse>> {
-    let sspQuery = '';
+    let kv: { key: string; value: string }[] = [];
     if (ssp) {
-      sspQuery = '?';
-      sspQuery += generateSspQuery(ssp);
+      kv.push(...generateSspKV(ssp));
     }
+    if (filter) {
+      kv.push(...generateFilterKV(filter));
+    }
+
     return this.http.get<SspResponse<TransactionResponse>>(
-      routes.account.transactions(accountId) + sspQuery,
+      routes.account.transactions(accountId, generateQuery(kv)),
       { withCredentials: true }
     );
   }
@@ -111,16 +120,30 @@ export class AccountService {
   }
 }
 
-function generateSspQuery(ssp: SspPayload<TransactionResponse>): string {
-  let result = '';
-  result += `page=${ssp.paginator.pageIndex}`;
-  result += `&pageSize=${ssp.paginator.pageSize}`;
-
-  if (ssp.filter) {
-    ssp.filter.filterOptions.forEach((option) => {
-      result += `&${option}=${ssp.filter?.filterValue}`;
-    });
-  }
-
+function generateSspKV(
+  ssp: SspPayload<TransactionResponse>
+): { key: string; value: string }[] {
+  let result: { key: string; value: string }[] = [];
+  result.push({ key: 'page', value: ssp.paginator.pageIndex.toString() });
+  result.push({ key: 'pageSize', value: ssp.paginator.pageSize.toString() });
   return result;
+}
+
+function generateFilterKV<T>(
+  filter: Partial<{
+    [P in keyof T]: string;
+  }>
+): { key: string; value: string }[] {
+  let result: { key: string; value: string }[] = [];
+  Object.entries<any>(filter).forEach(([key, value]) => {
+    if (value) result.push({ key: key, value: value ?? '' });
+  });
+  return result;
+}
+
+function generateQuery(
+  kv: { key: string; value: string }[]
+): string | undefined {
+  if (kv.length === 0) return undefined;
+  return kv.map((x) => `${x.key}=${x.value}`).join('&');
 }

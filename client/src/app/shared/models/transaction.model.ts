@@ -177,6 +177,11 @@ export class IncomingTransaction extends Transaction {
   }
 }
 
+export type TransactionFilterRequest = {
+  description: string;
+  category: string;
+};
+
 export type TransactionResponse = {
   _id: string;
   user_id: string;

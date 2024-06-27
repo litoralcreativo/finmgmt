@@ -19,8 +19,10 @@ export const routes = {
     all: `${environment.apiUrl}/account`,
     create: `${environment.apiUrl}/account`,
     byId: (id: string) => `${environment.apiUrl}/account/${id}`,
-    transactions: (id: string) =>
-      `${environment.apiUrl}/account/${id}/transactions`,
+    transactions: (id: string, query?: string) =>
+      `${environment.apiUrl}/account/${id}/transactions${
+        query ? '?' + query : ''
+      }`,
     setFavorite: (id: string) => `${environment.apiUrl}/account/fav/${id}`,
     amount: (id: string) => `${environment.apiUrl}/account/${id}/amount`,
     categoriesAmount: (id: string) =>
