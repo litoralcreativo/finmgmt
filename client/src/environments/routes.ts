@@ -27,8 +27,10 @@ export const routes = {
     amount: (id: string) => `${environment.apiUrl}/account/${id}/amount`,
     categoriesAmount: (id: string) =>
       `${environment.apiUrl}/account/${id}/categories`,
-    balance: (id: string, days: number) =>
-      `${environment.apiUrl}/account/${id}/balance?days=${days}`,
+    balance: (id: string, from: Date, to: Date) =>
+      `${
+        environment.apiUrl
+      }/account/${id}/balance?from=${from.toISOString()}&to=${to.toISOString()}`,
   },
   scopes: {
     all: `${environment.apiUrl}/scopes`,

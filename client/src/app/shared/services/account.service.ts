@@ -107,10 +107,11 @@ export class AccountService {
 
   getAccountBalance(
     accountId: string,
-    days: number
+    from: Date,
+    to: Date
   ): Observable<BalanceData[]> {
     return this.http
-      .get<BalanceDataDTO[]>(`${routes.account.balance(accountId, days)}`)
+      .get<BalanceDataDTO[]>(`${routes.account.balance(accountId, from, to)}`)
       .pipe(
         map((res) => {
           return res.map((x) => ({

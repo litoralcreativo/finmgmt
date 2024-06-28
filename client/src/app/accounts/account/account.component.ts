@@ -71,9 +71,13 @@ export class AccountComponent implements OnInit {
   getAccountBalance() {
     if (!this.accountId) throw new Error('No account id provided');
 
+    const to: Date = new Date();
+    const from: Date = new Date();
+    from.setDate(from.getDate() - this.balanceDays + 1);
+
     this.fetchingBalanceData = true;
     this.accService
-      .getAccountBalance(this.accountId, this.balanceDays)
+      .getAccountBalance(this.accountId, from, to)
       .subscribe((res) => {
         this.accountBalanceData = res;
       })

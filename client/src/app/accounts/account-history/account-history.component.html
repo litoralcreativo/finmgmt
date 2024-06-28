@@ -3,7 +3,9 @@
 </button>
 
 <div class="mat-card transactions-list-container">
-  <h2 class="transactions-list-title">Your activity</h2>
+  <h2 class="transactions-list-title">
+    Your activity <span *ngIf="account">in {{ account.data.name }}</span>
+  </h2>
   <mat-divider></mat-divider>
   <div class="transactions-search-bar" [formGroup]="searchFormGroup">
     <!-- <mat-form-field appearance="outline" class="iconed-form-field">
@@ -111,6 +113,7 @@
       [length]="0"
       [pageSize]="5"
       [pageSizeOptions]="[5, 10, 25, 100]"
+      [showFirstLastButtons]="true"
       aria-label="Select page"
       (page)="onPaginatorChange($event)"
     >
@@ -187,6 +190,7 @@
       [pageSize]="this.paginator?.pageSize || 5"
       [pageIndex]="this.paginator?.pageIndex || 5"
       [pageSizeOptions]="this.paginator?.pageSizeOptions || [5]"
+      [showFirstLastButtons]="true"
       aria-label="Select page"
       [disabled]="true"
     >

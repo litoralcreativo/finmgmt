@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { BSON, Filter, ObjectId } from "mongodb";
+import { z } from "zod";
 import { DbManager } from "../bdd/db";
 import { Account, AccountRequestDTO } from "../models/account.model";
 import { AccountAcumulator } from "../models/accountAcumulator.model";
@@ -180,13 +181,21 @@ export const getAccountAmountsByCategory = (req: Request, res: Response) => {
 export const getAccountBalanceById = (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { days } = req.query;
+    const { from, to } = req.query;
 
-    if (isNaN(Number(days))) throw new Error("Days must be a number");
+    z.string().datetime().parse(from);
+    if (to) {
+      z.string().datetime().parse(to);
+    }
 
-    transactionService.getAccountBalance(id, Number(days)).subscribe((val) => {
-      return res.status(200).json(val);
-    });
+    const fromDate: Date = new Date(from as "string");
+    const toDate: Date = to ? new Date(to as "string") : new Date();
+
+    transactionService
+      .getAccountBalance(id, fromDate, toDate)
+      .subscribe((val) => {
+        return res.status(200).json(val);
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({
