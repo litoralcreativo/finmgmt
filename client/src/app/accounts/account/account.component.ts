@@ -144,6 +144,7 @@ export class AccountComponent implements OnInit {
       transaction.setAmount(madeTransaction.amount);
       transaction.setDescription(madeTransaction.description);
       transaction.setScope(madeTransaction.scope);
+      transaction.setDate(new Date(madeTransaction.date));
     }
 
     this.dialog

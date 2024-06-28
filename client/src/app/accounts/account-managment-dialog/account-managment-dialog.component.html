@@ -27,7 +27,8 @@
         <mat-label>Symbol</mat-label>
         <mat-select formControlName="symbol" value="ARS">
           <mat-option value="ARS">Peso argentino (ARS)</mat-option>
-          <mat-option value="USD">Dolar estadounidense (USD)</mat-option>
+          <mat-option value="USD">USA Dollar (USD)</mat-option>
+          <mat-option value="USDT">Tether Dolar (USDT)</mat-option>
         </mat-select>
         <mat-error *ngIf="form.controls.symbol.hasError('required')"
           >This field is required</mat-error

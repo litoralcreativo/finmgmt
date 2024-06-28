@@ -73,10 +73,15 @@ export class AccountListComponent extends FetchingFlag implements OnInit {
 
   private totalAmount(accArr: Account[]): number {
     return accArr.reduce((a, c) => {
-      const symbolCoeficent: number =
-        c.data.symbol === 'USD'
-          ? this.symbolChangeService.prices.get('MEP')?.venta ?? 0
-          : 1;
+      let symbolCoeficent: number = 1;
+      if (c.data.symbol === 'USD') {
+        symbolCoeficent =
+          this.symbolChangeService.prices.get('MEP')?.venta ?? 0;
+      }
+      if (c.data.symbol === 'USDT') {
+        symbolCoeficent =
+          this.symbolChangeService.prices.get('CRIPTO')?.venta ?? 0;
+      }
       return a + c.data.amount * symbolCoeficent;
     }, 0);
   }

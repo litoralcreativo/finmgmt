@@ -12,7 +12,9 @@
   <mat-card-content class="mat-card-content-account">
     <h2
       [class.positive]="account.data.amount > 0"
-      [class.bluish]="account.data.symbol === 'USD'"
+      [class.bluish]="
+        account.data.symbol === 'USD' || account.data.symbol === 'USDT'
+      "
       [class.negative]="account.data.amount < 0"
       [class.zerotive]="account.data.amount == 0"
     >

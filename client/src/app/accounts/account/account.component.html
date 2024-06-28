@@ -26,7 +26,10 @@
         <mat-card-content>
           <h2
             [class.positive]="!fetchingAccount && account.data.amount > 0"
-            [class.bluish]="!fetchingAccount && account.data.symbol === 'USD'"
+            [class.bluish]="
+              (!fetchingAccount && account.data.symbol === 'USD') ||
+              account.data.symbol === 'USDT'
+            "
             [class.negative]="!fetchingAccount && account.data.amount < 0"
             [class.zerotive]="!fetchingAccount && account.data.amount == 0"
           >

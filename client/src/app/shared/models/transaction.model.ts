@@ -137,7 +137,7 @@ export abstract class Transaction {
     let tranReq: TransactionRequestDTO = {
       account_id: accountId,
       amount: this.amount,
-      description: this.description ?? 'generic transaction',
+      description: this.description ?? '',
       date: this.date.toISOString(),
       scope: {
         _id: this.scope._id,
@@ -152,7 +152,7 @@ export abstract class Transaction {
   generateModificationRequest(): ModifiedTransactionRequestDTO {
     return {
       amount: this.amount,
-      description: this.description ?? 'generic transaction',
+      description: this.description ?? '',
       scope: {
         _id: this.scope._id,
         category: {
