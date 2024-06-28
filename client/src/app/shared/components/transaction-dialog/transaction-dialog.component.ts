@@ -156,7 +156,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     this.form.updateValueAndValidity();
   }
 
-  commit() {
+  commit(remove: boolean = false) {
     const { amount, description, date, scope, category } =
       this.form.getRawValue();
     this.data.setAmount(amount);
@@ -174,14 +174,29 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
     if (this.hasOriginal) {
       this.dialog
-        .open(ConfirmationComponent)
+        .open(ConfirmationComponent, {
+          data: { title: remove ? 'Delete' : 'Update' },
+        })
         .afterClosed()
         .subscribe((res) => {
           if (res) {
             const request = this.data.generateModificationRequest();
             this.fetching = true;
-            this.tranService
-              .updateTransaction(this.data.madeTransaction!._id, request)
+            let $obs: Observable<any>;
+
+            // delete or update
+            if (remove) {
+              $obs = this.tranService.deleteTransaction(
+                this.data.madeTransaction!._id
+              );
+            } else {
+              $obs = this.tranService.updateTransaction(
+                this.data.madeTransaction!._id,
+                request
+              );
+            }
+
+            $obs
               .subscribe({
                 next: (x) => {
                   this.dialogRef.close(true);

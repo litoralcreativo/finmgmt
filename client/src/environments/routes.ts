@@ -43,8 +43,9 @@ export const routes = {
   },
   transactions: {
     all: `${environment.apiUrl}/transaction`,
+    byId: (id: string) => `${environment.apiUrl}/transaction/${id}`,
     create: `${environment.apiUrl}/transaction`,
     update: (id: string) => `${environment.apiUrl}/transaction/${id}`,
-    byId: (id: string) => `${environment.apiUrl}/transaction/${id}`,
+    delete: (id: string) => `${environment.apiUrl}/transaction/${id}`,
   },
 };

@@ -203,15 +203,8 @@ export const createTransaction = async (req: Request, res: Response) => {
       })
       .catch((err) => Responses.BadRequest(res, err.message));
 
-    const acountAmount = await firstValueFrom(
-      transactionService.getAccountAmount(account_id)
-    );
-
-    const updated = await firstValueFrom(
-      accountService.updateOneById(account_id, {
-        amount: acountAmount.totalAmount,
-      })
-    );
+    // when finish, update account amount
+    await updateAccountAmount(account_id);
 
     return res.status(200).json({
       ...new ResponseStrategy(200, "inserted"),
@@ -247,6 +240,7 @@ export const updateTransactionById = async (req: Request, res: Response) => {
 
   let account_id: string;
 
+  //TODO: Check if there is a change form the original
   await firstValueFrom($getTransaction)
     .then((transaction) => {
       if (!transaction) {
@@ -259,6 +253,7 @@ export const updateTransactionById = async (req: Request, res: Response) => {
 
   if (account_id! === undefined) throw new Error("No account id");
 
+  //TODO: Only update scope if it change form the original
   await firstValueFrom($getScope)
     .then((scopeData) => {
       if (!scopeData) {
@@ -288,6 +283,7 @@ export const updateTransactionById = async (req: Request, res: Response) => {
     })
     .catch((err) => Responses.BadRequest(res, err.message));
 
+  // Update the transaction
   await firstValueFrom(transactionService.updateOneById(transactionId, updated))
     .then((val) => {
       if (!val) {
@@ -296,34 +292,61 @@ export const updateTransactionById = async (req: Request, res: Response) => {
     })
     .catch((err) => Responses.BadRequest(res, err.message));
 
-  const acountAmount = await firstValueFrom(
-    transactionService.getAccountAmount(account_id)
-  );
-
-  const updatedAccount = await firstValueFrom(
-    accountService.updateOneById(account_id, {
-      amount: acountAmount.totalAmount,
-    })
-  );
+  // when finish, update account amount
+  await updateAccountAmount(account_id);
 
   return res.status(200).json({
     ...new ResponseStrategy(200, "updated"),
   });
 };
 
-/* export const deleteTransactionById = (req: Request, res: Response) => {
-  const id = req.params.id;
-  transactionService.deleteOne(id).subscribe((result) => {
-    if (!result.acknowledged) {
-      res
-        .status(500)
-        .json({ message: "The DB culden't confirm the modification" });
-    } else {
-      if (result.deletedCount === 0) {
-        res.status(404).json({ message: "Item not found" });
-      } else {
-        res.status(200).send(result.deletedCount.toString());
+export const deleteTransactionById = async (req: Request, res: Response) => {
+  const transactionId = req.params.id;
+
+  let account_id: string;
+  const $getTransaction = transactionService.getById(transactionId);
+
+  // Get account_id
+  await firstValueFrom($getTransaction)
+    .then((transaction) => {
+      if (!transaction) {
+        return throwError(() => new Error("The transaction doesn't exist"));
       }
-    }
+
+      account_id = transaction.account_id;
+    })
+    .catch((err) => Responses.BadRequest(res, err.message));
+
+  if (account_id! === undefined) throw new Error("No account id");
+
+  // Delete the transaction
+  await firstValueFrom(transactionService.deleteOne(transactionId))
+    .then((val) => {
+      if (!val) {
+        return res.status(404).json({ message: "Not modified" });
+      }
+    })
+    .catch((err) => Responses.BadRequest(res, err.message));
+
+  // when finish, update account amount
+  await updateAccountAmount(account_id);
+
+  return res.status(200).json({
+    ...new ResponseStrategy(200, "deleted"),
   });
-}; */
+};
+
+const updateAccountAmount = async (account_id: string) => {
+  if (account_id! === undefined) throw new Error("No account id");
+  const acountAmount = await firstValueFrom(
+    transactionService.getAccountAmount(account_id)
+  );
+
+  await firstValueFrom(
+    accountService.updateOneById(account_id, {
+      amount: acountAmount.totalAmount,
+    })
+  );
+
+  return acountAmount;
+};

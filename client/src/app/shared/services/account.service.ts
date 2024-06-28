@@ -29,7 +29,9 @@ export class AccountService {
       })
       .pipe(first())
       .subscribe((res) => {
-        this.$account.next(res.map((x) => new Account(x)));
+        const accounts: Account[] = res.map((x) => new Account(x));
+        accounts.sort((a, b) => (a.data.type > b.data.type ? -1 : 1));
+        this.$account.next(accounts);
       });
   }
 

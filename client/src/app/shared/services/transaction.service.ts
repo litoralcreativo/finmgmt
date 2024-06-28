@@ -38,4 +38,8 @@ export class TransactionService {
       }
     );
   }
+
+  deleteTransaction(transactionId: string): Observable<any> {
+    return this.http.delete<any>(routes.transactions.delete(transactionId));
+  }
 }

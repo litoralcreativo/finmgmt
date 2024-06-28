@@ -39,6 +39,14 @@
   >
     {{ hasOriginal ? "Apply change" : "Commit" }}
   </button>
+  <button
+    *ngIf="hasOriginal"
+    mat-flat-button
+    color="warn"
+    (click)="commit(true)"
+  >
+    <mat-icon>delete</mat-icon>
+  </button>
 </div>
 
 <ng-template #unkonType> </ng-template>
