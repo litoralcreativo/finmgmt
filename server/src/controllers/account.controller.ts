@@ -203,3 +203,29 @@ export const getAccountBalanceById = (req: Request, res: Response) => {
     });
   }
 };
+
+export const getWholeBalance = (req: Request, res: Response) => {
+  try {
+    const { from, to } = req.query;
+
+    z.string().datetime().parse(from);
+    if (to) {
+      z.string().datetime().parse(to);
+    }
+
+    const fromDate: Date = new Date(from as "string");
+    const toDate: Date = to ? new Date(to as "string") : new Date();
+
+    const userId = (req.user! as any).id;
+    transactionService
+      .getWholeBalance(userId, fromDate, toDate)
+      .subscribe((val) => {
+        return res.status(200).json(val);
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Internal server error"),
+    });
+  }
+};

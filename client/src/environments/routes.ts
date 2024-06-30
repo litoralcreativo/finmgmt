@@ -31,6 +31,10 @@ export const routes = {
       `${
         environment.apiUrl
       }/account/${id}/balance?from=${from.toISOString()}&to=${to.toISOString()}`,
+    wholeBalance: (from: Date, to: Date) =>
+      `${
+        environment.apiUrl
+      }/account/balance?from=${from.toISOString()}&to=${to.toISOString()}`,
   },
   scopes: {
     all: `${environment.apiUrl}/scopes`,

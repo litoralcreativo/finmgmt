@@ -40,7 +40,7 @@ export class AccountComponent implements OnInit {
 
   searchFormControl: FormControl = new FormControl('');
 
-  accountBalanceData: BalanceData[];
+  accountBalanceData: BalanceData[][];
 
   balanceDays = 30;
 
@@ -79,7 +79,7 @@ export class AccountComponent implements OnInit {
     this.accService
       .getAccountBalance(this.accountId, from, to)
       .subscribe((res) => {
-        this.accountBalanceData = res;
+        this.accountBalanceData = [res];
       })
       .add(() => (this.fetchingBalanceData = false));
   }

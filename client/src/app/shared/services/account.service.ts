@@ -121,6 +121,19 @@ export class AccountService {
         })
       );
   }
+
+  getWholeBalance(from: Date, to: Date): Observable<BalanceData[]> {
+    return this.http
+      .get<BalanceDataDTO[]>(`${routes.account.wholeBalance(from, to)}`)
+      .pipe(
+        map((res) => {
+          return res.map((x) => ({
+            day: new Date(x.day),
+            totalAmount: Number(x.totalAmount.toFixed(2)),
+          }));
+        })
+      );
+  }
 }
 
 function generateSspKV(

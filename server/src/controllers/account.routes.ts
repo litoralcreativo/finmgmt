@@ -7,6 +7,7 @@ import {
   getAccountBalanceById,
   getById,
   getByUser,
+  getWholeBalance,
   setFavorite,
 } from "./account.controller";
 import { getPaginatedTransactionByAccountId } from "./transaction.controller";
@@ -16,6 +17,7 @@ const router = express.Router();
 router.get("/", requireAuth, getByUser);
 router.post("/", requireAuth, create);
 router.patch("/fav/:id", requireAuth, setFavorite);
+router.get("/balance", requireAuth, getWholeBalance);
 router.get("/:id", requireAuth, getById);
 router.get("/:id/balance", requireAuth, getAccountBalanceById);
 router.get(

@@ -42,18 +42,18 @@ export type ChartOptions = {
 export class BalanceGraphComponent implements OnInit, OnChanges {
   @ViewChild('chart') chart: ChartComponent;
   chartOptions: ChartOptions;
-  @Input('data') data: BalanceData[];
+  @Input('data') data: BalanceData[][] = [];
   @Output('scopeChange') scopeChange: EventEmitter<number> = new EventEmitter();
 
   constructor() {
     this.chartOptions = {
-      series: [
-        {
+      series: this.data?.map((data) => {
+        return {
           name: 'BALANCE',
-          data: (this.data || []).map((x) => x.totalAmount),
-          color: 'purple',
-        },
-      ],
+          data: data.map((x) => x.totalAmount),
+          color: '#673ab7',
+        };
+      }),
       chart: {
         type: 'area',
         toolbar: {
@@ -86,7 +86,7 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
         text: 'Price Movements',
         align: 'left',
       },
-      labels: (this.data || []).map((x) => x.day.toLocaleDateString()),
+      labels: this.data[0]?.map((x) => x.day.toLocaleDateString()),
       xaxis: {
         labels: {
           show: false,
@@ -114,14 +114,17 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   updateData() {
-    this.chartOptions.series = [
-      {
+    this.chartOptions.series = this.data.map((data) => {
+      return {
         name: 'BALANCE',
-        data: this.data.map((x) => x.totalAmount),
+        data: data.map((x) => x.totalAmount),
         color: '#673ab7',
-      },
-    ];
-    this.chartOptions.labels = this.data.map((x) => x.day.toLocaleDateString());
+      };
+    });
+
+    this.chartOptions.labels = this.data[0]?.map((x) =>
+      x.day.toLocaleDateString()
+    );
 
     if (this.chart) {
       this.chart.labels = this.chartOptions.labels;
