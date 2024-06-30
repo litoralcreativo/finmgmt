@@ -44,6 +44,12 @@ export class ShellComponent implements OnInit {
       icon: 'business_center',
       active: false,
     },
+    {
+      name: 'Calendar',
+      route: '/calendar',
+      icon: 'calendar_month',
+      active: false,
+    },
   ];
 
   changes: Map<string, SymbolChange> = new Map();

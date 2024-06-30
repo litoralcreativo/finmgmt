@@ -26,6 +26,12 @@ const routes: Routes = [
     loadChildren: () =>
       import('./scopes/scopes.module').then((m) => m.ScopeModule),
   },
+  {
+    path: 'calendar',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./calendar/calendar.module').then((m) => m.CalendarModule),
+  },
 ];
 
 @NgModule({
