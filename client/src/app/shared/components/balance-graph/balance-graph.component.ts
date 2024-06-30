@@ -57,10 +57,18 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
       chart: {
         type: 'area',
         toolbar: {
-          show: false,
+          show: true,
+          tools: {
+            download: false,
+            pan: false,
+            reset: true,
+            selection: true,
+            zoom: true,
+          },
         },
         zoom: {
-          enabled: false,
+          enabled: true,
+          autoScaleYaxis: true,
         },
       },
       dataLabels: {

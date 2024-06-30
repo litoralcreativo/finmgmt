@@ -135,6 +135,8 @@ export class TransactionService extends Crud<Transaction> {
     to: Date = new Date()
   ): Observable<BalanceData[]> {
     const $accountAmount = this.getAccountAmount(accountId, from);
+    from.setHours(0, 0, 0, 0);
+    to.setHours(0, 0, 0, 0);
 
     const filter: Filter<Transaction> = {
       account_id: accountId,
@@ -163,11 +165,12 @@ export class TransactionService extends Crud<Transaction> {
         let currentBalance = totalAmount;
 
         balanceData.forEach((data, index) => {
+          const dataDate = data.day.toISOString().split("T")[0];
           const dayTransactions = transactions.filter((transaction) => {
+            transaction.date.setUTCHours(0, 0, 0, 0);
             const transactionDate = new Date(transaction.date)
               .toISOString()
               .split("T")[0];
-            const dataDate = data.day.toISOString().split("T")[0];
             return transactionDate === dataDate;
           });
 
@@ -175,7 +178,7 @@ export class TransactionService extends Crud<Transaction> {
             (sum, transaction) => sum + transaction.amount,
             0
           );
-          currentBalance += dayVariation;
+          currentBalance += Number(dayVariation.toFixed(2));
           data.totalAmount = currentBalance;
         });
 
