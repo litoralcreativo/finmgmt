@@ -37,7 +37,12 @@
     [opened]="this.screenSize >= 2 && loggedIn"
   >
     <mat-nav-list *ngFor="let item of navItems">
-      <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link">
+      <a
+        mat-list-item
+        [routerLink]="item.route"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
         <mat-icon mat-list-icon [color]="item.active ? 'primary' : undefined">{{
           item.icon
         }}</mat-icon>
