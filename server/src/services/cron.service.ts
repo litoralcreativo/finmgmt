@@ -2,7 +2,7 @@ import cron from "node-cron";
 import axios from "axios";
 import { BehaviorSubject } from "rxjs";
 
-const apiUrl = /* process.env.API_URI ||  */ "http://localhost:3000";
+const apiUrl = process.env.API_URI || "http://localhost:3000";
 
 export type CronTask = {
   schedule: string;
@@ -16,6 +16,8 @@ export class CronService {
     this._setDummyTask();
   }
   private _setDummyTask() {
+    console.log(`Setting dummy task every 12 minutes: ${apiUrl}`);
+
     const dummytask: CronTask = {
       schedule: "*/12 * * * *",
       callback: () => {
