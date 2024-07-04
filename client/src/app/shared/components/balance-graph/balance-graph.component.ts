@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -45,17 +46,23 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
   @Input('data') data: BalanceData[][] = [];
   @Output('scopeChange') scopeChange: EventEmitter<number> = new EventEmitter();
 
-  constructor() {
+  showChart: boolean = false;
+  scope: 30;
+
+  constructor(private cdr: ChangeDetectorRef) {
     this.chartOptions = {
       series: this.data?.map((data) => {
         return {
           name: 'BALANCE',
-          data: data.map((x) => x.totalAmount),
+          data: [],
           color: '#673ab7',
         };
       }),
       chart: {
         type: 'area',
+        animations: {
+          enabled: false,
+        },
         toolbar: {
           show: true,
           tools: {
@@ -75,7 +82,7 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
         enabled: false,
       },
       stroke: {
-        curve: 'smooth',
+        curve: 'stepline',
         width: 2,
       },
       title: {
@@ -86,8 +93,9 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
         text: 'Price Movements',
         align: 'left',
       },
-      labels: this.data[0]?.map((x) => x.day.toLocaleDateString()),
+      labels: [],
       xaxis: {
+        type: 'datetime',
         labels: {
           show: false,
         },
@@ -111,7 +119,11 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.chart;
+  }
+
+  ngAfterViewInit() {}
 
   updateData() {
     this.chartOptions.series = this.data.map((data) => {
@@ -122,15 +134,16 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
       };
     });
 
-    this.chartOptions.labels = this.data[0]?.map((x) =>
-      x.day.toLocaleDateString()
-    );
+    this.chartOptions.labels = this.data[0]?.map((x) => x.day.toISOString());
 
     if (this.chart) {
       this.chart.labels = this.chartOptions.labels;
       this.chart.updateSeries(this.chartOptions.series);
       this.chart.resetSeries();
     }
+    this.showChart = false;
+    this.cdr.detectChanges();
+    this.showChart = true;
   }
 
   onSelectionChange($event: any) {

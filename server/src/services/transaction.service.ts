@@ -176,9 +176,9 @@ export class TransactionService extends Crud<Transaction> {
     from: Date,
     to: Date = new Date()
   ): Observable<BalanceData[]> {
-    const $accountAmount = this.getAccountAmount(accountId, from);
     from.setHours(0, 0, 0, 0);
     to.setHours(0, 0, 0, 0);
+    const $accountAmount = this.getAccountAmount(accountId, from);
 
     const filter: Filter<Transaction> = {
       account_id: accountId,
@@ -192,37 +192,44 @@ export class TransactionService extends Crud<Transaction> {
         const totalAmount = accountAmount.totalAmount || 0;
         const transactions = accountTransactions.elements || [];
 
-        // Crear un mapa para almacenar el acumulado diario
-        const balanceData: BalanceData[] = [];
+        let currentBalance = totalAmount;
+        let lastAmount = currentBalance;
         let currentDate = new Date(from);
+        const balanceData: BalanceData[] = [
+          {
+            day: new Date(currentDate),
+            totalAmount: currentBalance,
+          },
+        ];
+
+        transactions.forEach((transaction) => {
+          transaction.date.setHours(0, 0, 0, 0);
+        });
 
         while (currentDate <= to) {
-          balanceData.push({
-            day: new Date(currentDate),
-            totalAmount: 0,
-          });
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        let currentBalance = totalAmount;
-
-        balanceData.forEach((data, index) => {
-          const dataDate = data.day.toISOString().split("T")[0];
-          const dayTransactions = transactions.filter((transaction) => {
-            transaction.date.setUTCHours(0, 0, 0, 0);
-            const transactionDate = new Date(transaction.date)
-              .toISOString()
-              .split("T")[0];
-            return transactionDate === dataDate;
+          const dateTransactions = transactions.filter((transaction) => {
+            return transaction.date.getTime() === currentDate.getTime();
           });
 
-          const dayVariation = dayTransactions.reduce(
+          const dayVariation = dateTransactions.reduce(
             (sum, transaction) => sum + transaction.amount,
             0
           );
-          currentBalance += Number(dayVariation.toFixed(2));
-          data.totalAmount = currentBalance;
-        });
+          currentBalance += dayVariation;
+
+          if (
+            currentBalance !== lastAmount ||
+            currentDate.getTime() === to.getTime()
+          ) {
+            balanceData.push({
+              day: new Date(currentDate),
+              totalAmount: currentBalance,
+            });
+            lastAmount = currentBalance;
+          }
+
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
 
         return balanceData;
       })
@@ -234,9 +241,9 @@ export class TransactionService extends Crud<Transaction> {
     from: Date,
     to: Date = new Date()
   ): Observable<BalanceData[]> {
-    const $accountAmount = this.getWholeAmount(userId, from);
     from.setHours(0, 0, 0, 0);
     to.setHours(0, 0, 0, 0);
+    const $accountAmount = this.getWholeAmount(userId, from);
 
     const filter: Filter<Transaction> = {
       date: { $gt: from, $lte: to },
@@ -245,41 +252,48 @@ export class TransactionService extends Crud<Transaction> {
     const $transactions = this.getAll(undefined, filter);
 
     return combineLatest([$accountAmount, $transactions]).pipe(
-      map(([accountAmount, allTransactions]) => {
+      map(([accountAmount, accountTransactions]) => {
         const totalAmount = accountAmount.totalAmount || 0;
-        const transactions = allTransactions.elements || [];
-
-        // Crear un mapa para almacenar el acumulado diario
-        const balanceData: BalanceData[] = [];
-        let currentDate = new Date(from);
-
-        while (currentDate <= to) {
-          balanceData.push({
-            day: new Date(currentDate),
-            totalAmount: 0,
-          });
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
+        const transactions = accountTransactions.elements || [];
 
         let currentBalance = totalAmount;
+        let lastAmount = currentBalance;
+        let currentDate = new Date(from);
+        const balanceData: BalanceData[] = [
+          {
+            day: new Date(currentDate),
+            totalAmount: currentBalance,
+          },
+        ];
 
-        balanceData.forEach((data, index) => {
-          const dataDate = data.day.toISOString().split("T")[0];
-          const dayTransactions = transactions.filter((transaction) => {
-            transaction.date.setUTCHours(0, 0, 0, 0);
-            const transactionDate = new Date(transaction.date)
-              .toISOString()
-              .split("T")[0];
-            return transactionDate === dataDate;
+        transactions.forEach((transaction) => {
+          transaction.date.setHours(0, 0, 0, 0);
+        });
+
+        while (currentDate <= to) {
+          const dateTransactions = transactions.filter((transaction) => {
+            return transaction.date.getTime() === currentDate.getTime();
           });
 
-          const dayVariation = dayTransactions.reduce(
+          const dayVariation = dateTransactions.reduce(
             (sum, transaction) => sum + transaction.amount,
             0
           );
-          currentBalance += Number(dayVariation.toFixed(2));
-          data.totalAmount = currentBalance;
-        });
+          currentBalance += dayVariation;
+
+          if (
+            currentBalance !== lastAmount ||
+            currentDate.getTime() === to.getTime()
+          ) {
+            balanceData.push({
+              day: new Date(currentDate),
+              totalAmount: currentBalance,
+            });
+            lastAmount = currentBalance;
+          }
+
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
 
         return balanceData;
       })

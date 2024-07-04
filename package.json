@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "client": "npm --prefix client run start",
     "client:prod": "npm --prefix client run start:prod",
-    "server:dev": "npm --prefix server run dev",
-    "server": "npm --prefix server run build && npm --prefix server run start"
+    "server": "npm --prefix server run dev"
   },
   "keywords": [],
   "author": "",
