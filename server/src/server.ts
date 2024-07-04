@@ -11,6 +11,9 @@ import { swaggerSpec } from "./swagger";
 import { requireAuth } from "./middlewares/autenticate.middleware";
 import "./auth";
 import ServerlessHttp from "serverless-http";
+import { cronService } from "./services/cron.service";
+
+cronService;
 
 const apiPrefix = process.env.API_PREFIX || "";
 
@@ -36,6 +39,8 @@ app.use(`${apiPrefix}/auth`, authRouter);
 app.use(`${apiPrefix}/account`, accountRouter);
 app.use(`${apiPrefix}/transaction`, requireAuth, transactionRouter);
 app.use(`${apiPrefix}/scopes`, requireAuth, scopeRouter);
+
+app.use(`${apiPrefix}/dummy`, (req, res) => res.status(200).send("ok"));
 
 app.all("*", (req, res) => {
   res.status(404).json({

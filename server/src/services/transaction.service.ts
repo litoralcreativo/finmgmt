@@ -177,7 +177,7 @@ export class TransactionService extends Crud<Transaction> {
     to: Date = new Date()
   ): Observable<BalanceData[]> {
     from.setHours(0, 0, 0, 0);
-    to.setHours(0, 0, 0, 0);
+    to.setHours(23, 59, 59, 999);
     const $accountAmount = this.getAccountAmount(accountId, from);
 
     const filter: Filter<Transaction> = {

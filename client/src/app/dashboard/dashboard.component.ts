@@ -16,11 +16,11 @@ export class DashboardComponent implements OnInit {
   constructor(private accService: AccountService) {}
 
   ngOnInit(): void {
-    /* this.accService.$account
+    this.accService.$account
       .pipe(filter((x) => x.length > 0))
       .subscribe((x) => {
         this.getAccountBalance();
-      }); */
+      });
   }
 
   getAccountBalance() {
@@ -32,9 +32,5 @@ export class DashboardComponent implements OnInit {
       (x) => x.data._id
     );
     this.fetchingBalanceData = true;
-
-    this.accService.getWholeBalance(from, to).subscribe((res) => {
-      this.accountBalanceData = [res];
-    });
   }
 }
