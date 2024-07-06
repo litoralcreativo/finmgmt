@@ -1,4 +1,4 @@
-@import "../../styles.scss";
+@import "../../palletes.scss";
 
 :host {
   width: 100vw;
@@ -20,7 +20,8 @@ mat-toolbar.main-app-toolbar {
 }
 
 #sub-toolbar-info {
-  background-color: mat-color($accent, 300);
+  background-color: primary-color(700);
+  color: primary-color(700, "contrast");
   padding: 2px 1rem;
 
   display: flex;
@@ -34,7 +35,7 @@ mat-toolbar.main-app-toolbar {
   }
 }
 
-mat-drawer-container.main-app-drawer-container {
+::ng-deep mat-drawer-container.main-app-drawer-container {
   flex-grow: 1;
 
   mat-drawer {
@@ -43,9 +44,30 @@ mat-drawer-container.main-app-drawer-container {
     justify-content: flex-start;
     align-items: center;
 
-    .active-link {
-      background-color: mat-color($primary, 50);
-      color: mat-color($primary, 400);
+    .mat-list-item {
+      color: rgba($color: primary-color(50, "contrast"), $alpha: 0.8);
+      &:hover {
+        background-color: rgba($color: accent-color(50), $alpha: 0.5);
+      }
+      &.active-link {
+        background-color: accent-color(50);
+        color: accent-color(700);
+      }
+    }
+  }
+
+  .nav-link {
+    background-color: primary-color(100);
+    color: primary-color(900, "contrast");
+
+    &:hover {
+      background-color: primary-color(200);
+      color: primary-color(900, "contrast");
+    }
+
+    &.active-link {
+      background-color: primary-color(500);
+      color: primary-color(50, "contrast");
     }
   }
 
@@ -62,5 +84,13 @@ mat-drawer-container.main-app-drawer-container {
   mat-drawer-content > section.main-responsive-container {
     padding: 1.5em 2em;
     max-width: 70em;
+  }
+}
+
+.logo-container {
+  display: grid;
+  place-content: center;
+  img {
+    height: 40px;
   }
 }

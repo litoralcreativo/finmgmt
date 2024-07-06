@@ -1,0 +1,94 @@
+@import "../../../../palletes.scss";
+
+#content {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+}
+
+path {
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#F > path,
+#I > path,
+#N > path {
+  stroke: primary-color(500);
+}
+#K > path {
+  stroke: accent-color(500);
+}
+
+#logo,
+#logo g,
+#logo g path {
+  transition: all 0.2s ease;
+}
+
+#logo g {
+  opacity: 0;
+  transform: translateX(20px);
+  animation: cameLeft 0.5s ease forwards;
+}
+
+#logo path {
+  stroke-width: 20;
+  animation: tilt 5s ease infinite;
+  animation-delay: 2s;
+}
+
+#logo:hover path {
+  stroke-width: 20 !important;
+}
+
+g#F {
+  animation-delay: 1000ms;
+}
+g#I {
+  animation-delay: 1100ms;
+}
+g#N {
+  animation-delay: 1200ms;
+}
+g#K {
+  animation-delay: 1300ms;
+}
+
+g#F path {
+  animation-delay: 2000ms;
+}
+g#I path {
+  animation-delay: 2100ms;
+}
+g#N path {
+  animation-delay: 2200ms;
+}
+g#K path {
+  animation-delay: 2300ms;
+}
+
+@keyframes cameLeft {
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes tilt {
+  0% {
+    stroke-width: 20;
+  }
+  15% {
+    stroke-width: 30;
+  }
+  30% {
+    stroke-width: 20;
+  }
+  100% {
+    stroke-width: 20;
+  }
+}

@@ -1,0 +1,81 @@
+/* PALETTES */
+$primary-palette: (
+  50: #e8eff9,
+  100: #c5d7ef,
+  200: #9ebde5,
+  300: #77a2da,
+  400: #5a8ed2,
+  500: #3d7aca,
+  600: #3772c5,
+  700: #2f67bd,
+  800: #275db7,
+  900: #1a4aab,
+  A100: #e0eaff,
+  A200: #adc6ff,
+  A400: #7aa2ff,
+  A700: #6190ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+$accent-palette: (
+  50: #fde9f0,
+  100: #fac8da,
+  200: #f7a3c1,
+  300: #f47ea8,
+  400: #f16395,
+  500: #ef4782,
+  600: #ed407a,
+  700: #eb376f,
+  800: #e82f65,
+  900: #e42052,
+  A100: #ffffff,
+  A200: #ffe8ed,
+  A400: #ffb5c6,
+  A700: #ff9cb2,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+
+@function color($palette, $shade, $type: "color") {
+  @if $type == "color" {
+    @return map-get($palette, $shade);
+  } @else if $type == "contrast" {
+    @return map-get(map-get($palette, "contrast"), $shade);
+  }
+}
+
+@function primary-color($shade, $type: "color") {
+  @return color($primary-palette, $shade, $type);
+}
+
+@function accent-color($shade, $type: "color") {
+  @return color($accent-palette, $shade, $type);
+}

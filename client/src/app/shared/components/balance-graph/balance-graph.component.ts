@@ -55,7 +55,7 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
         return {
           name: 'BALANCE',
           data: [],
-          color: '#673ab7',
+          color: '#3d7aca',
         };
       }),
       chart: {
@@ -130,7 +130,7 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
       return {
         name: 'BALANCE',
         data: data.map((x) => x.totalAmount),
-        color: '#673ab7',
+        color: '#3d7aca',
       };
     });
 
