@@ -10,6 +10,6 @@
   flex-direction: column;
   pointer-events: none;
   > * {
-    width: 50vw;
+    max-width: 95vh;
   }
 }

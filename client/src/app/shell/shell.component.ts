@@ -149,4 +149,8 @@ export class ShellComponent implements OnInit {
         }
       });
   }
+
+  goHome() {
+    this.router.navigate(['/']);
+  }
 }

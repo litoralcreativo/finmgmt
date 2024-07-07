@@ -20,6 +20,7 @@ import { IconSelectorComponent } from './components/icon-selector/icon-selector.
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 import { BalanceGraphComponent } from './components/balance-graph/balance-graph.component';
 import { AnimatedLogoComponent } from './components/animated-logo/animated-logo.component';
+import { KComponent } from './components/k/k.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { AnimatedLogoComponent } from './components/animated-logo/animated-logo.
     ConfirmationComponent,
     BalanceGraphComponent,
     AnimatedLogoComponent,
+    KComponent,
   ],
   imports: [
     CommonModule,
@@ -60,6 +62,7 @@ import { AnimatedLogoComponent } from './components/animated-logo/animated-logo.
     BalanceGraphComponent,
     NgApexchartsModule,
     AnimatedLogoComponent,
+    KComponent,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-AR' }],
 })
