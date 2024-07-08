@@ -1,0 +1,65 @@
+@use "@angular/material" as mat;
+@use "./palletes.scss" as pal;
+
+@include mat.core();
+
+$primary: mat.m2-define-palette(pal.$primary-palette, 400);
+$accent: mat.m2-define-palette(pal.$accent-palette, 300);
+/* $my-typography: mat.m2-define-typography-config(); */
+$my-typography: mat.m2-define-typography-config(
+  $body-1: mat.m2-define-typography-level(1em, 1em, 400),
+  $body-2: mat.m2-define-typography-level(1em, 1em, 400),
+  $headline-6: mat.m2-define-typography-level(1.3em, 1.3em, 500),
+  $button: mat.m2-define-typography-level(14px, 14px, 500, $letter-spacing: 1px),
+);
+
+$fink-light-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: mat.m2-define-palette(pal.$primary-palette, 500),
+      accent: mat.m2-define-palette(pal.$accent-palette, 500),
+    ),
+    typography: $my-typography,
+    density: 0,
+  )
+);
+
+$fink-dark-theme: mat.m2-define-dark-theme(
+  (
+    color: (
+      primary: mat.m2-define-palette(pal.$primary-palette, 400),
+      accent: mat.m2-define-palette(pal.$accent-palette, 300),
+    ),
+    typography: $my-typography,
+    density: 0,
+  )
+);
+
+:root {
+  @include mat.typography-hierarchy($my-typography);
+  @include mat.all-component-themes($fink-light-theme);
+}
+
+.dark-theme {
+  @include mat.all-component-colors($fink-dark-theme);
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:root {
+  // mat-card-rounded-corners
+  --mdc-dialog-container-shape: 20px;
+
+  // mat-button rounded corners
+  --mdc-filled-button-container-shape: 10px;
+  --mdc-text-button-container-shape: 10px;
+
+  --mat-dialog-actions-padding: 1rem;
+}

@@ -1,0 +1,70 @@
+<mat-toolbar class="main-app-toolbar" color="primary">
+  <button
+    mat-icon-button
+    (click)="drawer.toggle()"
+    *ngIf="loggedIn && this.screenSize < 2"
+  >
+    <mat-icon>{{ drawer.opened ? "close" : "menu" }}</mat-icon>
+  </button>
+  <div *ngIf="screenSize >= 2" class="logo-container">
+    <k></k>
+  </div>
+  <div class="toolbar-actions">
+    <ng-container
+      *ngTemplateOutlet="loggedIn ? loggedActions : unloggedActions"
+    ></ng-container>
+  </div>
+</mat-toolbar>
+<div id="sub-toolbar-info" class="mat-caption">
+  <div *ngIf="changes.get('MEP')" class="symbol-change">
+    MEP: {{ changes.get("MEP")?.venta | currency }}
+  </div>
+  <div *ngIf="changes.get('INFORMAL')" class="symbol-change">
+    Blue: {{ changes.get("INFORMAL")?.venta | currency }}
+  </div>
+  <div *ngIf="changes.get('CRIPTO')" class="symbol-change">
+    Cripto: {{ changes.get("CRIPTO")?.venta | currency }}
+  </div>
+</div>
+
+<mat-drawer-container class="main-app-drawer-container" autosize>
+  <mat-drawer
+    #drawer
+    [mode]="screenSize >= 2 ? 'side' : 'over'"
+    [opened]="this.screenSize >= 2 && loggedIn"
+  >
+    <mat-nav-list>
+      @for (link of navItems; track link) {
+      <mat-list-item [activated]="link.active" [routerLink]="link.route">
+        <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
+        <span matListItemTitle>{{ link.name }}</span>
+      </mat-list-item>
+      }
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <section class="main-responsive-container">
+      <ng-content></ng-content>
+    </section>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+<ng-template #unloggedActions>
+  <button mat-button [disabled]="fetching" (click)="openLoginDialog()">
+    Login
+  </button>
+  <button mat-flat-button [disabled]="fetching" (click)="openRegisterDialog()">
+    Register
+  </button>
+</ng-template>
+
+<ng-template #loggedActions>
+  <app-user-menu></app-user-menu>
+</ng-template>
+
+<!-- <div class="variacion">
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='up'">▲</span>
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='down'">▼</span>
+      <span *ngIf="changes.get('MEP')?.['class-variacion']==='equal'">=</span>
+    </div> -->

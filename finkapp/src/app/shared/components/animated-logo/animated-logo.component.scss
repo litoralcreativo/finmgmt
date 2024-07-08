@@ -1,0 +1,55 @@
+@import "../../../../palletes.scss";
+
+#content {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+}
+
+path {
+  stroke-width: 20;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#F > path,
+#I > path,
+#N > path {
+  stroke: primary-color(500);
+}
+#K > path {
+  stroke: accent-color(500);
+}
+
+#logo,
+#logo g,
+#logo g path {
+  transition: all 0.2s ease;
+}
+
+#logo g {
+  opacity: 0;
+  transform: translate(20px);
+  animation: cameLeft 0.5s ease forwards;
+}
+
+@for $i from 1 through 4 {
+  #logo g:nth-child(#{$i}) {
+    animation-delay: $i * 0.1s;
+  }
+}
+
+@keyframes cameLeft {
+  to {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+}
+@keyframes cameUp {
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}

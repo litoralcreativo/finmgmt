@@ -1,0 +1,15 @@
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  left: 0;
+  top: 0;
+  flex-direction: column;
+  pointer-events: none;
+  > * {
+    max-width: 95vh;
+  }
+}

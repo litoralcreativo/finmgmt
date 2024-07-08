@@ -1,0 +1,51 @@
+<h2 class="mat-h1" mat-dialog-title>Login</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="login-form">
+    <mat-form-field apperance="outline">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        formControlName="username"
+        title="username"
+        autocomplete="email"
+      />
+      <mat-error *ngIf="form.controls['username'].errors">
+        Enter a valid email
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        formControlName="password"
+        title="password"
+      />
+      <mat-error *ngIf="form.controls['password'].errors">
+        The password must be between 4 and 60 characters
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-flat-button
+    (click)="login()"
+    color="primary"
+    class="login-btn expand"
+    [disabled]="fetching"
+  >
+    Sign In
+  </button>
+  <button mat-button (click)="close()" [disabled]="fetching" cdkFocusInitial>
+    Close
+  </button>
+</mat-dialog-actions>
+
+<ng-container *ngIf="fetching"
+  ><app-loading-panel theme="light" [spinner]="true" [spinnerSize]="40"
+    ><span class="mat-caption">Logging</span></app-loading-panel
+  ></ng-container
+>

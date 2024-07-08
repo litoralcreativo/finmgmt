@@ -1,0 +1,26 @@
+@import "../../../../palletes.scss";
+
+#content {
+  height: 45px;
+  width: 45px;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+  cursor: pointer;
+  background-color: primary-color(300);
+  border-radius: 10px;
+
+  svg {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+path {
+  stroke-width: 20;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: accent-color(300);
+  stroke: white;
+  transition: all 0.2s ease;
+}

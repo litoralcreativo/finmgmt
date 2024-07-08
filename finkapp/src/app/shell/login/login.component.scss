@@ -1,0 +1,14 @@
+:host {
+  position: relative;
+}
+
+form.login-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
