@@ -30,6 +30,8 @@ app.use(
       if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
+        console.error(allowedOrigins.join(" - "));
+        console.error(origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
