@@ -1,7 +1,7 @@
 {
   "name": "fink",
   "short_name": "fink",
-  "theme_color": "#1976d2",
+  "theme_color": "#d5e3ff",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",

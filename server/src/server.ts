@@ -20,10 +20,19 @@ const apiPrefix = process.env.API_PREFIX || "";
 const app = express();
 const PORT = 3000;
 
+const allowedOrigins: string[] = process.env.CORS_ORIGINS?.split(",") || [];
+
 // cors config
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
