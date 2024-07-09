@@ -91,6 +91,7 @@ export class AuthService {
     this.userInfo().subscribe({
       next: (userdata) => {
         this._userData.next(userdata);
+        this.router.navigate(['dashboard']);
       },
       error: (err) => {
         if (err.error?.logout) {

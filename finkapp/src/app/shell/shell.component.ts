@@ -51,6 +51,14 @@ export class ShellComponent implements OnInit {
       active: false,
     },
   ];
+  navUserItems: NavItem[] = [
+    {
+      name: 'Settings',
+      route: '/settings',
+      icon: 'settings',
+      active: false,
+    },
+  ];
 
   changes: Map<string, SymbolChange> = new Map();
   screenSize: number;
@@ -152,5 +160,9 @@ export class ShellComponent implements OnInit {
 
   goHome() {
     this.router.navigate(['/']);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

@@ -80,6 +80,9 @@
 @include fonts-mixin;
 @include natives.native-mixin;
 
+h1 {
+  @extend .mat-headline-large;
+}
 h2 {
   @extend .mat-headline-medium;
 }
