@@ -1,4 +1,5 @@
-@import "../../../../palletes.scss";
+@use "@angular/material" as mat;
+@use "../../../../styles/m3-theme.scss" as m3;
 
 #content {
   width: 100%;
@@ -17,10 +18,10 @@ path {
 #F > path,
 #I > path,
 #N > path {
-  stroke: primary-color(500);
+  stroke: mat.get-theme-color(m3.$dark-theme, primary, 50);
 }
 #K > path {
-  stroke: accent-color(500);
+  stroke: mat.get-theme-color(m3.$dark-theme, tertiary, 60);
 }
 
 #logo,

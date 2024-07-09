@@ -1,4 +1,4 @@
-<mat-toolbar class="main-app-toolbar" color="primary">
+<div class="main-app-toolbar">
   <button
     mat-icon-button
     (click)="drawer.toggle()"
@@ -6,16 +6,16 @@
   >
     <mat-icon>{{ drawer.opened ? "close" : "menu" }}</mat-icon>
   </button>
-  <div *ngIf="screenSize >= 2" class="logo-container">
+  <!-- <div *ngIf="screenSize >= 2" class="logo-container">
     <k></k>
-  </div>
+  </div> -->
   <div class="toolbar-actions">
     <ng-container
       *ngTemplateOutlet="loggedIn ? loggedActions : unloggedActions"
     ></ng-container>
   </div>
-</mat-toolbar>
-<div id="sub-toolbar-info" class="mat-caption">
+</div>
+<!-- <div id="sub-toolbar-info" class="mat-label-medium bg-main">
   <div *ngIf="changes.get('MEP')" class="symbol-change">
     MEP: {{ changes.get("MEP")?.venta | currency }}
   </div>
@@ -25,7 +25,7 @@
   <div *ngIf="changes.get('CRIPTO')" class="symbol-change">
     Cripto: {{ changes.get("CRIPTO")?.venta | currency }}
   </div>
-</div>
+</div> -->
 
 <mat-drawer-container class="main-app-drawer-container" autosize>
   <mat-drawer
@@ -44,7 +44,7 @@
   </mat-drawer>
 
   <mat-drawer-content>
-    <section class="main-responsive-container">
+    <section class="">
       <ng-content></ng-content>
     </section>
   </mat-drawer-content>
@@ -54,7 +54,7 @@
   <button mat-button [disabled]="fetching" (click)="openLoginDialog()">
     Login
   </button>
-  <button mat-flat-button [disabled]="fetching" (click)="openRegisterDialog()">
+  <button mat-button [disabled]="fetching" (click)="openRegisterDialog()">
     Register
   </button>
 </ng-template>

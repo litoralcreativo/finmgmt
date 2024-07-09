@@ -1,47 +1,93 @@
 @use "@angular/material" as mat;
-@use "./palletes.scss" as pal;
+@use "natives" as natives;
+@use "sass:map";
+@use "./styles/m3-theme.scss" as m3;
 
 @include mat.core();
 
-$primary: mat.m2-define-palette(pal.$primary-palette, 400);
-$accent: mat.m2-define-palette(pal.$accent-palette, 300);
-/* $my-typography: mat.m2-define-typography-config(); */
-$my-typography: mat.m2-define-typography-config(
-  $body-1: mat.m2-define-typography-level(1em, 1em, 400),
-  $body-2: mat.m2-define-typography-level(1em, 1em, 400),
-  $headline-6: mat.m2-define-typography-level(1.3em, 1.3em, 500),
-  $button: mat.m2-define-typography-level(14px, 14px, 500, $letter-spacing: 1px),
-);
-
-$fink-light-theme: mat.m2-define-light-theme(
-  (
-    color: (
-      primary: mat.m2-define-palette(pal.$primary-palette, 500),
-      accent: mat.m2-define-palette(pal.$accent-palette, 500),
-    ),
-    typography: $my-typography,
-    density: 0,
-  )
-);
-
-$fink-dark-theme: mat.m2-define-dark-theme(
-  (
-    color: (
-      primary: mat.m2-define-palette(pal.$primary-palette, 400),
-      accent: mat.m2-define-palette(pal.$accent-palette, 300),
-    ),
-    typography: $my-typography,
-    density: 0,
-  )
-);
-
+//M3
 :root {
-  @include mat.typography-hierarchy($my-typography);
-  @include mat.all-component-themes($fink-light-theme);
+  @include mat.core-theme(m3.$light-theme);
+  @include mat.all-component-themes(m3.$light-theme);
+
+  // especifications
+  --mat-sidenav-container-width: auto;
+  .mat-mdc-nav-list .mat-mdc-list-item.mdc-list-item--activated {
+    --mdc-list-list-item-label-text-color: #00529c;
+    --mdc-list-list-item-leading-icon-color: #00529c;
+  }
 }
 
-.dark-theme {
-  @include mat.all-component-colors($fink-dark-theme);
+@mixin fonts-mixin {
+  .mat-display- {
+    &large {
+      font: mat.get-theme-typography(m3.$light-theme, display-large, font);
+    }
+    &medium {
+      font: mat.get-theme-typography(m3.$light-theme, display-medium, font);
+    }
+    &small {
+      font: mat.get-theme-typography(m3.$light-theme, display-small, font);
+    }
+  }
+  .mat-headline- {
+    &large {
+      font: mat.get-theme-typography(m3.$light-theme, headline-large, font);
+    }
+    &medium {
+      font: mat.get-theme-typography(m3.$light-theme, headline-medium, font);
+    }
+    &small {
+      font: mat.get-theme-typography(m3.$light-theme, headline-small, font);
+    }
+  }
+  .mat-title- {
+    &large {
+      font: mat.get-theme-typography(m3.$light-theme, title-large, font);
+    }
+    &medium {
+      font: mat.get-theme-typography(m3.$light-theme, title-medium, font);
+    }
+    &small {
+      font: mat.get-theme-typography(m3.$light-theme, title-small, font);
+    }
+  }
+  .mat-body- {
+    &large {
+      font: mat.get-theme-typography(m3.$light-theme, body-large, font);
+      line-height: 28px;
+      color: mat.get-theme-color(m3.$light-theme, neutral-variant, 30);
+    }
+    &medium {
+      font: mat.get-theme-typography(m3.$light-theme, body-medium, font);
+    }
+    &small {
+      font: mat.get-theme-typography(m3.$light-theme, body-small, font);
+    }
+  }
+  .mat-label- {
+    &large {
+      font: mat.get-theme-typography(m3.$light-theme, label-large, font);
+    }
+    &medium {
+      font: mat.get-theme-typography(m3.$light-theme, label-medium, font);
+    }
+    &small {
+      font: mat.get-theme-typography(m3.$light-theme, label-small, font);
+    }
+  }
+}
+@include fonts-mixin;
+@include natives.native-mixin;
+
+h2 {
+  @extend .mat-headline-medium;
+}
+h3 {
+  @extend .mat-headline-small;
+}
+p {
+  @extend .mat-body-large;
 }
 
 html,
@@ -51,15 +97,4 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-:root {
-  // mat-card-rounded-corners
-  --mdc-dialog-container-shape: 20px;
-
-  // mat-button rounded corners
-  --mdc-filled-button-container-shape: 10px;
-  --mdc-text-button-container-shape: 10px;
-
-  --mat-dialog-actions-padding: 1rem;
 }

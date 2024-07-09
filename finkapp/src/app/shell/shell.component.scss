@@ -1,4 +1,5 @@
-@import "../../palletes.scss";
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
 
 :host {
   width: 100vw;
@@ -7,10 +8,15 @@
   display: flex;
   flex-direction: column;
 }
-mat-toolbar.main-app-toolbar {
+.main-app-toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
   position: sticky;
   top: 0;
   flex-shrink: 0;
+  background-color: mat.get-theme-color(m3.$light-theme, primary, 90);
+  padding: 0.5rem;
 
   > .toolbar-actions {
     margin-left: auto;
@@ -20,8 +26,8 @@ mat-toolbar.main-app-toolbar {
 }
 
 #sub-toolbar-info {
-  background-color: primary-color(700);
-  color: primary-color(700, "contrast");
+  /* background-color: primary-color(700); */
+  /* color: primary-color(700, "contrast"); */
   padding: 2px 1rem;
 
   display: flex;
@@ -38,36 +44,25 @@ mat-toolbar.main-app-toolbar {
 ::ng-deep mat-drawer-container.main-app-drawer-container {
   flex-grow: 1;
 
+  mat-divider {
+    height: 100%;
+    width: -moz-fit-content;
+    width: fit-content;
+  }
+
   mat-drawer {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    padding: 0 1rem 0 0.5rem;
 
-    .mat-list-item {
-      color: rgba($color: primary-color(50, "contrast"), $alpha: 0.8);
-      &:hover {
-        background-color: rgba($color: accent-color(50), $alpha: 0.5);
+    mat-nav-list {
+      mat-list-item {
+        margin: 5px 0;
+        -webkit-user-select: none;
+        user-select: none;
       }
-      &.active-link {
-        background-color: accent-color(50);
-        color: accent-color(700);
-      }
-    }
-  }
-
-  .nav-link {
-    background-color: primary-color(100);
-    color: primary-color(900, "contrast");
-
-    &:hover {
-      background-color: primary-color(200);
-      color: primary-color(900, "contrast");
-    }
-
-    &.active-link {
-      background-color: primary-color(500);
-      color: primary-color(50, "contrast");
     }
   }
 
@@ -81,9 +76,11 @@ mat-toolbar.main-app-toolbar {
 }
 
 @media (width > 768px) {
-  mat-drawer-content > section.main-responsive-container {
-    padding: 1.5em 2em;
-    max-width: 70em;
+  mat-drawer-content {
+    > section.main-responsive-container {
+      padding: 1.5em 2em;
+      max-width: 70em;
+    }
   }
 }
 

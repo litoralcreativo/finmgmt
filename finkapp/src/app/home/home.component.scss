@@ -1,3 +1,6 @@
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
+
 .logo-container {
   display: flex;
   justify-content: center;
@@ -11,5 +14,107 @@
   pointer-events: none;
   > * {
     max-width: 95vh;
+  }
+}
+
+header.homepage-header {
+  overflow: hidden;
+  height: 420px;
+  background-color: mat.get-theme-color(m3.$light-theme, primary, 90);
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  .header-section {
+    width: 90%;
+    position: relative;
+    z-index: 0;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .brand-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      app-brand {
+        display: block;
+        width: 300px;
+        max-width: 90vw;
+      }
+    }
+
+    h1 {
+      font-size: 56px;
+      font-weight: 500;
+      line-height: 56px;
+      margin: 15px 5px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 28px;
+      margin: 15px 0 25px;
+    }
+
+    .header-start {
+      text-align: center;
+      margin: 50px 0 0;
+    }
+  }
+
+  .app-logo {
+    position: absolute;
+    bottom: -100px;
+    left: 50%;
+    transform: translate(-50%);
+    opacity: 0.1;
+    margin-left: 330px;
+    width: 500px;
+    height: 500px;
+    pointer-events: none;
+  }
+}
+
+main.homepage-promo {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  width: 75%;
+  max-width: 1080px;
+  margin: auto;
+  .homepage-row {
+    display: flex;
+    flex-direction: row;
+    margin: 50px 0;
+    gap: 1rem;
+    .homepage-row-column {
+      display: flex;
+      flex-direction: column;
+      font-weight: 300 !important;
+    }
+  }
+}
+
+@media (max-width: 850px) {
+  main.homepage-promo .homepage-row {
+    flex-direction: column;
+  }
+}
+
+app-brand {
+  transform: translateY(-20px);
+  opacity: 0;
+  animation: goDown 1s ease forwards;
+}
+
+@keyframes goDown {
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

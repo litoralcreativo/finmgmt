@@ -22,7 +22,10 @@
     "useDefineForClassFields": false,
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false,
-    "lib": ["ES2022", "dom"]
+    "lib": ["ES2022", "dom"],
+    "paths": {
+      "style": ["./src/styles"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

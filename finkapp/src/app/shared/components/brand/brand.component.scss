@@ -1,0 +1,17 @@
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
+
+path {
+  stroke-width: 20;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: black;
+  transition: all 0.2s ease;
+}
+
+.primary path {
+  stroke: mat.get-theme-color(m3.$light-theme, primary, 40);
+}
+.secondary path {
+  stroke: mat.get-theme-color(m3.$light-theme, tertiary, 60);
+}
