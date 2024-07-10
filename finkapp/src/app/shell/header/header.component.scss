@@ -1,0 +1,16 @@
+nav.header-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  .current-path {
+    margin-left: 1rem;
+  }
+
+  &:has(button) {
+    .current-path {
+      margin-left: 0px;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<nav class="header-nav">
+  <ng-container *ngFor="let breadcrumb of breadcrumbs; let i = index">
+    <!-- <button mat-icon-button *ngIf="i !== breadcrumbs.length - 1">
+      <mat-icon>chevron_left</mat-icon>
+    </button> -->
+    <p
+      class="current-path mat-title-medium"
+      *ngIf="i === breadcrumbs.length - 1"
+    >
+      {{ breadcrumb }}
+    </p>
+  </ng-container>
+</nav>

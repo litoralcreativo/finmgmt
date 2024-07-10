@@ -8,26 +8,32 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
+    data: { breadcrumb: 'Home' },
   },
   {
     path: 'dashboard',
     canActivate: [AuthGuard],
     component: DashboardComponent,
+    data: { breadcrumb: 'Dashboard' },
   },
   {
     path: 'accounts',
     canActivate: [AuthGuard],
-    component: DashboardComponent,
+    loadChildren: () =>
+      import('./accounts/accounts.module').then((m) => m.AccountsModule),
+    data: { breadcrumb: 'Accounts' },
   },
   {
     path: 'scopes',
     canActivate: [AuthGuard],
     component: DashboardComponent,
+    data: { breadcrumb: 'Scopes' },
   },
   {
     path: 'calendar',
     canActivate: [AuthGuard],
     component: DashboardComponent,
+    data: { breadcrumb: 'Calendar' },
   },
 ];
 

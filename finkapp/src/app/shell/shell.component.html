@@ -9,7 +9,7 @@
     Cripto: {{ changes.get("CRIPTO")?.venta | currency }}
   </div>
 </div> -->
-
+<div class="main-app-toolbar go-back"></div>
 <mat-drawer-container class="main-app-drawer-container" autosize>
   <mat-drawer
     #drawer
@@ -47,13 +47,14 @@
       >
         <mat-icon>{{ drawer.opened ? "close" : "menu" }}</mat-icon>
       </button>
+      <app-header *ngIf="loggedIn"></app-header>
       <div class="toolbar-actions">
         <ng-container
           *ngTemplateOutlet="loggedIn ? loggedTopbar : unloggedTopbar"
         ></ng-container>
       </div>
     </div>
-    <section class="">
+    <section [class.main-responsive-container]="loggedIn">
       <ng-content></ng-content>
     </section>
   </mat-drawer-content>

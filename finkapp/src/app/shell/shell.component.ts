@@ -111,7 +111,7 @@ export class ShellComponent implements OnInit {
 
   private _updateActiveNavItem(currentRoute: string) {
     this.navItems.forEach((item) => {
-      item.active = item.route === currentRoute;
+      item.active = currentRoute.startsWith(item.route);
     });
   }
 

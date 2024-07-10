@@ -19,6 +19,7 @@
   background-color: mat.get-theme-color(m3.$light-theme, primary, 90);
   padding: 0 0.5rem;
   height: 64px;
+  z-index: 999;
 
   > .toolbar-actions {
     margin-left: auto;
@@ -43,9 +44,18 @@
   }
 }
 
+.go-back {
+  z-index: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 0;
+}
+
 ::ng-deep mat-drawer-container.main-app-drawer-container {
   flex-grow: 1;
-  background-color: mat.get-theme-color(m3.$light-theme, primary, 90);
+  background-color: transparent;
 
   mat-divider {
     height: 100%;
@@ -62,6 +72,7 @@
     border-right: 1px solid
       mat.get-theme-color(m3.$light-theme, neutral-variant, 90);
     /* border-radius: 0; */
+    /* background-color: gray; */
 
     .mat-drawer-inner-container {
       display: flex;
