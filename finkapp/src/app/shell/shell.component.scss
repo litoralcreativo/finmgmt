@@ -45,6 +45,7 @@
 
 ::ng-deep mat-drawer-container.main-app-drawer-container {
   flex-grow: 1;
+  background-color: mat.get-theme-color(m3.$light-theme, primary, 90);
 
   mat-divider {
     height: 100%;
@@ -60,7 +61,7 @@
     padding: 0 1rem 0 0.5rem;
     border-right: 1px solid
       mat.get-theme-color(m3.$light-theme, neutral-variant, 90);
-    border-radius: 0;
+    /* border-radius: 0; */
 
     .mat-drawer-inner-container {
       display: flex;
@@ -75,6 +76,10 @@
         user-select: none;
       }
     }
+  }
+
+  mat-drawer-content {
+    background-color: mat.get-theme-color(m3.$light-theme, neutral-variant, 99);
   }
 }
 
