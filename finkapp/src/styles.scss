@@ -5,6 +5,15 @@
 
 @include mat.core();
 
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 //M3
 :root {
   @include mat.core-theme(m3.$light-theme);
@@ -15,10 +24,12 @@
   .mat-mdc-nav-list .mat-mdc-list-item.mdc-list-item--activated {
     --mdc-list-list-item-label-text-color: #00529c;
     --mdc-list-list-item-leading-icon-color: #00529c;
+    --mdc-list-list-item-hover-leading-icon-color: #00529c;
     --mat-sidenav-content-background-color: #d5e3ff;
   }
 }
 
+// FONTS SECTION
 @mixin fonts-mixin {
   .mat-display- {
     &large {
@@ -69,12 +80,15 @@
   .mat-label- {
     &large {
       font: mat.get-theme-typography(m3.$light-theme, label-large, font);
+      font-weight: 400;
     }
     &medium {
       font: mat.get-theme-typography(m3.$light-theme, label-medium, font);
+      font-weight: 300;
     }
     &small {
       font: mat.get-theme-typography(m3.$light-theme, label-small, font);
+      font-weight: 300;
     }
   }
 }
@@ -90,15 +104,26 @@ h2 {
 h3 {
   @extend .mat-headline-small;
 }
+h4 {
+  @extend .mat-title-large;
+}
 p {
   @extend .mat-body-large;
 }
 
-html,
-body {
-  height: 100%;
+// OTHER STYLES
+@mixin currency {
+  .positive {
+    color: #3ca55c !important;
+  }
+  .bluish {
+    color: #3c6aa5 !important;
+  }
+  .negative {
+    color: #cd5c5c !important;
+  }
+  .zerotive {
+    color: #797979 !important;
+  }
 }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
+@include currency;

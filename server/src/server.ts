@@ -1,6 +1,5 @@
 import express from "express";
 import passport from "passport";
-import session from "express-session";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
 import { router as authRouter, router } from "./controllers/auth.routes";
@@ -44,7 +43,6 @@ app.use(
 app.use(passport.initialize());
 
 app.use(express.json());
-app.use(`${apiPrefix}/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(`${apiPrefix}/auth`, authRouter);
 app.use(`${apiPrefix}/account`, accountRouter);
@@ -52,6 +50,8 @@ app.use(`${apiPrefix}/transaction`, requireAuth, transactionRouter);
 app.use(`${apiPrefix}/scopes`, requireAuth, scopeRouter);
 
 app.use(`${apiPrefix}/dummy`, (req, res) => res.status(200).send("ok"));
+
+app.use(`${apiPrefix}/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.all("*", (req, res) => {
   res.status(404).json({

@@ -1,0 +1,44 @@
+<mat-card class="calendar-container">
+  <div class="calendar-filter">
+    <mat-form-field [formGroup]="filter">
+      <mat-label>Accounts</mat-label>
+
+      <mat-select formControlName="account" multiple>
+        <mat-select-trigger>
+          <ng-container [ngSwitch]="filter.controls['account'].value.length">
+            <span *ngSwitchCase="0"></span>
+            <span *ngSwitchCase="1">{{
+              filter.controls["account"].value[0].data.name
+            }}</span>
+            <span *ngSwitchCase="userAccounts.length"> All accounts </span>
+            <span *ngSwitchDefault>
+              {{ filter.controls["account"].value[0].data.name }}
+              <span class="additional-selection">
+                (+{{ filter.controls["account"].value.length - 1 }}
+                {{
+                  filter.controls["account"].value?.length === 2
+                    ? "other"
+                    : "others"
+                }})
+              </span>
+            </span>
+          </ng-container>
+        </mat-select-trigger>
+        <mat-optgroup
+          *ngFor="let group of groupedAccounts"
+          [label]="group.type | uppercase"
+        >
+          <mat-option *ngFor="let account of group.accounts" [value]="account">
+            {{ account.data.name }}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <mat-calendar
+    [maxDate]="today"
+    [(selected)]="selectedDay"
+    [dateClass]="dateClass"
+    (selectedChange)="onDaySelection($event)"
+  ></mat-calendar>
+</mat-card>

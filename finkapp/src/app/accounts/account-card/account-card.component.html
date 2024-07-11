@@ -1,0 +1,32 @@
+<mat-card (click)="goToAccount()">
+  <mat-card-header>
+    <mat-card-title-group>
+      <mat-card-title> {{ account.data.name }}</mat-card-title>
+      <mat-card-subtitle
+        ><span class="mat-label-large">{{
+          account.data.type
+        }}</span></mat-card-subtitle
+      >
+      <mat-icon
+        mat-card-image
+        class="favorite-account-icon"
+        *ngIf="account.data.favorite"
+        >star</mat-icon
+      >
+    </mat-card-title-group>
+  </mat-card-header>
+  <mat-card-content class="mat-card-content-account">
+    <h4
+      [class.positive]="account.data.amount > 0"
+      [class.bluish]="
+        account.data.symbol === 'USD' || account.data.symbol === 'USDT'
+      "
+      [class.negative]="account.data.amount < 0"
+      [class.zerotive]="account.data.amount == 0"
+    >
+      {{ account.data.amount | currency }}
+      <span class="mat-label-large">{{ account.data.symbol }}</span>
+    </h4>
+  </mat-card-content>
+  <div matRipple></div>
+</mat-card>

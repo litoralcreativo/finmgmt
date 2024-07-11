@@ -9,6 +9,9 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './handlers/AuthInterceptor';
 import { LogoComponent } from './components/logo/logo.component';
 import { BrandComponent } from './components/brand/brand.component';
+import { SkeletonLoaderDirective } from './directives/skeleton-loader.directive';
+import { NumericInputDirective } from './directives/numeric-input.directive';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,8 @@ import { BrandComponent } from './components/brand/brand.component';
     AnimatedLogoComponent,
     LogoComponent,
     BrandComponent,
+    SkeletonLoaderDirective,
+    NumericInputDirective,
   ],
   imports: [CommonModule, MaterialModule, ReactiveFormsModule],
   exports: [
@@ -27,7 +32,12 @@ import { BrandComponent } from './components/brand/brand.component';
     AnimatedLogoComponent,
     LogoComponent,
     BrandComponent,
+    SkeletonLoaderDirective,
+    NumericInputDirective,
   ],
-  providers: [provideHttpClient(withInterceptors([authInterceptor]))],
+  providers: [
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideNativeDateAdapter(),
+  ],
 })
 export class SharedModule {}

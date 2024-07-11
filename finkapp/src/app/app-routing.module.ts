@@ -32,7 +32,8 @@ const routes: Routes = [
   {
     path: 'calendar',
     canActivate: [AuthGuard],
-    component: DashboardComponent,
+    loadChildren: () =>
+      import('./calendar/calendar.module').then((m) => m.CalendarModule),
     data: { breadcrumb: 'Calendar' },
   },
 ];

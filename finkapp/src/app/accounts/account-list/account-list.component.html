@@ -1,0 +1,47 @@
+<mat-accordion
+  multi
+  class="accounts-acordion"
+  *ngIf="!fetching; else fetchingTemplate"
+>
+  <mat-expansion-panel
+    *ngFor="let accountGroup of sortedAccounts"
+    expanded
+    class="mat-elevation-z0"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ accountGroup.title | titlecase }}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ accountGroup.sum | currency }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="account-group">
+      <div class="acounts-grid">
+        <app-account-card
+          *ngFor="let account of accountGroup.accounts"
+          [account]="account"
+        >
+        </app-account-card>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<ng-template #fetchingTemplate>
+  <div class="account-group">
+    <div class="acounts-grid">
+      <mat-card [appSkeletonLoader]="true">
+        <mat-card-title>Skeleton card</mat-card-title>
+        <mat-card-subtitle>example</mat-card-subtitle>
+        <mat-card-content>
+          <h2>
+            {{ 0 | currency }}
+            <span class="mat-caption">USD</span>
+          </h2>
+        </mat-card-content>
+        <div matRipple></div>
+      </mat-card>
+    </div>
+  </div>
+</ng-template>

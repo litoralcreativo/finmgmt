@@ -1,0 +1,49 @@
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
+
+.acounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.account-group {
+  > h2 {
+    margin: 2rem 0 1rem;
+    text-align: center;
+  }
+}
+
+.accounts-acordion {
+  .mat-expansion-panel:not(:last-child) {
+    border-radius: 0;
+    border-bottom: 1px solid
+      mat.get-theme-color(m3.$light-theme, neutral-variant, 80);
+  }
+}
+
+.accounts-acordion .mat-expansion-panel-header-title,
+.accounts-acordion .mat-expansion-panel-header-description {
+  flex-basis: 200px;
+}
+
+.skeleton-loader {
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  width: -moz-fit-content;
+  width: fit-content;
+  animation: skeleton-loading 1.2s infinite ease-in-out;
+  color: transparent;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #c0c0c0;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
