@@ -3,12 +3,12 @@
     <div *ngSwitchCase="'incoming'">
       <div mat-line>Incoming transaction</div>
       <div mat-line class="mat-caption">
-        to {{ data.destination?.data?.name }}
+        to {{ data.destination.data.name }}
       </div>
     </div>
     <div *ngSwitchCase="'outgoing'">
       <div mat-line>Outgoing transaction</div>
-      <div mat-line class="mat-caption">from {{ data.origin?.data?.name }}</div>
+      <div mat-line class="mat-caption">from {{ data.origin.data.name }}</div>
     </div>
     <div *ngSwitchDefault>
       <div mat-line>Transaction</div>
@@ -165,13 +165,13 @@
               [value]="account"
               [disabled]="
                 account.data._id ===
-                this.form.controls['destination']?.value.data?._id
+                this.form.controls['destination'].value.data?._id
               "
             >
               {{ account.data.name }}
               {{
                 account.data._id ===
-                this.form.controls["destination"]?.value.data?._id
+                this.form.controls["destination"].value.data?._id
                   ? "(destination)"
                   : ""
               }}
@@ -201,13 +201,13 @@
               [value]="account"
               [disabled]="
                 account.data._id ===
-                this.form.controls['origin']?.value.data?._id
+                this.form.controls['origin'].value.data?._id
               "
             >
               {{ account.data.name }}
               {{
                 account.data._id ===
-                this.form.controls["origin"]?.value.data?._id
+                this.form.controls["origin"].value.data?._id
                   ? "(origin)"
                   : ""
               }}

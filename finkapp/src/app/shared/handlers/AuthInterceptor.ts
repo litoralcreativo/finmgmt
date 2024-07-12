@@ -61,6 +61,7 @@ export const authInterceptor: HttpInterceptorFn = (
           horizontalPosition: 'start',
           verticalPosition: 'bottom',
           panelClass: 'matsnack-error',
+          duration: 5000,
         });
       },
     })

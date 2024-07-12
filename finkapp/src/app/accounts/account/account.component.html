@@ -66,17 +66,28 @@
 </section>
 
 <ng-template #fetchingAccountCard>
-  <mat-card [appSkeletonLoader]="true">
-    <mat-card-title>
-      <span>Placeholder</span>
-    </mat-card-title>
-    <mat-card-subtitle>placeholder</mat-card-subtitle>
-    <mat-card-content>
-      <h2>
-        {{ 100000.55 | currency }}
-        <span class="mat-caption">USD</span>
-      </h2>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title [appSkeletonLoader]="true"
+          ><span>Placeholder</span></mat-card-title
+        >
+        <mat-card-subtitle [appSkeletonLoader]="true"
+          ><span class="mat-label-large">Placeholder</span></mat-card-subtitle
+        >
+      </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content
+      class="mat-card-content-account"
+      [appSkeletonLoader]="true"
+    >
+      <h4>
+        {{ 10000 | currency }}
+        <span class="mat-label-large">USD</span>
+      </h4>
+      <div></div>
     </mat-card-content>
+    <div></div>
   </mat-card>
 </ng-template>
 
@@ -96,21 +107,37 @@
 </ng-template>
 
 <ng-template #fetchingTransactionsCard>
-  <mat-card>
-    <mat-card-title [appSkeletonLoader]="true">
-      <h1>Placeholder</h1>
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <br />
+  <mat-card class="transactions-list-container">
+    <mat-card-header>
+      <div class="transactions-search-bar">
+        <mat-form-field appearance="fill">
+          <mat-label>Search</mat-label>
+          <input
+            matInput
+            title="search"
+            (keydown.enter)="onSearch()"
+            disabled
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card-header>
     <mat-card-content>
-      <div
-        *ngFor="let transaction of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]"
-        [appSkeletonLoader]="true"
-      >
-        <h1>Lorem ipsum dolor sit amet consectetur adipisicing</h1>
-        <p>Placeholder placeholder</p>
+      <div class="transaction-list">
+        @for (transaction of [1, 2, 3, 4, 5]; track transaction) {
+        <div [appSkeletonLoader]="true" style="margin-bottom: 5px">
+          <p class="mat-label-large">placeholder</p>
+          <span>Placeholder placeholder</span>
+        </div>
+        <mat-divider></mat-divider>
+        }
       </div>
     </mat-card-content>
+    <mat-card-footer>
+      <button mat-button class="activity-history" disabled>
+        <span>ACTIVITY HISTORY</span>
+      </button>
+    </mat-card-footer>
   </mat-card>
 </ng-template>
 
