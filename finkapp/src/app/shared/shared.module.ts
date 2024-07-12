@@ -15,7 +15,11 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { provideEnvironmentNgxMask } from 'ngx-mask';
+import {
+  NgxMaskDirective,
+  NgxMaskPipe,
+  provideEnvironmentNgxMask,
+} from 'ngx-mask';
 import { FormatDatePipe } from './pipes/format-date.pipe';
 import { MonthlyCategoriesComponent } from './components/monthly-categories/monthly-categories.component';
 import { BalanceGraphComponent } from './components/balance-graph/balance-graph.component';
@@ -44,6 +48,8 @@ import { IconSelectorComponent } from './components/icon-selector/icon-selector.
     MaterialModule,
     ReactiveFormsModule,
     NgApexchartsModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
   exports: [
     MaterialModule,

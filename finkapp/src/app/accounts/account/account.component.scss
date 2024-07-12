@@ -1,6 +1,6 @@
 .account-grid {
   display: grid;
-  grid-gap: 24px;
+  grid-gap: 12px 24px;
   grid-template-columns: 23.125em 1fr;
   grid-template-areas:
     "top top"

@@ -8,9 +8,19 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
     <div mat-dialog-content>Are you sure you want to confirm this action?</div>
     <div mat-dialog-actions align="end">
       <button mat-button [mat-dialog-close]="false">Close</button>
-      <button mat-button [mat-dialog-close]="true" color="warn">Yes</button>
+      <button mat-button [mat-dialog-close]="true" [class.warn]="true">
+        Yes
+      </button>
     </div>
   `,
+  styles: [
+    `
+      .warn {
+        color: white;
+        background-color: red;
+      }
+    `,
+  ],
 })
 export class ConfirmationComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { title?: string }) {}

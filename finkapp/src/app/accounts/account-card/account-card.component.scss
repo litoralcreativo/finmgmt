@@ -5,6 +5,10 @@ mat-card {
   -webkit-user-select: none;
   user-select: none;
 
+  .account-card-title {
+    font-weight: 500;
+  }
+
   overflow: hidden;
   .mat-ripple {
     position: absolute;

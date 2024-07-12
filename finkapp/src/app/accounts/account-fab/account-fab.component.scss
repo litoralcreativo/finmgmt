@@ -12,6 +12,10 @@
     &.hide {
       display: none;
     }
+
+    &.fright {
+      float: right;
+    }
   }
   .fab-actions {
     display: flex;
@@ -29,12 +33,11 @@
 
     .swap {
       background-color: white;
-      color: gray;
       animation-delay: 0.2s;
     }
     .outgoing {
       background-color: white;
-      color: #a70909;
+      color: #c90101;
       animation-delay: 0.1s;
     }
     .incoming {

@@ -1,6 +1,6 @@
 .transaction-date {
-  width: 150px;
-  flex-basis: 0;
+  /* width: 150px; */
+  /* flex-basis: 0; */
 }
 
 .transaction-amount {
@@ -9,7 +9,19 @@
 }
 
 ::ng-deep mat-form-field.iconed-form-field {
-  .mat-form-field-infix {
-    height: 1.4rem;
+  mat-icon {
+    vertical-align: top;
   }
+}
+
+.transaction-dialog-actions {
+  .delete-transaction-btn {
+    background-color: red;
+    color: white;
+    margin-right: auto;
+  }
+}
+
+.amount-form-control {
+  margin-top: 1rem;
 }

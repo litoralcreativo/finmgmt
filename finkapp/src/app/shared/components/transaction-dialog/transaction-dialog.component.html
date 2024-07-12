@@ -1,19 +1,15 @@
 <div mat-dialog-title>
-  <div [ngSwitch]="type">
-    <div *ngSwitchCase="'incoming'">
-      <div mat-line>Incoming transaction</div>
-      <div mat-line class="mat-caption">
-        to {{ data.destination.data.name }}
-      </div>
-    </div>
-    <div *ngSwitchCase="'outgoing'">
-      <div mat-line>Outgoing transaction</div>
-      <div mat-line class="mat-caption">from {{ data.origin.data.name }}</div>
-    </div>
-    <div *ngSwitchDefault>
-      <div mat-line>Transaction</div>
-    </div>
-  </div>
+  <ng-container [ngSwitch]="type">
+    <ng-container *ngSwitchCase="'incoming'">
+      <span>Incoming transaction</span>
+      <div class="mat-label-large">to {{ data.destination.data.name }}</div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'outgoing'">
+      <span>Outgoing transaction</span>
+      <div class="mat-label-large">from {{ data.origin.data.name }}</div>
+    </ng-container>
+    <ng-container *ngSwitchDefault> Transaction </ng-container>
+  </ng-container>
 </div>
 
 <div mat-dialog-content>
@@ -21,14 +17,22 @@
     *ngTemplateOutlet="type ? formTemplate : unkonType"
   ></ng-container>
 </div>
-<div mat-dialog-actions>
-  <mat-checkbox
+<div mat-dialog-actions class="transaction-dialog-actions">
+  <!-- <mat-checkbox
     class="example-margin"
     [(ngModel)]="swap"
     style="margin-right: auto"
     (change)="onSwapCheckboxChange()"
     >Swap</mat-checkbox
+  > -->
+  <button
+    mat-icon-button
+    *ngIf="hasOriginal"
+    class="delete-transaction-btn"
+    (click)="commit(true)"
   >
+    <mat-icon>delete</mat-icon>
+  </button>
   <button mat-button mat-dialog-close [disabled]="fetching">Close</button>
   <button
     mat-flat-button
@@ -38,14 +42,6 @@
     type="submit"
   >
     {{ hasOriginal ? "Apply change" : "Commit" }}
-  </button>
-  <button
-    *ngIf="hasOriginal"
-    mat-flat-button
-    color="warn"
-    (click)="commit(true)"
-  >
-    <mat-icon>delete</mat-icon>
   </button>
 </div>
 
@@ -62,6 +58,7 @@
           class="transaction-amount"
           matInput
           formControlName="amount"
+          prefix="{{ type === 'outgoing' ? '-' : '' }}$ "
           title="amount"
           mask="separator.2"
           thousandSeparator=","

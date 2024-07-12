@@ -21,39 +21,40 @@
   <div class="FAB-container">
     <div class="fab-actions" [class.show]="actionsShown">
       <button
-        mat-mini-fab
+        mat-button
         aria-label="FAB action"
         class="swap"
         (click)="emitAction('swap')"
       >
         <mat-icon>swap_horiz</mat-icon>
+        swap
       </button>
       <button
-        mat-mini-fab
+        mat-button
         aria-label="FAB action"
         class="outgoing"
         (click)="emitAction('out')"
       >
         <mat-icon>remove</mat-icon>
+        outgoing
       </button>
       <button
-        mat-mini-fab
+        mat-button
         aria-label="FAB action"
         class="incoming"
         (click)="emitAction('in')"
       >
         <mat-icon>add</mat-icon>
+        incoming
       </button>
     </div>
     <button
       mat-fab
       aria-label="FAB"
       (click)="toggleActions()"
-      class="main-fab"
-      extended
+      class="main-fab fright"
     >
       <mat-icon>close</mat-icon>
-      Close
     </button>
   </div>
 </ng-template>

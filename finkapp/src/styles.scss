@@ -21,6 +21,7 @@ body {
 
   // especifications
   --mat-sidenav-container-width: auto;
+  --mdc-dialog-subhead-weight: 500;
   .mat-mdc-nav-list .mat-mdc-list-item.mdc-list-item--activated {
     --mdc-list-list-item-label-text-color: #00529c;
     --mdc-list-list-item-leading-icon-color: #00529c;
@@ -157,3 +158,28 @@ p {
   }
 }
 @include skeleton;
+
+@mixin transactionForm {
+  form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    .form-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      gap: 0.5rem;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    mat-form-field {
+      flex-grow: 1;
+    }
+  }
+}
+@include transactionForm;
