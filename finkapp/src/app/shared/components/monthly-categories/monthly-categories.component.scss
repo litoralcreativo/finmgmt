@@ -1,0 +1,22 @@
+.month-picker {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .month-label {
+    flex-grow: 1;
+    text-align: center;
+  }
+}
+
+.acumulator-line {
+  min-width: 50px;
+}
+
+.acumulator-list mat-list-item {
+  cursor: pointer;
+}
+
+.progress-and-amount {
+  width: 100%;
+}

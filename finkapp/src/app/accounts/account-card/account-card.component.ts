@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Account, AccountData } from 'src/app/shared/models/accountData.model';
 
@@ -9,6 +9,8 @@ import { Account, AccountData } from 'src/app/shared/models/accountData.model';
 })
 export class AccountCardComponent implements OnInit {
   @Input('account') account: Account;
+  @Input('ripple') ripple: boolean = true;
+  @Output('fabClick') fabClick: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private router: Router, private aRoute: ActivatedRoute) {}
 
@@ -16,5 +18,9 @@ export class AccountCardComponent implements OnInit {
 
   goToAccount() {
     this.router.navigate([this.account.data._id], { relativeTo: this.aRoute });
+  }
+
+  toogleFavorite() {
+    this.fabClick.emit(true);
   }
 }

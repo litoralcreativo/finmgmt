@@ -12,6 +12,15 @@ import { BrandComponent } from './components/brand/brand.component';
 import { SkeletonLoaderDirective } from './directives/skeleton-loader.directive';
 import { NumericInputDirective } from './directives/numeric-input.directive';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
+import { ConfirmationComponent } from './components/confirmation/confirmation.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
+import { FormatDatePipe } from './pipes/format-date.pipe';
+import { MonthlyCategoriesComponent } from './components/monthly-categories/monthly-categories.component';
+import { BalanceGraphComponent } from './components/balance-graph/balance-graph.component';
+import { TransactionListItemComponent } from './components/transaction-list-item/transaction-list-item.component';
+import { IconSelectorComponent } from './components/icon-selector/icon-selector.component';
 
 @NgModule({
   declarations: [
@@ -22,8 +31,20 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     BrandComponent,
     SkeletonLoaderDirective,
     NumericInputDirective,
+    TransactionDialogComponent,
+    ConfirmationComponent,
+    FormatDatePipe,
+    MonthlyCategoriesComponent,
+    BalanceGraphComponent,
+    TransactionListItemComponent,
+    IconSelectorComponent,
   ],
-  imports: [CommonModule, MaterialModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    NgApexchartsModule,
+  ],
   exports: [
     MaterialModule,
     KComponent,
@@ -34,10 +55,18 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     BrandComponent,
     SkeletonLoaderDirective,
     NumericInputDirective,
+    TransactionDialogComponent,
+    ConfirmationComponent,
+    FormatDatePipe,
+    MonthlyCategoriesComponent,
+    BalanceGraphComponent,
+    TransactionListItemComponent,
+    IconSelectorComponent,
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),
     provideNativeDateAdapter(),
+    provideEnvironmentNgxMask(),
   ],
 })
 export class SharedModule {}

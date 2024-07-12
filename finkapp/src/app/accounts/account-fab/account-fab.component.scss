@@ -1,0 +1,57 @@
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
+
+.FAB-container {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  margin: 0 2rem 2rem 0;
+  .main-fab {
+    background-color: mat.get-theme-color(m3.$light-theme, primary, 40);
+    color: mat.get-theme-color(m3.$light-theme, primary, 90);
+    &.hide {
+      display: none;
+    }
+  }
+  .fab-actions {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    justify-content: center;
+    align-items: end;
+    gap: 1rem;
+
+    > * {
+      opacity: 0;
+      transform: scale(0);
+      animation: appear 0.3s ease forwards;
+    }
+
+    .swap {
+      background-color: white;
+      color: gray;
+      animation-delay: 0.2s;
+    }
+    .outgoing {
+      background-color: white;
+      color: #a70909;
+      animation-delay: 0.1s;
+    }
+    .incoming {
+      background-color: white;
+      color: #09a70f;
+      animation-delay: 0s;
+    }
+  }
+}
+
+.fab-backdrop {
+  background-color: rgba($color: #000000, $alpha: 0.1);
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

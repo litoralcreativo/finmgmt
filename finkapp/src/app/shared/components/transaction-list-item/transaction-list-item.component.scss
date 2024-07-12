@@ -1,0 +1,25 @@
+.transaction-list-item {
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 1rem;
+  padding: 1rem;
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &.center {
+      overflow: hidden;
+      white-space: nowrap;
+      > * {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    &.right {
+      align-items: flex-end;
+    }
+  }
+}

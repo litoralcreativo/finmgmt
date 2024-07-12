@@ -1,0 +1,59 @@
+<div class="FAB-container">
+  <button
+    mat-fab
+    aria-label="FAB"
+    (click)="toggleActions()"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    class="main-fab"
+    [class.hide]="actionsShown"
+  >
+    <mat-icon>attach_money</mat-icon>
+  </button>
+</div>
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="actionsShown"
+  cdkConnectedOverlayHasBackdrop
+  (backdropClick)="toggleActions()"
+>
+  <div class="FAB-container">
+    <div class="fab-actions" [class.show]="actionsShown">
+      <button
+        mat-mini-fab
+        aria-label="FAB action"
+        class="swap"
+        (click)="emitAction('swap')"
+      >
+        <mat-icon>swap_horiz</mat-icon>
+      </button>
+      <button
+        mat-mini-fab
+        aria-label="FAB action"
+        class="outgoing"
+        (click)="emitAction('out')"
+      >
+        <mat-icon>remove</mat-icon>
+      </button>
+      <button
+        mat-mini-fab
+        aria-label="FAB action"
+        class="incoming"
+        (click)="emitAction('in')"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <button
+      mat-fab
+      aria-label="FAB"
+      (click)="toggleActions()"
+      class="main-fab"
+      extended
+    >
+      <mat-icon>close</mat-icon>
+      Close
+    </button>
+  </div>
+</ng-template>

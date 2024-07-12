@@ -1,0 +1,27 @@
+<div class="transaction-list-item" matRipple>
+  <div class="left">
+    <mat-icon class="transaction-scope">{{
+      transaction.scope.category.icon
+    }}</mat-icon>
+  </div>
+  <div class="center">
+    <span>{{ transaction.description }}</span>
+    <span class="mat-label-medium"
+      >{{ transaction.scope.name | uppercase }} -
+      {{ transaction.scope.category.name }}</span
+    >
+  </div>
+  <div class="right">
+    <span
+      class="transaction-amount"
+      [class.positive]="transaction.amount > 0"
+      [class.bold]="transaction.amount > 0"
+    >
+      {{ transaction.amount > 0 ? "+ " : ""
+      }}{{ transaction.amount | currency : "USD" : "$ " }}
+    </span>
+    <span class="mat-label-medium">
+      {{ transaction.date | formatDate }}
+    </span>
+  </div>
+</div>

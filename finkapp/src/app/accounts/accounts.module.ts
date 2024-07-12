@@ -7,6 +7,8 @@ import { AccountsComponent } from './accounts.component';
 import { AccountComponent } from './account/account.component';
 import { AccountCardComponent } from './account-card/account-card.component';
 import { AccountListComponent } from './account-list/account-list.component';
+import { AccountFABComponent } from './account-fab/account-fab.component';
+import { AccountHistoryComponent } from './account-history/account-history.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +16,8 @@ import { AccountListComponent } from './account-list/account-list.component';
     AccountComponent,
     AccountCardComponent,
     AccountListComponent,
+    AccountFABComponent,
+    AccountHistoryComponent,
   ],
   imports: [CommonModule, AccountsRoutingModule, SharedModule],
 })

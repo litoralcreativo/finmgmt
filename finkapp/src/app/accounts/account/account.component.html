@@ -1,1 +1,117 @@
-<p>account works!</p>
+<section class="account-container">
+  <div class="account-grid">
+    <div class="grid-area grid-top">
+      <button mat-button (click)="navigateBack()" color="primary">
+        <mat-icon>chevron_left</mat-icon> BACK TO ACCOUNTS
+      </button>
+    </div>
+    <div class="grid-area grid-left">
+      <app-account-card
+        *ngIf="!fetchingAccount; else fetchingAccountCard"
+        [account]="account"
+        [ripple]="false"
+        (fabClick)="toogleFavorite()"
+      ></app-account-card>
+
+      <app-balance-graph
+        [data]="accountBalanceData"
+        (scopeChange)="balanceDays = $event; getAccountBalance()"
+      ></app-balance-graph>
+    </div>
+    <div class="grid-area grid-right">
+      <mat-card
+        class="transactions-list-container"
+        *ngIf="!fetchingTransactions; else fetchingTransactionsCard"
+      >
+        <mat-card-header>
+          <div class="transactions-search-bar">
+            <mat-form-field appearance="fill">
+              <mat-label>Search</mat-label>
+              <input
+                matInput
+                title="search"
+                (keydown.enter)="onSearch()"
+                [formControl]="searchFormControl"
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="transaction-list">
+            @for (transaction of transactions; track transaction) {
+
+            <app-transaction-list-item
+              [transaction]="transaction"
+              (click)="onTransactionClick(transaction)"
+            ></app-transaction-list-item>
+            <mat-divider></mat-divider>
+            }
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <button
+            mat-button
+            class="activity-history"
+            color="primary"
+            (click)="goToHistory()"
+          >
+            <span>ACTIVITY HISTORY</span>
+          </button>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+    <div class="grid-area grid-bottom"></div>
+  </div>
+</section>
+
+<ng-template #fetchingAccountCard>
+  <mat-card [appSkeletonLoader]="true">
+    <mat-card-title>
+      <span>Placeholder</span>
+    </mat-card-title>
+    <mat-card-subtitle>placeholder</mat-card-subtitle>
+    <mat-card-content>
+      <h2>
+        {{ 100000.55 | currency }}
+        <span class="mat-caption">USD</span>
+      </h2>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+
+<ng-template #fetchingAcumulatorCard>
+  <div [appSkeletonLoader]="true">
+    <h1>Placeholder</h1>
+    <p style="width: fit-content">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis, quae
+      architecto optio sapiente aperiam in sequi, laboriosam, expedita
+      doloremque adipisci pariatur distinctio et? Nisi, dignissimos provident
+      modi consequatur eum quod.
+    </p>
+    <p>Lorem ipsum dolor</p>
+    <p>Lorem ipsum</p>
+    <p>Lorem ipsum dolor sit amet</p>
+  </div>
+</ng-template>
+
+<ng-template #fetchingTransactionsCard>
+  <mat-card>
+    <mat-card-title [appSkeletonLoader]="true">
+      <h1>Placeholder</h1>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <br />
+    <mat-card-content>
+      <div
+        *ngFor="let transaction of [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]"
+        [appSkeletonLoader]="true"
+      >
+        <h1>Lorem ipsum dolor sit amet consectetur adipisicing</h1>
+        <p>Placeholder placeholder</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+
+<app-account-fab (action)="openTransactionDialog($event)"></app-account-fab>

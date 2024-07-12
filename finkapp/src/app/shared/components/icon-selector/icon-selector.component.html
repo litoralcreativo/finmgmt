@@ -1,0 +1,44 @@
+<ng-container *ngIf="!categories; else scopeContainer">
+  <mat-card class="icons-container">
+    <div *ngFor="let category of catIcons" class="category">
+      <h4 style="text-align: center">{{ category[0] | titlecase }}</h4>
+      <div class="category-icons">
+        <button
+          mat-icon-button
+          *ngFor="let icon of category[1]"
+          (click)="changeIcon(icon)"
+        >
+          <mat-icon>{{ icon }}</mat-icon>
+        </button>
+      </div>
+      <mat-divider inset></mat-divider>
+    </div>
+  </mat-card>
+</ng-container>
+
+<ng-template #scopeContainer>
+  <mat-card class="icons-container">
+    <div *ngFor="let category of scopeIcons" class="category">
+      <h4 style="text-align: center">{{ category[0] | titlecase }}</h4>
+      <div class="category-icons">
+        <button
+          mat-icon-button
+          *ngFor="let cat of category[1]"
+          (click)="changeCategory(cat)"
+          [matTooltip]="cat.name"
+        >
+          <mat-icon>{{ cat.icon }}</mat-icon>
+        </button>
+      </div>
+      <mat-divider inset></mat-divider>
+    </div>
+    <button
+      mat-flat-button
+      (click)="changeCategory(undefined)"
+      class="none-btn"
+      color="primary"
+    >
+      None
+    </button>
+  </mat-card>
+</ng-template>

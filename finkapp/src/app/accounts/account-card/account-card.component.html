@@ -1,4 +1,4 @@
-<mat-card (click)="goToAccount()">
+<mat-card>
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title> {{ account.data.name }}</mat-card-title>
@@ -10,8 +10,10 @@
       <mat-icon
         mat-card-image
         class="favorite-account-icon"
-        *ngIf="account.data.favorite"
-        >star</mat-icon
+        [class.not-favorite]="!account.data.favorite"
+        [class.hide]="ripple && !account.data.favorite"
+        (click)="toogleFavorite()"
+        >{{ account.data.favorite ? "star" : "star_outlined" }}</mat-icon
       >
     </mat-card-title-group>
   </mat-card-header>
@@ -28,5 +30,6 @@
       <span class="mat-label-large">{{ account.data.symbol }}</span>
     </h4>
   </mat-card-content>
-  <div matRipple></div>
+  <div></div>
+  <div *ngIf="ripple" matRipple (click)="goToAccount()"></div>
 </mat-card>

@@ -5,7 +5,6 @@ mat-card {
   -webkit-user-select: none;
   user-select: none;
 
-  cursor: pointer;
   overflow: hidden;
   .mat-ripple {
     position: absolute;
@@ -13,11 +12,21 @@ mat-card {
     right: 0;
     top: 0;
     bottom: 0;
+    cursor: pointer;
   }
 
   .favorite-account-icon {
     color: mat.get-theme-color(m3.$light-theme, primary, 50);
     float: right;
+    cursor: pointer;
+
+    &.not-favorite {
+      color: mat.get-theme-color(m3.$light-theme, neutral-variant, 90);
+    }
+
+    &.hide {
+      display: none;
+    }
   }
 }
 
