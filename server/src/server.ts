@@ -20,7 +20,7 @@ cronService;
 const apiPrefix = process.env.API_PREFIX || "";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const allowedOrigins: string[] = process.env.CORS_ORIGINS?.split(",") || [];
 

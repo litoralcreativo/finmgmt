@@ -8,8 +8,7 @@
     "dev": "ts-node-dev --respawn src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "build:nfy": "tsc --outDir functions",
-    "start:nfy": "node functions/server.js"
+    "buildandstart": "tsc && node dist/server.js"
   },
   "keywords": [],
   "author": "",

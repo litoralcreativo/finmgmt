@@ -7,8 +7,8 @@ const dbName = process.env.DB_NAME || "finmgmt";
 
 const client = new MongoClient(uri, {
   serverSelectionTimeoutMS: 30000,
-  tls: true,
-  tlsAllowInvalidCertificates: true,
+  /* tls: true,
+  tlsAllowInvalidCertificates: true, */
 });
 
 export namespace DbManager {
@@ -20,7 +20,7 @@ export namespace DbManager {
     // Return if there is an instance
     if (_instance.getValue()) return;
 
-    console.log("Connecting to MongoDB");
+    console.log("Connecting to MongoDB:", uri);
     from(client.connect())
       .pipe(
         map((con) => {
