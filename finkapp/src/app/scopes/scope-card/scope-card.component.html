@@ -1,0 +1,21 @@
+<mat-card matRipple [matRippleDisabled]="false">
+  <mat-card-header>
+    <mat-card-title-group>
+      <mat-card-title class="scope-card-title">
+        {{ scope.data.name }}</mat-card-title
+      >
+      <mat-card-subtitle
+        ><span class="mat-label-large"
+          >{{ scope.data.categories.length }} categories</span
+        ></mat-card-subtitle
+      >
+    </mat-card-title-group>
+  </mat-card-header>
+  <mat-card-content></mat-card-content>
+  <mat-card-footer class="mat-label-large">
+    <span *ngIf="!scope.data.shared" class="private">private</span>
+    <span *ngIf="scope.data.shared" class="shared"
+      >shared with {{ scope.data.users.length - 1 }} users</span
+    >
+  </mat-card-footer>
+</mat-card>

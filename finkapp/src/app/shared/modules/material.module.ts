@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
   declarations: [],
@@ -61,6 +62,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatPaginatorModule,
     MatProgressBarModule,
     OverlayModule,
+    MatButtonToggleModule,
   ],
 })
 export class MaterialModule {}

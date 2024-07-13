@@ -1,0 +1,57 @@
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
+mat-card {
+  -webkit-user-select: none;
+  user-select: none;
+
+  .scope-card-title {
+    font-weight: 500;
+  }
+
+  overflow: hidden;
+  .mat-ripple {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    cursor: pointer;
+  }
+
+  .favorite-account-icon {
+    color: mat.get-theme-color(m3.$light-theme, primary, 50);
+    float: right;
+    cursor: pointer;
+
+    &.not-favorite {
+      color: mat.get-theme-color(m3.$light-theme, neutral-variant, 90);
+    }
+
+    &.hide {
+      display: none;
+    }
+  }
+
+  mat-card-header {
+    margin-bottom: 1rem;
+  }
+
+  mat-card-footer {
+    padding: 0.2rem 1rem;
+    &:has(.private) {
+      background-color: mat.get-theme-color(m3.$light-theme, primary, 95);
+      color: mat.get-theme-color(m3.$light-theme, primary, 30);
+    }
+    &:has(.shared) {
+      color: mat.get-theme-color(m3.$light-theme, tertiary, 30);
+      background-color: mat.get-theme-color(m3.$light-theme, tertiary, 95);
+    }
+  }
+}
+
+::ng-deep mat-card-content.mat-card-content-account {
+  margin-bottom: 1rem;
+  > * {
+    font-weight: 500;
+  }
+}

@@ -16,8 +16,15 @@ export class AccountCardComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  onCardClick() {
+    if (!this.ripple) return;
+    else this.goToAccount();
+  }
+
   goToAccount() {
-    this.router.navigate([this.account.data._id], { relativeTo: this.aRoute });
+    this.router.navigate([this.account.data._id], {
+      relativeTo: this.aRoute,
+    });
   }
 
   toogleFavorite() {

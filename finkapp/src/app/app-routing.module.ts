@@ -26,7 +26,8 @@ const routes: Routes = [
   {
     path: 'scopes',
     canActivate: [AuthGuard],
-    component: DashboardComponent,
+    loadChildren: () =>
+      import('./scopes/scopes.module').then((m) => m.ScopesModule),
     data: { breadcrumb: 'Scopes' },
   },
   {

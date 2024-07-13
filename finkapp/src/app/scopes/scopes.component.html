@@ -1,0 +1,10 @@
+<app-scope-list></app-scope-list>
+<button
+  mat-fab
+  (click)="openNewScopeDialog()"
+  class="main-fab"
+  [class.hide]="dialogOpened"
+  extended
+>
+  <mat-icon>add</mat-icon> New scope
+</button>

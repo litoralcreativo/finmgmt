@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card matRipple [matRippleDisabled]="ripple" (click)="onCardClick()">
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title class="account-card-title">
@@ -33,5 +33,4 @@
     </h4>
   </mat-card-content>
   <div></div>
-  <div *ngIf="ripple" matRipple (click)="goToAccount()"></div>
 </mat-card>
