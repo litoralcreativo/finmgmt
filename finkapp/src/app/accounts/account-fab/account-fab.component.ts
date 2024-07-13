@@ -6,6 +6,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './account-fab.component.scss',
 })
 export class AccountFABComponent {
+  hide: boolean = false;
   actionsShown: boolean = false;
 
   @Output('action') action: EventEmitter<'in' | 'out' | 'swap'> =
@@ -18,5 +19,6 @@ export class AccountFABComponent {
   emitAction(action: 'in' | 'out' | 'swap') {
     this.action.emit(action);
     this.toggleActions();
+    this.hide = true;
   }
 }

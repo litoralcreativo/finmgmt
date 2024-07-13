@@ -6,11 +6,12 @@
     cdkOverlayOrigin
     #trigger="cdkOverlayOrigin"
     class="main-fab"
-    [class.hide]="actionsShown"
+    [class.hide]="hide"
   >
     <mat-icon>attach_money</mat-icon>
   </button>
 </div>
+
 <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="trigger"
@@ -18,7 +19,7 @@
   cdkConnectedOverlayHasBackdrop
   (backdropClick)="toggleActions()"
 >
-  <div class="FAB-container">
+  <div class="fab-actions-container">
     <div class="fab-actions" [class.show]="actionsShown">
       <button
         mat-button
@@ -48,13 +49,13 @@
         incoming
       </button>
     </div>
-    <button
+    <!-- <button
       mat-fab
       aria-label="FAB"
       (click)="toggleActions()"
       class="main-fab fright"
     >
       <mat-icon>close</mat-icon>
-    </button>
+    </button> -->
   </div>
 </ng-template>

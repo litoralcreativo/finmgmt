@@ -56,6 +56,7 @@
 ::ng-deep mat-drawer-container.main-app-drawer-container {
   flex-grow: 1;
   background-color: transparent;
+  position: relative;
 
   mat-drawer {
     display: flex;
@@ -84,6 +85,7 @@
   }
 
   mat-drawer-content {
+    position: unset;
     background-color: mat.get-theme-color(m3.$light-theme, neutral-variant, 99);
   }
 }

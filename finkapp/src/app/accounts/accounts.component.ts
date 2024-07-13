@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AccountService } from '../shared/services/account.service';
+import { AccountManagmentDialogComponent } from './account-managment-dialog/account-managment-dialog.component';
 
 @Component({
   selector: 'app-accounts',
@@ -8,10 +9,12 @@ import { AccountService } from '../shared/services/account.service';
   styleUrl: './accounts.component.scss',
 })
 export class AccountsComponent {
+  dialogOpened: boolean;
   constructor(private dialog: MatDialog, private accService: AccountService) {}
 
   openNewAccountDialog() {
-    /* this.dialog
+    this.dialogOpened = true;
+    this.dialog
       .open(AccountManagmentDialogComponent, {
         width: '450px',
         disableClose: true,
@@ -22,6 +25,9 @@ export class AccountsComponent {
           // this.accountListComponent?.fetchList();
           this.accService.getAccounts();
         }
-      }); */
+      })
+      .add(() => {
+        this.dialogOpened = false;
+      });
   }
 }

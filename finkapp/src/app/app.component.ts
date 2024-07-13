@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'fink';
   constructor(private authService: AuthService, private router: Router) {
     if (this.authService.userData.value !== undefined) {
-      this.router.navigate(['dashboard']);
+      this.router.navigate(['accounts']);
     }
   }
 }

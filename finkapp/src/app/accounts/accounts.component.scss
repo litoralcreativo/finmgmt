@@ -1,0 +1,17 @@
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
+
+.main-fab {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0 2rem 2rem 0;
+  background-color: mat.get-theme-color(m3.$light-theme, primary, 40);
+  color: mat.get-theme-color(m3.$light-theme, primary, 90);
+
+  animation: showIn 0.2s ease forwards;
+
+  &.hide {
+    animation: hideOut 0.1s ease forwards;
+  }
+}

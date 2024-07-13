@@ -36,6 +36,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
+  maxDate: Date = new Date();
+
   form: FormGroup;
   userAccounts: { type: AccountType; accounts: Account[] }[] = [];
   userScopes: Scope[] = [];
@@ -64,7 +66,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     this.form = new FormGroup({
       amount: new FormControl(this.data.amount, [Validators.required]),
       description: new FormControl(this.data.description),
-      date: new FormControl(this.data.date ?? new Date(), []),
+      date: new FormControl(this.data.date ?? this.maxDate, []),
       origin: new FormControl(this.data.origin ?? null, [Validators.required]),
       destination: new FormControl(this.data.destination ?? null, [
         Validators.required,

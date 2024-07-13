@@ -8,13 +8,7 @@ import { MatDrawerContainer } from '@angular/material/sidenav';
 import { SymbolChangeService } from '../shared/services/symbol-change.service';
 import { BreakpointService } from '../shared/services/breakpoint.service';
 import { SymbolChange } from '../shared/models/symbolChange.model';
-
-export type NavItem = {
-  name: string;
-  route: string;
-  icon: string;
-  active: boolean;
-};
+import { NavItem } from '../shared/models/navItem.model';
 
 @Component({
   selector: 'app-shell',
@@ -25,40 +19,7 @@ export class ShellComponent implements OnInit {
   loggedIn: boolean = false;
   @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
 
-  navItems: NavItem[] = [
-    {
-      name: 'Dashboard',
-      route: '/dashboard',
-      icon: 'dashboard',
-      active: false,
-    },
-    {
-      name: 'Accounts',
-      route: '/accounts',
-      icon: 'wallet',
-      active: false,
-    },
-    {
-      name: 'Scopes',
-      route: '/scopes',
-      icon: 'business_center',
-      active: false,
-    },
-    {
-      name: 'Calendar',
-      route: '/calendar',
-      icon: 'calendar_month',
-      active: false,
-    },
-  ];
-  navUserItems: NavItem[] = [
-    {
-      name: 'Settings',
-      route: '/settings',
-      icon: 'settings',
-      active: false,
-    },
-  ];
+  navItems: Map<string, NavItem> = new Map([]);
 
   changes: Map<string, SymbolChange> = new Map();
   screenSize: number;
@@ -70,7 +31,39 @@ export class ShellComponent implements OnInit {
     public dialog: MatDialog,
     private symbolChange: SymbolChangeService,
     private breakpointService: BreakpointService
-  ) {}
+  ) {
+    this.navItems.set('Dashboard', {
+      name: 'Dashboard',
+      route: '/dashboard',
+      icon: 'dashboard',
+      active: false,
+      disabled: true,
+    });
+    this.navItems.set('Accounts', {
+      name: 'Accounts',
+      route: '/accounts',
+      icon: 'wallet',
+      active: false,
+    });
+    this.navItems.set('Scopes', {
+      name: 'Scopes',
+      route: '/scopes',
+      icon: 'business_center',
+      active: false,
+    });
+    this.navItems.set('Calendar', {
+      name: 'Calendar',
+      route: '/calendar',
+      icon: 'calendar_month',
+      active: false,
+    });
+    this.navItems.set('Settings', {
+      name: 'Settings',
+      route: '/settings',
+      icon: 'settings',
+      active: false,
+    });
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
@@ -82,8 +75,8 @@ export class ShellComponent implements OnInit {
     this.authService.userData.subscribe((user) => {
       this.loggedIn = !!user;
 
-      if (!user) this.drawerContainer?.close();
-      else this.drawerContainer?.open();
+      /* if (!user) this.drawerContainer?.close();
+      else this.drawerContainer?.open(); */
     });
 
     this.symbolChange.$prices.subscribe((x) => (this.changes = x));
@@ -130,7 +123,7 @@ export class ShellComponent implements OnInit {
       .subscribe((result) => {
         switch (result) {
           case 'ok':
-            this.drawerContainer.open();
+            // this.drawerContainer.open();
             break;
           case 'changeDialog':
             this.openRegisterDialog();

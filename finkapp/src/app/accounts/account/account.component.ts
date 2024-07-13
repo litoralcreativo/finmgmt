@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +19,7 @@ import {
 } from 'src/app/shared/models/transaction.model';
 import { AccountService } from 'src/app/shared/services/account.service';
 import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
+import { AccountFABComponent } from '../account-fab/account-fab.component';
 
 @Component({
   selector: 'app-account',
@@ -43,6 +44,7 @@ export class AccountComponent implements OnInit {
   accountBalanceData: BalanceData[][];
 
   balanceDays = 30;
+  @ViewChild(AccountFABComponent) accountFab: AccountFABComponent;
 
   constructor(
     private router: Router,
@@ -168,6 +170,9 @@ export class AccountComponent implements OnInit {
           this.getAccountBalance();
           this.accService.getAccounts();
         }
+      })
+      .add(() => {
+        this.accountFab.hide = false;
       });
   }
 

@@ -48,9 +48,9 @@ export class AuthService {
           return this.userInfo().pipe(
             tap((userdata) => {
               this.fetching = false;
-              if (response.redirectTo) {
-                this.router.navigate([response.redirectTo]);
-              }
+              this.router.navigate(['accounts']);
+              /* if (response.redirectTo) {
+              } */
             })
           );
         }),
@@ -91,7 +91,7 @@ export class AuthService {
     this.userInfo().subscribe({
       next: (userdata) => {
         this._userData.next(userdata);
-        this.router.navigate(['dashboard']);
+        this.router.navigate(['accounts']);
       },
       error: (err) => {
         if (err.error?.logout) {

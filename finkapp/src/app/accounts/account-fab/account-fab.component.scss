@@ -2,51 +2,62 @@
 @use "m3-theme" as m3;
 
 .FAB-container {
-  position: fixed;
+  position: absolute;
   right: 0;
   bottom: 0;
   margin: 0 2rem 2rem 0;
   .main-fab {
     background-color: mat.get-theme-color(m3.$light-theme, primary, 40);
     color: mat.get-theme-color(m3.$light-theme, primary, 90);
+    animation: showIn 0.2s ease forwards;
+
     &.hide {
-      display: none;
+      animation: hideOut 0.1s ease forwards;
     }
 
     &.fright {
       float: right;
     }
   }
-  .fab-actions {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-    justify-content: center;
-    align-items: end;
-    gap: 1rem;
+}
+.fab-actions {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  justify-content: center;
+  align-items: end;
+  gap: 1rem;
 
-    > * {
-      opacity: 0;
-      transform: scale(0);
-      animation: appear 0.3s ease forwards;
-    }
+  > * {
+    opacity: 0;
+    transform: scale(0);
+    animation: appear 0.3s ease forwards;
+  }
 
-    .swap {
-      background-color: white;
-      animation-delay: 0.2s;
-    }
-    .outgoing {
-      background-color: white;
-      color: #c90101;
-      animation-delay: 0.1s;
-    }
-    .incoming {
-      background-color: white;
-      color: #09a70f;
-      animation-delay: 0s;
-    }
+  .swap {
+    background-color: white;
+    animation-delay: 0.2s;
+  }
+  .outgoing {
+    background-color: white;
+    color: #c90101;
+    animation-delay: 0.1s;
+  }
+  .incoming {
+    background-color: white;
+    color: #09a70f;
+    animation-delay: 0s;
   }
 }
+
+/* ::ng-deep.cdk-overlay-pane:has(.fab-actions-container) {
+  right: 0;
+  bottom: 0;
+  top: auto !important;
+  left: auto !important;
+  .fab-actions-container {
+  }
+} */
 
 .fab-backdrop {
   background-color: rgba($color: #000000, $alpha: 0.1);

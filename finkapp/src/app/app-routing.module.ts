@@ -10,12 +10,12 @@ const routes: Routes = [
     component: HomeComponent,
     data: { breadcrumb: 'Home' },
   },
-  {
+  /* {
     path: 'dashboard',
     canActivate: [AuthGuard],
     component: DashboardComponent,
     data: { breadcrumb: 'Dashboard' },
-  },
+  }, */
   {
     path: 'accounts',
     canActivate: [AuthGuard],
@@ -35,6 +35,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./calendar/calendar.module').then((m) => m.CalendarModule),
     data: { breadcrumb: 'Calendar' },
+  },
+  {
+    path: 'settings',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./settings/settings.module').then((m) => m.SettingsModule),
+    data: { breadcrumb: 'Settings' },
   },
 ];
 

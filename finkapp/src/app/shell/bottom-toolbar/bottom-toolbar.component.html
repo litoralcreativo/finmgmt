@@ -1,0 +1,15 @@
+<div class="bottom-toolbar">
+  @for (item of items.values(); track item) {
+  <ng-container *ngIf="!item.disabled">
+    <div
+      [class.activated]="item.active"
+      [routerLink]="item.route"
+      class="action"
+      matRipple
+    >
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span class="mat-label-large">{{ item.name }}</span>
+    </div></ng-container
+  >
+  }
+</div>

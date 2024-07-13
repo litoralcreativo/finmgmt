@@ -1,0 +1,50 @@
+<h1 mat-dialog-title>New account</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Account name</mat-label>
+        <input matInput formControlName="name" title="name" />
+        <mat-error *ngIf="form.controls['name'].errors"
+          >The name must be between 6 and 32 characters long</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="fill">
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="digital wallet">Digital Wallet</mat-option>
+          <mat-option value="cash">Cash</mat-option>
+          <mat-option value="bank account">Bank Account</mat-option>
+          <mat-option value="broker">Broker</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['type'].hasError('required')"
+          >This field is required</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Symbol</mat-label>
+        <mat-select formControlName="symbol" value="ARS">
+          <mat-option value="ARS">Peso argentino (ARS)</mat-option>
+          <mat-option value="USD">USA Dollar (USD)</mat-option>
+          <mat-option value="USDT">Tether Dolar (USDT)</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['symbol'].hasError('required')"
+          >This field is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="fetching">Close</button>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="submit()"
+    [disabled]="!form.valid || fetching"
+  >
+    Create
+  </button>
+</div>

@@ -1,7 +1,22 @@
-<!-- <mat-card class="accounts-toolbar">
-  <button mat-flat-button color="primary" (click)="openNewAccountDialog()">
-    <mat-icon>add</mat-icon> New account
-  </button>
-</mat-card> -->
-
+<!-- <button
+  mat-fab
+  aria-label="FAB"
+  (click)="toggleActions()"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  class="main-fab"
+  [class.hide]="actionsShown"
+  >
+  <mat-icon>attach_money</mat-icon>
+</button> -->
 <app-account-list></app-account-list>
+
+<button
+  mat-fab
+  (click)="openNewAccountDialog()"
+  class="main-fab"
+  [class.hide]="dialogOpened"
+  extended
+>
+  <mat-icon>add</mat-icon> New account
+</button>

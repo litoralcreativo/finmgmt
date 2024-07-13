@@ -1,15 +1,3 @@
-<!-- <div id="sub-toolbar-info" class="mat-label-medium bg-main">
-  <div *ngIf="changes.get('MEP')" class="symbol-change">
-    MEP: {{ changes.get("MEP")?.venta | currency }}
-  </div>
-  <div *ngIf="changes.get('INFORMAL')" class="symbol-change">
-    Blue: {{ changes.get("INFORMAL")?.venta | currency }}
-  </div>
-  <div *ngIf="changes.get('CRIPTO')" class="symbol-change">
-    Cripto: {{ changes.get("CRIPTO")?.venta | currency }}
-  </div>
-</div> -->
-<div class="main-app-toolbar go-back"></div>
 <mat-drawer-container class="main-app-drawer-container" autosize>
   <mat-drawer
     #drawer
@@ -17,20 +5,18 @@
     [opened]="this.screenSize >= 2 && loggedIn"
   >
     <mat-nav-list>
-      @for (link of navItems; track link) {
-      <mat-list-item [activated]="link.active" [routerLink]="link.route">
+      @for (link of navItems.values(); track link) {
+      <mat-list-item
+        [activated]="link.active"
+        [routerLink]="link.route"
+        *ngIf="!link.disabled"
+      >
         <mat-icon matListItemIcon>{{ link.icon }}</mat-icon>
         <span matListItemTitle>{{ link.name }}</span>
       </mat-list-item>
       }
     </mat-nav-list>
     <mat-nav-list class="expand">
-      @for (link of navUserItems; track link) {
-      <mat-list-item [activated]="link.active" [routerLink]="link.route">
-        <mat-icon matListItemIcon>settings</mat-icon>
-        <span matListItemTitle>Settings</span>
-      </mat-list-item>
-      }
       <mat-list-item (click)="logout()">
         <mat-icon matListItemIcon>logout</mat-icon>
         <span matListItemTitle>Logout</span>
@@ -40,13 +26,13 @@
 
   <mat-drawer-content>
     <div class="main-app-toolbar">
-      <button
+      <!-- <button
         mat-icon-button
         (click)="drawer.toggle()"
         *ngIf="loggedIn && this.screenSize < 2"
       >
         <mat-icon>{{ drawer.opened ? "close" : "menu" }}</mat-icon>
-      </button>
+      </button> -->
       <app-header *ngIf="loggedIn"></app-header>
       <div class="toolbar-actions">
         <ng-container
@@ -59,6 +45,7 @@
     </section>
   </mat-drawer-content>
 </mat-drawer-container>
+<ng-container *ngTemplateOutlet="bottomToolbar"></ng-container>
 
 <ng-template #unloggedTopbar>
   <button mat-button [disabled]="fetching" (click)="openLoginDialog()">
@@ -71,4 +58,11 @@
 
 <ng-template #loggedTopbar>
   <!-- <app-user-menu></app-user-menu> -->
+</ng-template>
+
+<ng-template #bottomToolbar>
+  <app-bottom-toolbar
+    [items]="navItems"
+    *ngIf="loggedIn && this.screenSize < 2"
+  ></app-bottom-toolbar>
 </ng-template>

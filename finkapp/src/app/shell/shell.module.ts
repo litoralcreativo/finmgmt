@@ -7,6 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserMenuComponent } from './user-menu/user-menu.component';
 import { HeaderComponent } from './header/header.component';
+import { BottomToolbarComponent } from './bottom-toolbar/bottom-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { HeaderComponent } from './header/header.component';
     RegisterComponent,
     UserMenuComponent,
     HeaderComponent,
+    BottomToolbarComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule],
   exports: [ShellComponent],
