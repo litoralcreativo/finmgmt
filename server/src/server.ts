@@ -2,10 +2,13 @@ import express from "express";
 import passport from "passport";
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
+
 import { router as authRouter, router } from "./controllers/auth.routes";
 import { router as accountRouter } from "./controllers/account.routes";
 import { router as transactionRouter } from "./controllers/transaction.routes";
 import { router as scopeRouter } from "./controllers/financialScope.route";
+import { router as notificationsRouter } from "./controllers/notifications.route";
+
 import { swaggerSpec } from "./swagger";
 import { requireAuth } from "./middlewares/autenticate.middleware";
 import "./auth";
@@ -48,6 +51,7 @@ app.use(`${apiPrefix}/auth`, authRouter);
 app.use(`${apiPrefix}/account`, accountRouter);
 app.use(`${apiPrefix}/transaction`, requireAuth, transactionRouter);
 app.use(`${apiPrefix}/scopes`, requireAuth, scopeRouter);
+app.use(`${apiPrefix}/notifications`, notificationsRouter);
 
 app.use(`${apiPrefix}/dummy`, (req, res) => res.status(200).send("ok"));
 
