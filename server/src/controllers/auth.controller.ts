@@ -58,7 +58,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
             return next();
           }
           const token = jwt.sign({ id: user._id }, JWT_SECRET, {
-            expiresIn: "1h",
+            expiresIn: "2h",
           });
           return res.json({ redirectTo: "/dashboard", token });
 
@@ -68,38 +68,6 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
     )(req, res, next);
   } catch (e) {
     throw e;
-  }
-};
-
-export const logout = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // res.clearCookie("app-auth");
-    res.status(200).json({
-      timestamp: Date.now(),
-      msg: "Logged out successfully",
-      code: 200,
-    });
-    /* req.logout((err) => {
-      if (err) {
-        next(err);
-      }
-      req.session.destroy((err) => {
-        if (err) {
-          next(err);
-        }
-        res.clearCookie("app-auth");
-        res.status(200).json({
-          timestamp: Date.now(),
-          msg: "Logged out successfully",
-          code: 200,
-        });
-      });
-    }); */
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      ...new ResponseStrategy(500, "Fail to get user, internal server error"),
-    });
   }
 };
 
@@ -128,34 +96,4 @@ export const getUserInfo = (req: Request, res: Response) => {
       ...new ResponseStrategy(500, "Fail to get user, internal server error"),
     });
   }
-};
-
-export const checkIsAuth = (req: Request, res: Response) => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({
-      code: 401,
-      msg: "Not authenticated",
-      isAuth: false,
-    });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({
-        code: 401,
-        msg: "Not authenticated",
-        isAuth: false,
-      });
-    }
-
-    res.status(200).json({
-      code: 200,
-      msg: "Authenticated",
-      isAuth: true,
-    });
-  });
 };
