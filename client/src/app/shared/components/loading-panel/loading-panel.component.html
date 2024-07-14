@@ -1,8 +1,0 @@
-<div
-  [class.light]="theme === 'light'"
-  [class.dark]="theme === 'dark'"
-  id="loading-panel-container"
->
-  <mat-spinner *ngIf="spinner" [diameter]="spinnerSize"></mat-spinner>
-  <ng-content></ng-content>
-</div>
