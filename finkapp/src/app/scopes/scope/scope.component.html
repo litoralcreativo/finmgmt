@@ -1,0 +1,145 @@
+<section class="scope-container">
+  <div class="scope-grid">
+    <div class="grid-area grid-top">
+      <button mat-button (click)="navigateBack()" color="primary">
+        <mat-icon>chevron_left</mat-icon> BACK TO SCOPES
+      </button>
+    </div>
+    <div class="grid-area grid-left">
+      <app-scope-card
+        *ngIf="!fetchingScope; else fetchingScopeCard"
+        [scope]="scope"
+        [ripple]="false"
+      ></app-scope-card>
+
+      <!-- 
+      <app-balance-graph
+        [data]="accountBalanceData"
+        (scopeChange)="balanceDays = $event; getAccountBalance()"
+      ></app-balance-graph> -->
+
+      <mat-card>
+        <mat-card-header> </mat-card-header>
+        <mat-card-content>
+          <mat-chip-set class="categories-list">
+            @for (category of scopeCategories; track category) {
+            <mat-chip>
+              <div class="chip-content">
+                <mat-icon> {{ category.icon }}</mat-icon>
+                <span>{{ category.name }}</span>
+              </div>
+            </mat-chip>
+            }
+          </mat-chip-set>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="grid-area grid-right">
+      <mat-card
+        class="transactions-list-container"
+        *ngIf="!fetchingTransactions; else fetchingTransactionsCard"
+      >
+        <mat-card-header>
+          <div class="transactions-search-bar">
+            <mat-form-field appearance="fill">
+              <mat-label>Search</mat-label>
+              <input
+                matInput
+                title="search"
+                (keydown.enter)="onSearch()"
+                [formControl]="searchFormControl"
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="transaction-list">
+            @for (transaction of transactions; track transaction) {
+
+            <app-transaction-list-item
+              [transaction]="transaction"
+              (click)="onTransactionClick(transaction)"
+            ></app-transaction-list-item>
+            <mat-divider></mat-divider>
+            }
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <button
+            mat-button
+            class="activity-history"
+            color="primary"
+            (click)="goToHistory()"
+          >
+            <span>SCOPE HISTORY</span>
+          </button>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+
+    <div class="grid-area grid-bottom"></div>
+  </div>
+</section>
+
+<ng-template #fetchingScopeCard>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title [appSkeletonLoader]="true"
+          ><span>Placeholder</span></mat-card-title
+        >
+        <mat-card-subtitle [appSkeletonLoader]="true"
+          ><span class="mat-label-large">Placeholder</span></mat-card-subtitle
+        >
+      </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content
+      class="mat-card-content-account"
+      [appSkeletonLoader]="true"
+    >
+      <h4>
+        {{ 10000 | currency }}
+        <span class="mat-label-large">USD</span>
+      </h4>
+      <div></div>
+    </mat-card-content>
+    <div></div>
+  </mat-card>
+</ng-template>
+
+<ng-template #fetchingTransactionsCard>
+  <mat-card class="transactions-list-container">
+    <mat-card-header>
+      <div class="transactions-search-bar">
+        <mat-form-field appearance="fill">
+          <mat-label>Search</mat-label>
+          <input
+            matInput
+            title="search"
+            (keydown.enter)="onSearch()"
+            disabled
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="transaction-list">
+        @for (transaction of [1, 2, 3, 4, 5]; track transaction) {
+        <div [appSkeletonLoader]="true" style="margin-bottom: 5px">
+          <p class="mat-label-large">placeholder</p>
+          <span>Placeholder placeholder</span>
+        </div>
+        <mat-divider></mat-divider>
+        }
+      </div>
+    </mat-card-content>
+    <mat-card-footer>
+      <button mat-button class="activity-history" disabled>
+        <span>ACTIVITY HISTORY</span>
+      </button>
+    </mat-card-footer>
+  </mat-card>
+</ng-template>

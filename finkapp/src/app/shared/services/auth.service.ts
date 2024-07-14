@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, of } from 'rxjs';
@@ -6,6 +6,7 @@ import { finalize, tap, switchMap, map, catchError } from 'rxjs/operators';
 import { PublicUserData } from '../models/userdata.model';
 import { routes } from 'src/environments/routes';
 import { TokenService } from './token.service';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root',

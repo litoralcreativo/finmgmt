@@ -11,6 +11,7 @@ import {
   TransactionFilterRequest,
   TransactionResponse,
 } from '../models/transaction.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +19,14 @@ import {
 export class AccountService {
   $account: BehaviorSubject<Account[]> = new BehaviorSubject<Account[]>([]);
 
-  constructor(private http: HttpClient) {
-    this.getAccounts();
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.authService.userData.subscribe((data) => {
+      if (data) {
+        this.getAccounts();
+      } else {
+        this.$account.next([]);
+      }
+    });
   }
 
   getAccounts() {

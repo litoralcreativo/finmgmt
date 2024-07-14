@@ -1,4 +1,10 @@
-<mat-card matRipple [matRippleDisabled]="false">
+<mat-card
+  class="scope-card"
+  matRipple
+  [matRippleDisabled]="!ripple"
+  (click)="onCardClick()"
+  [class.pointer]="ripple"
+>
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title class="scope-card-title">
@@ -11,7 +17,7 @@
       >
     </mat-card-title-group>
   </mat-card-header>
-  <mat-card-content></mat-card-content>
+  <mat-card-content> </mat-card-content>
   <mat-card-footer class="mat-label-large">
     <span *ngIf="!scope.data.shared" class="private">private</span>
     <span *ngIf="scope.data.shared" class="shared"

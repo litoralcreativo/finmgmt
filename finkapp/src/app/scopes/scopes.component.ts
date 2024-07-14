@@ -20,7 +20,6 @@ export class ScopesComponent {
       .afterClosed()
       .subscribe((result) => {
         if (result) {
-          // this.accountListComponent?.fetchList();
           this.scopeService.getScopes();
         }
       })

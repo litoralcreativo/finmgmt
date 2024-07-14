@@ -21,7 +21,7 @@ export class ScopeManagmentDialogComponent
 
   form: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    icon: new FormControl('more_horiz', [Validators.required]),
+    icon: new FormControl('home', [Validators.required]),
     shared: new FormControl(false),
   });
 
@@ -38,7 +38,7 @@ export class ScopeManagmentDialogComponent
     this.scopeDTO = {
       name: this.form.controls['name'].value,
       icon: this.form.controls['icon'].value,
-      shared: this.form.controls['shared'].value,
+      shared: this.form.controls['shared'].value === 'true',
     };
 
     this.fetching = true;

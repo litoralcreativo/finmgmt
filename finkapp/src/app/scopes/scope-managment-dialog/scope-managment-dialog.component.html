@@ -8,28 +8,30 @@
         formControlName="shared"
       >
         <mat-button-toggle value="false" checked>private</mat-button-toggle>
-        <mat-button-toggle value="true">public</mat-button-toggle>
+        <mat-button-toggle value="true">shared</mat-button-toggle>
       </mat-button-toggle-group>
     </div>
     <div class="form-row">
-      <button
-        mat-icon-button
-        (click)="iconSelectorOpen = !iconSelectorOpen"
-        type="button"
-        cdkOverlayOrigin
-        #trigger="cdkOverlayOrigin"
-        [disabled]="fetching"
-      >
-        <mat-icon>{{ form.controls["icon"].value }}</mat-icon>
-      </button>
-      <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Name and icon</mat-label>
         <input
           matInput
           formControlName="name"
           title="name"
           autocomplete="given-name"
         />
+        <button
+          class="icon-selection-button"
+          mat-icon-button
+          matSuffix
+          (click)="iconSelectorOpen = !iconSelectorOpen"
+          type="button"
+          cdkOverlayOrigin
+          #trigger="cdkOverlayOrigin"
+          [disabled]="fetching"
+        >
+          <mat-icon>{{ form.controls["icon"].value }}</mat-icon>
+        </button>
         <mat-error *ngIf="form.controls['name'].errors">
           This field is required
         </mat-error>

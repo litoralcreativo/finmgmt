@@ -1,4 +1,10 @@
-<mat-card matRipple [matRippleDisabled]="ripple" (click)="onCardClick()">
+<mat-card
+  class="account-card"
+  matRipple
+  [matRippleDisabled]="!ripple"
+  (click)="onCardClick()"
+  [class.pointer]="ripple"
+>
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title class="account-card-title">

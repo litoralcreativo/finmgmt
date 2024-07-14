@@ -6,6 +6,7 @@ import { routes } from 'src/environments/routes';
 import { Category } from '../models/category.model';
 import { Scope, ScopeDTO, ScopeResponse } from '../models/scope.model';
 import { ScopeAcumulator } from '../models/scopeAcumulator.model';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,14 @@ import { ScopeAcumulator } from '../models/scopeAcumulator.model';
 export class ScopeService {
   $scopes: BehaviorSubject<Scope[]> = new BehaviorSubject<Scope[]>([]);
 
-  constructor(private http: HttpClient) {
-    this.getScopes();
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.authService.userData.subscribe((data) => {
+      if (data) {
+        this.getScopes();
+      } else {
+        this.$scopes.next([]);
+      }
+    });
   }
 
   getScopes(): void {

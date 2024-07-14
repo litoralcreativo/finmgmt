@@ -58,6 +58,14 @@
   background-color: transparent;
   position: relative;
 
+  &::before {
+    position: absolute;
+    content: "";
+    height: 64px;
+    width: 100%;
+    background-color: mat.get-theme-color(m3.$light-theme, primary, 90);
+  }
+
   mat-drawer {
     display: flex;
     flex-direction: column;
