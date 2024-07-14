@@ -20,7 +20,7 @@ export namespace DbManager {
     // Return if there is an instance
     if (_instance.getValue()) return;
 
-    console.log("Connecting to MongoDB:", uri);
+    console.log("Connecting to MongoDB");
     from(client.connect())
       .pipe(
         map((con) => {
