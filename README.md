@@ -1,100 +1,85 @@
-# Financial Management System (FinMGMT)
+# FINK - Financial Track System
 
-This project allows the management of financial transactions and accounting balances for an individual or a group of people. It is built using the MEAN stack, comprising a backend, a frontend, and a database.
+FINK is a financial tracking system for managing account balances, budgets, and more. This application provides tools for managing accounts, transactions, calendar, and financial goals, offering a comprehensive view of personal or business finances.
 
 ## Technologies Used
 
+- **Frontend:** Angular 18
+- **Backend:** Node.js with Express
 - **Database:** MongoDB
-- **Backend:** Express
-- **Frontend:** Angular
-- **UI Framework:** Angular Material
+- **Infrastructure:** Docker, Nginx
 
 ## Features
 
-- **Financial Transactions Management:** Track and manage your financial transactions easily.
-- **Accounting Balance:** Keep track of your accounting balances.
-- **User Authentication:** Secure authentication using Passport's local strategy.
-- **Session Management:** Sessions are managed with cookies.
-- **API Documentation:** API documentation is available via Swagger.
+- **Account Management:** Creation and tracking of multiple financial accounts.
+- **Transactions:** Detailed recording of income and expenses, with advanced categorization and filtering.
+- **Calendar:** Visualization and management of important financial events.
+- **Financial Goals:** Definition and tracking of financial objectives.
 
-## Getting Started
+## Prerequisites
 
-### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-Make sure you have the following installed on your system:
+## Installation and Configuration
 
-- Node.js
-- npm (Node Package Manager)
-- MongoDB
+Follow these steps to set up and run the project in your local environment.
 
-### Installation
+### Clone the Repository
 
-1. **Clone the repository:**
+```bash
+git clone https://github.com/litoralcreativo/finmgmt.git
+cd finmgmt
+```
 
-   ```sh
-   git clone https://github.com/your-username/financial-management-system.git
-   cd financial-management-system
-   ```
+### Project Structure
 
-2. **Backend Setup:**
-   Open a terminal and navigate to the backend directory and install the dependencies:
+The project has the following directory structure:
 
-   ```sh
-   cd backend
-   npm install
-   ```
+```graphql
+finmgmt/
+├── database/         # Database initialization files
+├── finkapp/          # Angular Application (frontend)
+├── server/           # Node.js API with Express (backend)
+├── docker-compose.yml
+└── README.md
+```
 
-   Create a .env file in the backend directory and add your environment variables:
+### Environment Configuration
 
-   ```env
-   PORT=3000
-   MONGO_URI=mongodb://localhost:27017/financialdb
-   SESSION_SECRET=your_secret_key
-   ```
+Create a .env file in the server directory with the following content:
 
-   Start the backend server:
+```env
+PORT=3000
+CORS_ORIGINS=http://localhost:4200
+MONGODB_URI=mongodb://mongo:27017/finmgmt
+DB_NAME=finmgmt
+```
 
-   ```sh
-   npm start
-   ```
+### Start the Project with Docker
 
-3. **Frontend Setup:**
-   Open a terminal and navigate to the frontend directory and install the dependencies:
+Make sure Docker is running and follow these steps:
 
-   ```sh
-   cd ..
-   cd frontend
-   npm install
-   ```
+1. Build and start the containers:
 
-   Start the frontend server:
+```bash
+docker-compose up --build
+```
 
-   ```sh
-   ng serve
-   ```
+2. Access the application:
+   - Frontend: http://localhost:4200
+   - Backend: http://localhost:3000
 
-4. **Access the Application:**
-   Open your browser and navigate to http://localhost:4200 to access the frontend.
-   The backend API is available at http://localhost:3000.
+### Contributions
 
-## API Documentation
+Contributions are welcome! If you have any ideas or improvements, feel free to open an issue or a pull request.
 
-API documentation is available via Swagger. Once the backend server is running, you can access the documentation at [http://localhost:3000/api-docs](http://localhost:3000/api-docs).
+### License
 
-## Authentication
+This project is licensed under the MIT License. For more details, see the LICENSE file.
 
-The project uses Passport's local strategy for authentication. Sessions are managed with cookies to ensure secure access to the system.
+### Contact
 
-## Contributing
+For any inquiries, you can contact us at litoralcreatives@example.com.
 
-We welcome contributions! Please follow these steps to contribute:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/YourFeature`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature/YourFeature`).
-5. Create a new Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Thank you for using FINK!
