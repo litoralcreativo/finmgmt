@@ -9,7 +9,7 @@ import { router as transactionRouter } from "./controllers/transaction.routes";
 import { router as scopeRouter } from "./controllers/financialScope.route";
 import { router as notificationsRouter } from "./controllers/notifications.route";
 
-const swaggerDocument = require("./swagger-doc/swagger.json");
+import swaggerOptions from "./swagger-doc/swagger";
 import { requireAuth } from "./middlewares/autenticate.middleware";
 import "./auth";
 import ServerlessHttp from "serverless-http";
@@ -55,8 +55,11 @@ app.use(`${apiPrefix}/notifications`, notificationsRouter);
 
 app.use(`${apiPrefix}/dummy`, (req, res) => res.status(200).send("ok"));
 
-const swaggerSpec = swaggerDocument;
-app.use(`${apiPrefix}/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  `${apiPrefix}/api-docs`,
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerOptions)
+);
 
 app.all("*", (req, res) => {
   res.status(404).json({
