@@ -25,6 +25,7 @@ import { MonthlyCategoriesComponent } from './components/monthly-categories/mont
 import { BalanceGraphComponent } from './components/balance-graph/balance-graph.component';
 import { TransactionListItemComponent } from './components/transaction-list-item/transaction-list-item.component';
 import { IconSelectorComponent } from './components/icon-selector/icon-selector.component';
+import { CategoryDialogComponent } from './components/category-dialog/category-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { IconSelectorComponent } from './components/icon-selector/icon-selector.
     BalanceGraphComponent,
     TransactionListItemComponent,
     IconSelectorComponent,
+    CategoryDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -68,6 +70,7 @@ import { IconSelectorComponent } from './components/icon-selector/icon-selector.
     BalanceGraphComponent,
     TransactionListItemComponent,
     IconSelectorComponent,
+    CategoryDialogComponent,
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
+import { CategoryDialogComponent } from 'src/app/shared/components/category-dialog/category-dialog.component';
 import { Category } from 'src/app/shared/models/category.model';
 import { Scope } from 'src/app/shared/models/scope.model';
 import { ScopeAcumulator } from 'src/app/shared/models/scopeAcumulator.model';
@@ -103,5 +104,20 @@ export class ScopeComponent {
       relativeTo: this.aRoute,
       queryParams: queryParams,
     }); */
+  }
+
+  onAddCategoryBtnClick() {
+    this.dialog
+      .open(CategoryDialogComponent, {
+        data: {
+          scope: this.scope,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.getScopeData();
+        }
+      });
   }
 }

@@ -209,3 +209,10 @@ p {
   }
 }
 @include animations();
+
+@mixin utils {
+  .maxwith {
+    width: 100%;
+  }
+}
+@include utils();
