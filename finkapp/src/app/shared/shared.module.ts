@@ -26,6 +26,7 @@ import { BalanceGraphComponent } from './components/balance-graph/balance-graph.
 import { TransactionListItemComponent } from './components/transaction-list-item/transaction-list-item.component';
 import { IconSelectorComponent } from './components/icon-selector/icon-selector.component';
 import { CategoryDialogComponent } from './components/category-dialog/category-dialog.component';
+import { DonutGraphComponent } from './components/donut-graph/donut-graph.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { CategoryDialogComponent } from './components/category-dialog/category-d
     TransactionListItemComponent,
     IconSelectorComponent,
     CategoryDialogComponent,
+    DonutGraphComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +73,7 @@ import { CategoryDialogComponent } from './components/category-dialog/category-d
     TransactionListItemComponent,
     IconSelectorComponent,
     CategoryDialogComponent,
+    DonutGraphComponent,
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),

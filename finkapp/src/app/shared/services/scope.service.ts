@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
+import { MonthlyAcumulator } from '../models/accumulator.model';
 import { Category } from '../models/category.model';
 import { Scope, ScopeDTO, ScopeResponse } from '../models/scope.model';
 import { ScopeAcumulator } from '../models/scopeAcumulator.model';
@@ -57,8 +58,8 @@ export class ScopeService {
     scopeId: string,
     year: number,
     month: number
-  ): Observable<ScopeAcumulator> {
-    return this.http.get<ScopeAcumulator>(
+  ): Observable<MonthlyAcumulator> {
+    return this.http.get<MonthlyAcumulator>(
       `${routes.scopes.categoriesAmount(scopeId)}?year=${year}&month=${month}`,
       {
         withCredentials: true,

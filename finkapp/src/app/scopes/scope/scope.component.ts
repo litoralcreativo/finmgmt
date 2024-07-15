@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CategoryDialogComponent } from 'src/app/shared/components/category-dialog/category-dialog.component';
+import { MonthlyAcumulator } from 'src/app/shared/models/accumulator.model';
 import { Category } from 'src/app/shared/models/category.model';
 import { Scope } from 'src/app/shared/models/scope.model';
 import { ScopeAcumulator } from 'src/app/shared/models/scopeAcumulator.model';
@@ -18,7 +19,6 @@ export class ScopeComponent {
   scopeId: string;
   scope: Scope;
   scopeCategories: Category[];
-  acumulator: ScopeAcumulator;
   year: number;
   month: number;
   transactions: TransactionResponse[] = [];
@@ -29,12 +29,22 @@ export class ScopeComponent {
 
   searchFormControl: FormControl = new FormControl('');
 
+  donutData: MonthlyAcumulator;
+
   constructor(
     private router: Router,
     private aRoute: ActivatedRoute,
     private scopeService: ScopeService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    const today: Date = new Date();
+    this.donutData = {
+      year: today.getFullYear(),
+      month: today.getMonth() + 1,
+      total: 0,
+      groups: [],
+    };
+  }
 
   ngOnInit(): void {
     const date = new Date();
@@ -72,7 +82,7 @@ export class ScopeComponent {
     this.scopeService
       .getCategoriesAmount(this.scopeId, this.year, this.month)
       .subscribe((res) => {
-        this.acumulator = res;
+        this.donutData = res;
       })
       .add(() => (this.fetchingAcumulator = false));
   }
