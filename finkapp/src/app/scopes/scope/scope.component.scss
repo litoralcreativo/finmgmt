@@ -4,7 +4,7 @@
 .scope-grid {
   display: grid;
   grid-gap: 12px 24px;
-  grid-template-columns: 23.125em 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-areas:
     "top top"
     "center center"

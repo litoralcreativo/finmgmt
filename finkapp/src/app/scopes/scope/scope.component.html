@@ -31,11 +31,10 @@
           </button>
         </mat-card-actions>
       </mat-card>
-      <app-donut-graph [data]="donutData"></app-donut-graph>
     </div>
 
     <div class="grid-area grid-right">
-      <mat-card
+      <!-- <mat-card
         class="transactions-list-container"
         *ngIf="!fetchingTransactions; else fetchingTransactionsCard"
       >
@@ -76,7 +75,11 @@
             <span>SCOPE HISTORY</span>
           </button>
         </mat-card-footer>
-      </mat-card>
+      </mat-card> -->
+      <app-donut-graph
+        [data]="donutData"
+        [colorTheme]="colorTheme"
+      ></app-donut-graph>
     </div>
 
     <div class="grid-area grid-right"></div>

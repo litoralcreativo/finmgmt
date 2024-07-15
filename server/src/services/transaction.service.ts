@@ -143,8 +143,11 @@ export class TransactionService extends Crud<Transaction> {
     ];
 
     return from(this.collection.aggregate<any>(pipeline).toArray()).pipe(
-      map((x) => {
-        return x;
+      map((result) => {
+        return result.map((x) => {
+          const rounded: number = Math.round(x.total * 100) / 100;
+          return { ...x, total: rounded };
+        });
       })
     );
   }

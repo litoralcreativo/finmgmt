@@ -40,6 +40,7 @@ export type ChartOptions = {
 export class DonutGraphComponent {
   @ViewChild(ChartComponent) chart: ChartComponent;
   @Input('data') data: MonthlyAcumulator = startingAccumulator;
+  @Input('colorTheme') colorTheme: string = '#3878c8';
   @Output('scopeChange') scopeChange: EventEmitter<number> = new EventEmitter();
   public chartOptions: ChartOptions;
   showChart: boolean;
@@ -54,7 +55,7 @@ export class DonutGraphComponent {
       theme: {
         monochrome: {
           enabled: true,
-          color: '#3878c8',
+          color: this.colorTheme,
         },
       },
       responsive: [
@@ -75,7 +76,7 @@ export class DonutGraphComponent {
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
-      if (changes['data'] && this.data) {
+      if (this.data && (changes['data'] || changes['colorTheme'])) {
         this.updateData();
       }
     }
@@ -88,6 +89,13 @@ export class DonutGraphComponent {
     });
 
     this.chartOptions.labels = outgoing.map((x) => x.category.name);
+
+    this.chartOptions.theme = {
+      monochrome: {
+        enabled: true,
+        color: this.colorTheme,
+      },
+    };
 
     if (this.chart) {
       this.chart.labels = this.chartOptions.labels;

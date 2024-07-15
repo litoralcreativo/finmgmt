@@ -31,6 +31,8 @@ export class ScopeComponent {
 
   donutData: MonthlyAcumulator;
 
+  colorTheme: string = '#3878c8';
+
   constructor(
     private router: Router,
     private aRoute: ActivatedRoute,
@@ -70,6 +72,7 @@ export class ScopeComponent {
       .subscribe((scope) => {
         this.scope = scope;
         this.scopeCategories = scope.getCategories();
+        this.colorTheme = this.scope.data.shared ? '#64307a' : '#3878c8';
       })
       .add(() => {
         this.fetchingScope = false;
