@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -13,6 +14,10 @@ import {
   ApexChart,
   ChartComponent,
   ApexTheme,
+  ApexPlotOptions,
+  ApexOptions,
+  ApexLegend,
+  ApexTooltip,
 } from 'ng-apexcharts';
 import { MonthlyAcumulator } from '../../models/accumulator.model';
 
@@ -27,15 +32,18 @@ const startingAccumulator: MonthlyAcumulator = {
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
-  responsive: ApexResponsive[];
   theme: ApexTheme;
+  plotOptions: ApexPlotOptions;
   labels: any;
+  legend: ApexLegend;
+  tooltip: ApexTooltip;
 };
 
 @Component({
   selector: 'app-donut-graph',
   templateUrl: './donut-graph.component.html',
   styleUrl: './donut-graph.component.scss',
+  providers: [CurrencyPipe],
 })
 export class DonutGraphComponent {
   @ViewChild(ChartComponent) chart: ChartComponent;
@@ -45,8 +53,15 @@ export class DonutGraphComponent {
   public chartOptions: ChartOptions;
   showChart: boolean;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private currencyPipe: CurrencyPipe
+  ) {
     this.chartOptions = {
+      legend: {
+        show: false,
+        floating: false,
+      },
       series: [],
       chart: {
         type: 'donut',
@@ -58,17 +73,28 @@ export class DonutGraphComponent {
           color: this.colorTheme,
         },
       },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: 'bottom',
+      plotOptions: {
+        pie: {
+          donut: {
+            labels: {
+              show: true,
+              value: {
+                show: true,
+                formatter: (value) => `${this.formatCurrency(Number(value))}`,
+              },
             },
+            size: '50',
           },
         },
-      ],
+      },
+      tooltip: {
+        enabled: false,
+      },
     };
+  }
+
+  private formatCurrency(value: number): string {
+    return this.currencyPipe.transform(value, 'USD', 'symbol', '1.2-2')!;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -80,6 +106,7 @@ export class DonutGraphComponent {
   }
 
   updateData() {
+    if (this.data.groups.length === 0) return;
     const outgoing = this.data.groups.filter((x) => x.amount < 0);
     this.chartOptions.series = outgoing.map((data) => {
       return Math.abs(data.amount);

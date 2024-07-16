@@ -76,10 +76,14 @@
           </button>
         </mat-card-footer>
       </mat-card> -->
-      <app-donut-graph
-        [data]="donutData"
-        [colorTheme]="colorTheme"
-      ></app-donut-graph>
+      <mat-card>
+        <mat-card-content>
+          <app-donut-graph
+            [data]="donutData"
+            [colorTheme]="colorTheme"
+          ></app-donut-graph>
+        </mat-card-content>
+      </mat-card>
     </div>
     <!-- 
     <div class="grid-area grid-right"></div> -->
