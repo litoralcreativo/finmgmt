@@ -1,5 +1,13 @@
-<div class="transaction-list-item" matRipple>
+<div
+  class="transaction-list-item"
+  matRipple
+  [class.foreing-transaction]="foreingTransaction"
+>
   <div class="left">
+    <span *ngIf="userData" class="initials mat-label-medium"
+      >{{ userData.name.first | initials
+      }}{{ userData.name.last | initials }}</span
+    >
     <mat-icon class="transaction-scope">{{
       transaction.scope.category.icon
     }}</mat-icon>

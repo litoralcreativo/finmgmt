@@ -27,14 +27,15 @@
   > -->
   <button
     mat-icon-button
-    *ngIf="hasOriginal"
+    *ngIf="hasOriginal && canEdit"
     class="delete-transaction-btn"
     (click)="commit(true)"
   >
     <mat-icon>delete</mat-icon>
   </button>
-  <button mat-button mat-dialog-close [disabled]="fetching">Close</button>
+  <button mat-button mat-dialog-close>Close</button>
   <button
+    *ngIf="canEdit"
     mat-flat-button
     [color]="hasOriginal ? 'warn' : 'primary'"
     (click)="commit()"
@@ -91,7 +92,7 @@
         <mat-datepicker #dp3 disabled="false"></mat-datepicker>
       </mat-form-field>
     </div>
-    <div class="form-row" *ngIf="!swap">
+    <div class="form-row" *ngIf="!swap && canEdit">
       <mat-form-field appearance="fill" class="iconed-form-field">
         <mat-label>Scope</mat-label>
         <mat-select formControlName="scope">

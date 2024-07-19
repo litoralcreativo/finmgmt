@@ -12,6 +12,14 @@ import { AccountService } from './account.service';
   providedIn: 'root',
 })
 export class AuthService {
+  public commonUsersDataEmitter: BehaviorSubject<boolean> = new BehaviorSubject(
+    true
+  );
+  private _commonUsersData: Map<string, PublicUserData | undefined> = new Map();
+  public get commonUsersData(): Map<string, PublicUserData | undefined> {
+    return this._commonUsersData;
+  }
+
   private _userData = new BehaviorSubject<PublicUserData | undefined>(
     undefined
   );
@@ -92,6 +100,8 @@ export class AuthService {
     this.userInfo().subscribe({
       next: (userdata) => {
         this._userData.next(userdata);
+        this._commonUsersData.set(userdata.id, userdata);
+        this.commonUsersDataEmitter.next(true);
         this.router.navigate(['accounts']);
       },
       error: (err) => {
@@ -112,5 +122,15 @@ export class AuthService {
           this._userData.next(userdata);
         })
       );
+  }
+
+  getForeingUserData(userId: string) {
+    this._commonUsersData.set(userId, undefined);
+    return this.http.get<PublicUserData>(routes.auth.foreinguser(userId)).pipe(
+      tap((userdata) => {
+        this._commonUsersData.set(userdata.id, userdata);
+        this.commonUsersDataEmitter.next(true);
+      })
+    );
   }
 }

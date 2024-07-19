@@ -26,6 +26,8 @@ import { ScopeService } from '../../services/scope.service';
 import { Category } from '../../models/category.model';
 import { TransactionService } from '../../services/transaction.service';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
+import { AuthService } from '../../services/auth.service';
+import { PublicUserData } from '../../models/userdata.model';
 
 @Component({
   selector: 'app-transaction-dialog',
@@ -48,6 +50,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
   @ViewChild('categoriesInput') categoriesInput: ElementRef<HTMLInputElement>;
   defaultCategory: Category[];
+  userData: PublicUserData;
+  canEdit: boolean = true;
 
   constructor(
     public dialogRef: MatDialogRef<TransactionDialogComponent>,
@@ -55,7 +59,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     private scopeService: ScopeService,
     private tranService: TransactionService,
     @Inject(MAT_DIALOG_DATA) public data: Transaction,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {
     super();
   }
@@ -89,6 +94,61 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
     this.fetchLists();
     this.onSwapCheckboxChange();
+    this._checkUserData();
+  }
+
+  private _checkUserData() {
+    if (!this.data.madeTransaction) return;
+
+    const hasUserCached = this.authService.commonUsersData.has(
+      this.data.madeTransaction.user_id
+    );
+
+    if (hasUserCached) {
+      this.userData = this.authService.commonUsersData.get(
+        this.data.madeTransaction.user_id
+      ) as PublicUserData;
+      this._checkIfUserCanEdit();
+    } else {
+      this.authService
+        .getForeingUserData(this.data.madeTransaction.user_id)
+        .subscribe()
+        .add(() => {
+          const hasUserCached = this.authService.commonUsersData.has(
+            this.data.madeTransaction!.user_id
+          );
+
+          if (hasUserCached) {
+            this.userData = this.authService.commonUsersData.get(
+              this.data.madeTransaction!.user_id
+            ) as PublicUserData;
+          }
+          this._checkIfUserCanEdit();
+        });
+    }
+  }
+
+  private _checkIfUserCanEdit() {
+    if (!this.userData) {
+      return;
+    }
+
+    const account: Account = this.data.origin || this.data.destination;
+    if (
+      this.data.madeTransaction?.user_id === this.authService.userData.value?.id
+    ) {
+      this.canEdit = true;
+    } else {
+      this.canEdit = false;
+      this.form.disable();
+    }
+
+    /* if (this.canEdit === false) {
+      this.form.get('scope')?.setValue(this.data.madeTransaction?.scope);
+      this.form
+        .get('category')
+        ?.setValue(this.data.madeTransaction?.scope.category);
+    } */
   }
 
   fetchLists() {
@@ -143,6 +203,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
         this.form.get('category')?.setValue(prefixedCategory);
       }
     }
+    this._checkIfUserCanEdit();
   }
 
   onSwapCheckboxChange() {

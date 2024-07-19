@@ -1,13 +1,38 @@
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
+
 .transaction-list-item {
   cursor: pointer;
   display: grid;
-  grid-template-columns: 24px 1fr auto;
+  grid-template-columns: auto 1fr auto;
   gap: 1rem;
   padding: 1rem;
   > div {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    &.left {
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      .initials {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        margin-right: 0.5rem;
+        border-radius: 50%;
+        background-color: mat.get-theme-color(m3.$light-theme, primary, 95);
+        color: mat.get-theme-color(m3.$light-theme, primary, 60);
+        width: 20px;
+        height: 20px;
+        padding: 5px;
+      }
+    }
 
     &.center {
       overflow: hidden;
@@ -22,4 +47,19 @@
       align-items: flex-end;
     }
   }
+
+  &.foreing-transaction {
+    > div {
+      &.left {
+        .initials {
+          background-color: mat.get-theme-color(m3.$light-theme, tertiary, 95);
+          color: mat.get-theme-color(m3.$light-theme, tertiary, 60);
+        }
+      }
+    }
+  }
 }
+
+/* .foreing-transaction {
+  color: mat.get-theme-color(m3.$light-theme, neutral-variant, 60);
+} */

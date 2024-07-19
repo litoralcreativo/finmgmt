@@ -4,10 +4,12 @@
   [matRippleDisabled]="!ripple"
   (click)="onCardClick()"
   [class.pointer]="ripple"
+  [class.shared-account]="account.shared"
 >
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title class="account-card-title">
+        <mat-icon *ngIf="account.shared" class="primary-icon">group</mat-icon>
         {{ account.data.name }}</mat-card-title
       >
       <mat-card-subtitle
@@ -17,7 +19,7 @@
       >
       <mat-icon
         mat-card-image
-        class="favorite-account-icon"
+        class="primary-icon favorite-account-icon"
         [class.not-favorite]="!account.data.favorite"
         [class.hide]="ripple && !account.data.favorite"
         (click)="toogleFavorite()"

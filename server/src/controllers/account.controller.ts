@@ -22,7 +22,9 @@ export const getByUser = (req: Request, res: Response) => {
   try {
     let userId: string = (req.user as any)?.id;
 
-    const filter: Filter<Account> = { user_id: userId };
+    const filter: Filter<Account> = {
+      $or: [{ user_id: userId }, { shared_with: userId }],
+    };
 
     accountService
       .getAll(
@@ -73,8 +75,8 @@ export const getById = (req: Request, res: Response) => {
     const { id } = req.params;
 
     const filter: Filter<Account> = {
-      user_id: userId,
       _id: new ObjectId(id),
+      $or: [{ user_id: userId }, { shared_with: userId }],
     };
 
     accountService.getSingle(filter).subscribe((val) => {

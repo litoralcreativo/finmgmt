@@ -18,6 +18,7 @@ import {
   TransactionResponse,
 } from 'src/app/shared/models/transaction.model';
 import { AccountService } from 'src/app/shared/services/account.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 import { AccountFABComponent } from '../account-fab/account-fab.component';
 
@@ -155,6 +156,9 @@ export class AccountComponent implements OnInit {
       transaction.setScope(madeTransaction.scope);
       transaction.setDate(new Date(madeTransaction.date));
     }
+
+    const canEdit: boolean =
+      madeTransaction?.user_id === this.account.data.user_id;
 
     this.dialog
       .open<TransactionDialogComponent>(TransactionDialogComponent, {

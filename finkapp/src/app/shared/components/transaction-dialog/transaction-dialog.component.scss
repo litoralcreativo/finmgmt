@@ -8,9 +8,15 @@
   font-size: x-large;
 }
 
-::ng-deep mat-form-field.iconed-form-field {
-  mat-icon {
-    vertical-align: top;
+::ng-deep mat-form-field {
+  .iconed-form-field {
+    mat-icon {
+      vertical-align: top;
+    }
+  }
+
+  > .mdc-text-field--filled.mdc-text-field--disabled {
+    background-color: transparent;
   }
 }
 

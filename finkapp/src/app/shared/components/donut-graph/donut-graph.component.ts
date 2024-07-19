@@ -50,6 +50,8 @@ export class DonutGraphComponent {
   @Input('data') data: MonthlyAcumulator = startingAccumulator;
   @Input('colorTheme') colorTheme: string = '#3878c8';
   @Output('scopeChange') scopeChange: EventEmitter<number> = new EventEmitter();
+  @Output('categorySelected') categorySelected: EventEmitter<string> =
+    new EventEmitter();
   public chartOptions: ChartOptions;
   showChart: boolean;
 
@@ -65,6 +67,14 @@ export class DonutGraphComponent {
       series: [],
       chart: {
         type: 'donut',
+        events: {
+          dataPointSelection: (e: any, chart: any, options?: any) => {
+            this.onChartSelection(
+              options.w.globals.labels[options.dataPointIndex],
+              options.selectedDataPoints[0].length !== 0
+            );
+          },
+        },
       },
       labels: [],
       theme: {
@@ -78,12 +88,13 @@ export class DonutGraphComponent {
           donut: {
             labels: {
               show: true,
+              name: { show: false },
               value: {
                 show: true,
                 formatter: (value) => `${this.formatCurrency(Number(value))}`,
               },
             },
-            size: '50',
+            size: '60',
           },
         },
       },
@@ -91,6 +102,11 @@ export class DonutGraphComponent {
         enabled: false,
       },
     };
+  }
+  onChartSelection(categoryName: string, selected: boolean) {
+    console.log(categoryName, selected);
+    /* console.log(this.chart); */
+    //this.categorySelected.emit(categoryName)
   }
 
   private formatCurrency(value: number): string {

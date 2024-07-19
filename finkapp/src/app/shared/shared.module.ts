@@ -27,6 +27,7 @@ import { TransactionListItemComponent } from './components/transaction-list-item
 import { IconSelectorComponent } from './components/icon-selector/icon-selector.component';
 import { CategoryDialogComponent } from './components/category-dialog/category-dialog.component';
 import { DonutGraphComponent } from './components/donut-graph/donut-graph.component';
+import { InitialsPipe } from './pipes/initials.pipe';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { DonutGraphComponent } from './components/donut-graph/donut-graph.compon
     IconSelectorComponent,
     CategoryDialogComponent,
     DonutGraphComponent,
+    InitialsPipe,
   ],
   imports: [
     CommonModule,
@@ -74,6 +76,7 @@ import { DonutGraphComponent } from './components/donut-graph/donut-graph.compon
     IconSelectorComponent,
     CategoryDialogComponent,
     DonutGraphComponent,
+    InitialsPipe,
   ],
   providers: [
     provideHttpClient(withInterceptors([authInterceptor])),

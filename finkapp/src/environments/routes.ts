@@ -9,6 +9,7 @@ export const routes = {
     register: `${environment.apiUrl}/auth/register`,
     authenticated: `${environment.apiUrl}/auth/authenticated`,
     user: `${environment.apiUrl}/auth/user`,
+    foreinguser: (id: string) => `${environment.apiUrl}/auth/foreinguser/${id}`,
   },
   currency: {
     mep: `${DOLAR_URL}/dolarrava/mep/variacion`,

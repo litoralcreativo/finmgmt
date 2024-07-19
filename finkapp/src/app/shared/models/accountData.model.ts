@@ -14,11 +14,13 @@ export const ACCOUNT_TYPES: AccountType[] = [
 
 export type AccountData = {
   _id: string;
+  user_id: string;
   name: string;
   type: AccountType;
   amount: number;
   symbol: string;
   favorite?: boolean;
+  shared_with?: string[];
 };
 
 export class Account {
@@ -33,5 +35,9 @@ export class Account {
 
   favorite(state: boolean) {
     this.data.favorite = state;
+  }
+
+  public get shared(): boolean {
+    return Boolean(this._data.shared_with);
   }
 }

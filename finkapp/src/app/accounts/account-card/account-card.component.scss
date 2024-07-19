@@ -15,8 +15,12 @@ mat-card.account-card {
 
   overflow: hidden;
 
-  .favorite-account-icon {
+  .primary-icon {
     color: mat.get-theme-color(m3.$light-theme, primary, 50);
+    vertical-align: text-top;
+  }
+
+  .favorite-account-icon {
     float: right;
     cursor: pointer;
 

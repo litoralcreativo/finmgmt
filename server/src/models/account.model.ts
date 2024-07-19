@@ -9,6 +9,7 @@ export type Account = BSON.Document & {
   type: string;
   symbol: string;
   amount: number;
+  shared_with?: string[];
 };
 
 export type AccountRequestDTO = {
