@@ -1,0 +1,25 @@
+::ng-deep .selected-category {
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  mat-chip {
+    width: 100%;
+    .mdc-evolution-chip__action {
+      width: 100%;
+      .mat-mdc-chip-action-label {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+
+        .amount {
+          flex-grow: 1;
+          text-align: right;
+        }
+      }
+    }
+  }
+}

@@ -19,15 +19,13 @@ import {
   ApexLegend,
   ApexTooltip,
 } from 'ng-apexcharts';
-import { MonthlyAcumulator } from '../../models/accumulator.model';
+import {
+  AcumulatorGroup,
+  MonthlyAcumulator,
+} from '../../models/accumulator.model';
 
 const today = new Date();
-const startingAccumulator: MonthlyAcumulator = {
-  year: today.getFullYear(),
-  month: today.getMonth() + 1,
-  total: 0,
-  groups: [],
-};
+const startingAccumulator: AcumulatorGroup[] = [];
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -47,7 +45,7 @@ export type ChartOptions = {
 })
 export class DonutGraphComponent {
   @ViewChild(ChartComponent) chart: ChartComponent;
-  @Input('data') data: MonthlyAcumulator = startingAccumulator;
+  @Input('data') data: AcumulatorGroup[] = startingAccumulator;
   @Input('colorTheme') colorTheme: string = '#3878c8';
   @Output('scopeChange') scopeChange: EventEmitter<number> = new EventEmitter();
   @Output('categorySelected') categorySelected: EventEmitter<{
@@ -56,6 +54,7 @@ export class DonutGraphComponent {
   }> = new EventEmitter();
   public chartOptions: ChartOptions;
   showChart: boolean;
+  selectedCategory?: AcumulatorGroup;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -68,6 +67,10 @@ export class DonutGraphComponent {
       },
       series: [],
       chart: {
+        animations: {
+          easing: 'easein',
+          speed: 300,
+        },
         type: 'donut',
         events: {
           dataPointSelection: (e: any, chart: any, options?: any) => {
@@ -96,7 +99,7 @@ export class DonutGraphComponent {
                 formatter: (value) => `${this.formatCurrency(Number(value))}`,
               },
             },
-            size: '60',
+            size: '50',
           },
         },
       },
@@ -107,6 +110,10 @@ export class DonutGraphComponent {
   }
   onChartSelection(categoryName: string, selected: boolean) {
     this.categorySelected.emit({ name: categoryName, selected: selected });
+    this.selectedCategory = this.data.find(
+      (x) => x.category.name === categoryName
+    );
+    if (!selected) this.selectedCategory = undefined;
   }
 
   private formatCurrency(value: number): string {
@@ -122,13 +129,13 @@ export class DonutGraphComponent {
   }
 
   updateData() {
-    if (this.data.groups.length === 0) return;
-    const outgoing = this.data.groups.filter((x) => x.amount < 0);
-    this.chartOptions.series = outgoing.map((data) => {
+    if (this.data.length === 0) return;
+    /* const outgoing = this.data.filter((x) => x.amount < 0); */
+    this.chartOptions.series = this.data.map((data) => {
       return Math.abs(data.amount);
     });
 
-    this.chartOptions.labels = outgoing.map((x) => x.category.name);
+    this.chartOptions.labels = this.data.map((x) => x.category.name);
 
     this.chartOptions.theme = {
       monochrome: {
@@ -139,12 +146,9 @@ export class DonutGraphComponent {
 
     if (this.chart) {
       this.chart.labels = this.chartOptions.labels;
-      this.chart.updateSeries(this.chartOptions.series);
-      this.chart.resetSeries();
+      this.chart?.updateSeries(this.chartOptions.series);
+      this.chart?.resetSeries();
     }
-    this.showChart = false;
-    this.cdr.detectChanges();
-    this.showChart = true;
   }
 
   onSelectionChange($event: any) {

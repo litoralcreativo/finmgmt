@@ -5,6 +5,38 @@
         <mat-icon>chevron_left</mat-icon> BACK TO SCOPES
       </button>
     </div>
+    <!-- <div class="grid-area grid-center-left">
+      <app-scope-card
+        *ngIf="!fetchingScope; else fetchingScopeCard"
+        [scope]="scope"
+        [ripple]="false"
+      ></app-scope-card>
+    </div>
+    <div class="grid-area grid-center-right">
+      <mat-card>
+        <mat-card-content>
+          <mat-chip-set class="categories-list">
+            @for (category of scopeCategories; track category) {
+            <mat-chip
+              [class.non-selected]="category.includedInGraph"
+              [class.selected]="category.selected"
+              [class.tertiary]="scope.data.shared"
+            >
+              <div class="chip-content">
+                <mat-icon> {{ category.icon }}</mat-icon>
+                <span>{{ category.name }}</span>
+              </div>
+            </mat-chip>
+            }
+          </mat-chip-set>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button class="maxwith" (click)="onAddCategoryBtnClick()">
+            <mat-icon>add</mat-icon> NEW CATEGORY
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div> -->
     <div class="grid-area grid-left">
       <app-scope-card
         *ngIf="!fetchingScope; else fetchingScopeCard"
@@ -12,7 +44,6 @@
         [ripple]="false"
       ></app-scope-card>
       <mat-card>
-        <mat-card-header> </mat-card-header>
         <mat-card-content>
           <mat-chip-set class="categories-list">
             @for (category of scopeCategories; track category) {
@@ -38,61 +69,13 @@
     </div>
 
     <div class="grid-area grid-right">
-      <!-- <mat-card
-        class="transactions-list-container"
-        *ngIf="!fetchingTransactions; else fetchingTransactionsCard"
-      >
-        <mat-card-header>
-          <div class="transactions-search-bar">
-            <mat-form-field appearance="fill">
-              <mat-label>Search</mat-label>
-              <input
-                matInput
-                title="search"
-                (keydown.enter)="onSearch()"
-                [formControl]="searchFormControl"
-              />
-              <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
-          </div>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="transaction-list">
-            @for (transaction of transactions; track transaction) {
-
-            <app-transaction-list-item
-              [transaction]="transaction"
-              (click)="onTransactionClick(transaction)"
-            ></app-transaction-list-item>
-            <mat-divider></mat-divider>
-            }
-          </div>
-        </mat-card-content>
-
-        <mat-card-footer>
-          <button
-            mat-button
-            class="activity-history"
-            color="primary"
-            (click)="goToHistory()"
-          >
-            <span>SCOPE HISTORY</span>
-          </button>
-        </mat-card-footer>
-      </mat-card> -->
-      <mat-card>
-        <mat-card-content>
-          <app-donut-graph
-            [data]="donutData"
-            [colorTheme]="colorTheme"
-            (categorySelected)="oncategorySelectedFromGraph($event)"
-          ></app-donut-graph>
-          {{ monthTotal | currency }}
-        </mat-card-content>
-      </mat-card>
+      <app-monthly-categories
+        [donutData]="donutData"
+        [colorTheme]="colorTheme"
+        (go)="onMonthlyAccumulatorNav($event)"
+        (categorySelected)="oncategorySelectedFromGraph($event)"
+      ></app-monthly-categories>
     </div>
-    <!-- 
-    <div class="grid-area grid-right"></div> -->
   </div>
 </section>
 

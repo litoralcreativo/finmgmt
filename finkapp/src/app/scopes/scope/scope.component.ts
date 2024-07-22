@@ -79,6 +79,7 @@ export class ScopeComponent {
         this.scope = scope;
         this.scopeCategories = scope.getCategories();
         this.colorTheme = this.scope.data.shared ? '#64307a' : '#3878c8';
+        this.updateCategories();
       })
       .add(() => {
         this.fetchingScope = false;
@@ -96,12 +97,21 @@ export class ScopeComponent {
       })
       .add(() => (this.fetchingAcumulator = false));
   }
+
+  onMonthlyAccumulatorNav(direction: -1 | 1) {
+    const date = new Date(this.year, this.month);
+    date.setMonth(this.month + direction);
+    this.year = date.getFullYear();
+    this.month = date.getMonth();
+    this.getScopeAcumulator();
+  }
   updateCategories() {
+    // this.hasOutcome = true
     this.monthTotal = this.donutData.groups
       .filter((x) => x.amount < 0)
       .reduce((a, c) => a + c.amount, 0);
     this.monthTotal = Math.abs(this.monthTotal);
-    this.scopeCategories.forEach((x) => {
+    this.scopeCategories?.forEach((x) => {
       x.includedInGraph = this.donutData.groups.some(
         (y) => y.category.name === x.name
       );

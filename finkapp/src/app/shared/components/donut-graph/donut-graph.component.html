@@ -1,6 +1,5 @@
 <div id="chart">
   <apx-chart
-    *ngIf="showChart"
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
     [labels]="chartOptions.labels"
@@ -9,4 +8,13 @@
     [legend]="chartOptions.legend"
     [tooltip]="chartOptions.tooltip"
   ></apx-chart>
+  <div class="selected-category">
+    <mat-chip *ngIf="selectedCategory"
+      ><mat-icon>{{ selectedCategory.category.icon }}</mat-icon
+      ><span>{{ selectedCategory.category.name }}</span
+      ><span class="amount">{{
+        selectedCategory.amount | currency
+      }}</span></mat-chip
+    >
+  </div>
 </div>

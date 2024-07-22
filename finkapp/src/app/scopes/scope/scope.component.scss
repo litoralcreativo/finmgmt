@@ -7,7 +7,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     "top top"
-    "center center"
+    "center-left center-right"
     "left right"
     "bottom bottom";
 
@@ -23,6 +23,8 @@
   .grid-right {
     grid-area: right;
     grid-auto-rows: max-content;
+    grid-gap: 24px;
+    display: grid;
   }
   .grid-bottom {
     grid-area: bottom;

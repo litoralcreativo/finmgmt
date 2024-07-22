@@ -1,4 +1,4 @@
-<div class="month-picker">
+<!-- <div class="month-picker">
   <button mat-icon-button (click)="goToMonth(-1)">
     <mat-icon>chevron_left</mat-icon>
   </button>
@@ -53,3 +53,44 @@
     </div>
   </mat-list-item>
 </mat-list>
+ -->
+
+<mat-card>
+  <div class="month-picker">
+    <button mat-icon-button (click)="goToMonth(-1)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <div class="month-label">{{ firstDayOfMonth | date : "MMMM" }}</div>
+    <button mat-icon-button (click)="goToMonth(1)" [disabled]="disableNext">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+  <mat-tab-group animationDuration="0ms">
+    <mat-tab label="Outcome" #outcome>
+      <mat-card-content>
+        <span class="mat-title-large"
+          ><b>Total</b>: {{ totalNegative | currency }}</span
+        >
+        <app-donut-graph
+          *ngIf="negatives?.length !== 0 && outcome.isActive"
+          [data]="negatives"
+          [colorTheme]="colorTheme"
+          (categorySelected)="onCategorySelectedFromGraph($event)"
+        ></app-donut-graph>
+      </mat-card-content>
+    </mat-tab>
+    <mat-tab label="Income" #income>
+      <mat-card-content>
+        <span class="mat-title-large"
+          ><b>Total</b>: {{ totalPositive | currency }}</span
+        >
+        <app-donut-graph
+          *ngIf="positives?.length !== 0 && income.isActive"
+          [data]="positives"
+          [colorTheme]="colorTheme"
+          (categorySelected)="onCategorySelectedFromGraph($event)"
+        ></app-donut-graph>
+      </mat-card-content>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>
