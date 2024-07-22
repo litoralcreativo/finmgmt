@@ -52,6 +52,7 @@ export class AccountListComponent extends FetchingFlag implements OnInit {
         const filtered = this.accounts
           .filter((x) => x.data.type === type)
           .sort(this.compareByAmount)
+          .sort(this.compareByFavorite)
           .filter(this.emptyPredicate);
 
         return {
@@ -62,6 +63,11 @@ export class AccountListComponent extends FetchingFlag implements OnInit {
       })
       .filter((x) => x.accounts.length > 0);
   }
+
+  private compareByFavorite = (a: Account, b: Account) => {
+    if (a.data.favorite) return -1;
+    return 1;
+  };
 
   private compareByAmount = (a: Account, b: Account) => {
     return a.data.amount < b.data.amount ? 1 : -1;

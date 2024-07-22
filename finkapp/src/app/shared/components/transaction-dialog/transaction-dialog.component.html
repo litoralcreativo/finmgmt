@@ -98,9 +98,11 @@
         <mat-select formControlName="scope">
           <mat-select-trigger>
             <div class="row-flex">
-              <mat-icon *ngIf="this.form.controls['scope'].value">{{
-                this.form.controls["scope"].value.data.icon
-              }}</mat-icon>
+              <mat-icon
+                class="form-icon"
+                *ngIf="this.form.controls['scope'].value"
+                >{{ this.form.controls["scope"].value.data.icon }}</mat-icon
+              >
               {{
                 this.form.controls["scope"].value
                   ? this.form.controls["scope"].value.data.name
@@ -110,7 +112,7 @@
           </mat-select-trigger>
           <mat-option [value]="null">None</mat-option>
           <mat-option *ngFor="let scope of userScopes" [value]="scope">
-            <mat-icon>{{ scope.data.icon }}</mat-icon>
+            <mat-icon class="form-icon">{{ scope.data.icon }}</mat-icon>
             {{ scope.data.name }}
           </mat-option>
         </mat-select>
@@ -120,9 +122,11 @@
         <mat-select formControlName="category">
           <mat-select-trigger>
             <div class="row-flex">
-              <mat-icon *ngIf="this.form.controls['category'].value">{{
-                this.form.controls["category"].value.icon
-              }}</mat-icon>
+              <mat-icon
+                class="form-icon"
+                *ngIf="this.form.controls['category'].value"
+                >{{ this.form.controls["category"].value.icon }}</mat-icon
+              >
               {{
                 this.form.controls["category"].value
                   ? this.form.controls["category"].value.name
@@ -132,7 +136,7 @@
           </mat-select-trigger>
           <mat-option [value]="null">None</mat-option>
           <mat-option *ngFor="let category of categories" [value]="category">
-            <mat-icon>{{ category.icon }}</mat-icon>
+            <mat-icon class="form-icon">{{ category.icon }}</mat-icon>
             {{ category.name }}
           </mat-option>
         </mat-select>
