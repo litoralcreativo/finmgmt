@@ -16,7 +16,11 @@
         <mat-card-content>
           <mat-chip-set class="categories-list">
             @for (category of scopeCategories; track category) {
-            <mat-chip>
+            <mat-chip
+              [class.non-selected]="category.includedInGraph"
+              [class.selected]="category.selected"
+              [class.tertiary]="scope.data.shared"
+            >
               <div class="chip-content">
                 <mat-icon> {{ category.icon }}</mat-icon>
                 <span>{{ category.name }}</span>
@@ -81,7 +85,9 @@
           <app-donut-graph
             [data]="donutData"
             [colorTheme]="colorTheme"
+            (categorySelected)="oncategorySelectedFromGraph($event)"
           ></app-donut-graph>
+          {{ monthTotal | currency }}
         </mat-card-content>
       </mat-card>
     </div>

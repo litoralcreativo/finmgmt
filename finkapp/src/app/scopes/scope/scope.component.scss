@@ -99,7 +99,7 @@
   }
 }
 
-mat-chip-set.categories-list {
+::ng-deep mat-chip-set.categories-list {
   mat-chip {
     flex-grow: 1;
     .chip-content {
@@ -107,6 +107,43 @@ mat-chip-set.categories-list {
       justify-content: center;
       align-items: center;
       gap: 5px;
+    }
+
+    &:not(.non-selected) {
+      * {
+        color: mat.get-theme-color(m3.$light-theme, neutral-variant, 80);
+      }
+      .mdc-evolution-chip__action--primary::before {
+        border-style: dashed;
+      }
+    }
+
+    &.non-selected {
+      /* background-color: mat.get-theme-color(m3.$light-theme, primary, 95);
+      * {
+        color: mat.get-theme-color(m3.$light-theme, primary, 10);
+      }
+
+      &.tertiary {
+        background-color: mat.get-theme-color(m3.$light-theme, tertiary, 99);
+        * {
+          color: mat.get-theme-color(m3.$light-theme, tertiary, 50);
+        }
+      } */
+    }
+
+    &.selected {
+      background-color: mat.get-theme-color(m3.$light-theme, primary, 90);
+      * {
+        color: mat.get-theme-color(m3.$light-theme, primary, 20);
+      }
+
+      &.tertiary {
+        background-color: mat.get-theme-color(m3.$light-theme, tertiary, 90);
+        * {
+          color: mat.get-theme-color(m3.$light-theme, tertiary, 20);
+        }
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -18,7 +18,10 @@ import { ScopeService } from 'src/app/shared/services/scope.service';
 export class ScopeComponent {
   scopeId: string;
   scope: Scope;
-  scopeCategories: Category[];
+  scopeCategories: (Category & {
+    selected?: boolean;
+    includedInGraph?: boolean;
+  })[];
   year: number;
   month: number;
   transactions: TransactionResponse[] = [];
@@ -33,11 +36,14 @@ export class ScopeComponent {
 
   colorTheme: string = '#3878c8';
 
+  monthTotal: number = 0;
+
   constructor(
     private router: Router,
     private aRoute: ActivatedRoute,
     private scopeService: ScopeService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {
     const today: Date = new Date();
     this.donutData = {
@@ -86,8 +92,20 @@ export class ScopeComponent {
       .getCategoriesAmount(this.scopeId, this.year, this.month)
       .subscribe((res) => {
         this.donutData = res;
+        this.updateCategories();
       })
       .add(() => (this.fetchingAcumulator = false));
+  }
+  updateCategories() {
+    this.monthTotal = this.donutData.groups
+      .filter((x) => x.amount < 0)
+      .reduce((a, c) => a + c.amount, 0);
+    this.monthTotal = Math.abs(this.monthTotal);
+    this.scopeCategories.forEach((x) => {
+      x.includedInGraph = this.donutData.groups.some(
+        (y) => y.category.name === x.name
+      );
+    });
   }
 
   navigateBack() {
@@ -132,5 +150,18 @@ export class ScopeComponent {
           this.getScopeData();
         }
       });
+  }
+
+  oncategorySelectedFromGraph(category: { name: string; selected: boolean }) {
+    const index = this.scopeCategories.findIndex(
+      (x) => x.name === category.name
+    );
+    this.scopeCategories.forEach((x) => {
+      x.selected = false;
+    });
+    if (index !== -1) {
+      this.scopeCategories[index].selected = category.selected;
+      this.cdr.detectChanges();
+    }
   }
 }

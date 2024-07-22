@@ -50,8 +50,10 @@ export class DonutGraphComponent {
   @Input('data') data: MonthlyAcumulator = startingAccumulator;
   @Input('colorTheme') colorTheme: string = '#3878c8';
   @Output('scopeChange') scopeChange: EventEmitter<number> = new EventEmitter();
-  @Output('categorySelected') categorySelected: EventEmitter<string> =
-    new EventEmitter();
+  @Output('categorySelected') categorySelected: EventEmitter<{
+    name: string;
+    selected: boolean;
+  }> = new EventEmitter();
   public chartOptions: ChartOptions;
   showChart: boolean;
 
@@ -104,9 +106,7 @@ export class DonutGraphComponent {
     };
   }
   onChartSelection(categoryName: string, selected: boolean) {
-    console.log(categoryName, selected);
-    /* console.log(this.chart); */
-    //this.categorySelected.emit(categoryName)
+    this.categorySelected.emit({ name: categoryName, selected: selected });
   }
 
   private formatCurrency(value: number): string {
