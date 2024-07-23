@@ -19,6 +19,6 @@ import { BottomToolbarComponent } from './bottom-toolbar/bottom-toolbar.componen
     BottomToolbarComponent,
   ],
   imports: [CommonModule, SharedModule, RouterModule],
-  exports: [ShellComponent],
+  exports: [ShellComponent, LoginComponent],
 })
 export class ShellModule {}

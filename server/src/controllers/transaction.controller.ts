@@ -342,6 +342,7 @@ const updateAccountAmount = async (account_id: string) => {
     transactionService.getAccountAmount(account_id)
   );
 
+  acountAmount.totalAmount = Math.round(acountAmount.totalAmount * 100) / 100;
   await firstValueFrom(
     accountService.updateOneById(account_id, {
       amount: acountAmount.totalAmount,

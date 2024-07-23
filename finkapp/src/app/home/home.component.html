@@ -11,12 +11,9 @@
       <h2>Financial track system for accounts balance, budget and more</h2>
     </div>
     <div class="header-start">
-      <a
-        mat-raised-button
-        routerlink="/guide/getting-started"
-        href="/guide/getting-started"
-        >Get started
-      </a>
+      <button mat-raised-button (click)="onGetStartedClick()">
+        Get started
+      </button>
     </div>
   </div>
   <app-logo class="app-logo"></app-logo>
