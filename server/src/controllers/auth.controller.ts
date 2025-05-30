@@ -58,7 +58,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
             return next();
           }
           const token = jwt.sign({ id: user._id }, JWT_SECRET, {
-            expiresIn: "2h",
+            expiresIn: "6h",
           });
           return res.json({ redirectTo: "/dashboard", token });
 
@@ -68,6 +68,26 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
     )(req, res, next);
   } catch (e) {
     throw e;
+  }
+};
+
+export const reautenticate = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = (req.user as any)?.id;
+
+    const token = jwt.sign({ id: userId }, JWT_SECRET, {
+      expiresIn: "6h",
+    });
+    return res.json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Fail to get user, internal server error"),
+    });
   }
 };
 

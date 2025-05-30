@@ -1,7 +1,7 @@
 import { inject, Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { finalize, tap, switchMap, map, catchError } from 'rxjs/operators';
 import { PublicUserData } from '../models/userdata.model';
 import { routes } from 'src/environments/routes';
@@ -29,6 +29,7 @@ export class AuthService {
   fetching: boolean;
 
   private authStatusListener: BehaviorSubject<boolean>;
+  private reauthInProgress: boolean = false;
 
   constructor(
     private tokenService: TokenService,
@@ -92,6 +93,25 @@ export class AuthService {
         throw err;
       })
     );
+  }
+
+  reauth(): Subscription {
+    if (this.reauthInProgress) return new Subscription(); // Evita múltiples llamadas
+
+    this.reauthInProgress = true;
+    return this.http.get(routes.auth.reauth).subscribe({
+      next: (res) => {
+        const token = (res as any).token;
+        if (token) localStorage.setItem('token', token);
+        this.authStatusListener.next(true);
+      },
+      complete: () => {
+        this.reauthInProgress = false;
+      },
+      error: () => {
+        this.reauthInProgress = false;
+      },
+    });
   }
 
   private fetchUserInfo() {

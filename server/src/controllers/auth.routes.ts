@@ -4,6 +4,7 @@ import {
   getForeingUserInfo,
   getUserInfo,
   login,
+  reautenticate,
   registration,
 } from "./auth.controller";
 
@@ -12,6 +13,8 @@ const router = express.Router();
 router.post("/register", registration);
 
 router.post("/login", login);
+
+router.get("/reauth", requireAuth, reautenticate);
 
 router.get("/user", requireAuth, getUserInfo);
 

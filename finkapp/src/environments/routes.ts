@@ -4,6 +4,7 @@ export const DOLAR_URL: string = 'https://mercados.ambito.com';
 
 export const routes = {
   auth: {
+    reauth: `${environment.apiUrl}/auth/reauth`,
     login: `${environment.apiUrl}/auth/login`,
     logout: `${environment.apiUrl}/auth/logout`,
     register: `${environment.apiUrl}/auth/register`,
