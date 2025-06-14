@@ -85,7 +85,18 @@ export class ScopeComponent {
         this.fetchingScope = false;
       });
   }
-  getScopeTransactions() {}
+
+  getScopeTransactions() {
+    this.fetchingTransactions = true;
+    this.scopeService
+      .getTransactions(this.scopeId, this.year, this.month, 1, 5)
+      .subscribe((res) => {
+        this.transactions = res.elements;
+      })
+      .add(() => {
+        this.fetchingTransactions = false;
+      });
+  }
 
   getScopeAcumulator() {
     this.fetchingAcumulator = true;
@@ -104,7 +115,9 @@ export class ScopeComponent {
     this.year = date.getFullYear();
     this.month = date.getMonth();
     this.getScopeAcumulator();
+    this.getScopeTransactions();
   }
+
   updateCategories() {
     // this.hasOutcome = true
     this.monthTotal = this.donutData.groups
@@ -139,12 +152,18 @@ export class ScopeComponent {
   }
 
   goToHistory(search?: string) {
-    /* const queryParams = search ? { search } : {};
+    const queryParams: any = {
+      year: this.year,
+      month: this.month,
+    };
+    if (search) {
+      queryParams.search = search;
+    }
 
     this.router.navigate(['history'], {
       relativeTo: this.aRoute,
       queryParams: queryParams,
-    }); */
+    });
   }
 
   onAddCategoryBtnClick() {

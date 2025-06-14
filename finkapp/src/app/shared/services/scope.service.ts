@@ -6,8 +6,10 @@ import { routes } from 'src/environments/routes';
 import { MonthlyAcumulator } from '../models/accumulator.model';
 import { Category } from '../models/category.model';
 import { Scope, ScopeDTO, ScopeResponse } from '../models/scope.model';
-import { ScopeAcumulator } from '../models/scopeAcumulator.model';
+import { TransactionResponse } from '../models/transaction.model';
 import { AuthService } from './auth.service';
+import { SspResponse } from '../models/sspdata.model';
+import { generateQuery } from 'src/app/shared/utils/query.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +88,26 @@ export class ScopeService {
       tap((res: any) => {
         this.getScopes();
       })
+    );
+  }
+
+  getTransactions(
+    scopeId: string,
+    year: number,
+    month: number,
+    page: number = 1,
+    pageSize: number = 5
+  ): Observable<SspResponse<TransactionResponse>> {
+    const query = generateQuery([
+      { key: 'year', value: year.toString() },
+      { key: 'month', value: month.toString() },
+      { key: 'page', value: (page - 1).toString() },
+      { key: 'pageSize', value: pageSize.toString() },
+    ]);
+
+    return this.http.get<SspResponse<TransactionResponse>>(
+      routes.scopes.transactions(scopeId, query),
+      { withCredentials: true }
     );
   }
 }

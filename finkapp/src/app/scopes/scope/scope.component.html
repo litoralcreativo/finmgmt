@@ -75,6 +75,47 @@
         (go)="onMonthlyAccumulatorNav($event)"
         (categorySelected)="oncategorySelectedFromGraph($event)"
       ></app-monthly-categories>
+
+      <mat-card
+        class="transactions-list-container"
+        *ngIf="!fetchingTransactions; else fetchingTransactionsCard"
+      >
+        <mat-card-header>
+          <div class="transactions-search-bar">
+            <mat-form-field appearance="fill">
+              <mat-label>Search</mat-label>
+              <input
+                matInput
+                title="search"
+                (keydown.enter)="onSearch()"
+                [formControl]="searchFormControl"
+              />
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="transaction-list">
+            @for (transaction of transactions; track transaction) {
+            <app-transaction-list-item
+              [transaction]="transaction"
+              (click)="onTransactionClick(transaction)"
+            ></app-transaction-list-item>
+            <mat-divider></mat-divider>
+            }
+          </div>
+        </mat-card-content>
+        <mat-card-footer>
+          <button
+            mat-button
+            class="activity-history"
+            color="primary"
+            (click)="goToHistory()"
+          >
+            <span>ACTIVITY HISTORY</span>
+          </button>
+        </mat-card-footer>
+      </mat-card>
     </div>
   </div>
 </section>

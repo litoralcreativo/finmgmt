@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Filter } from "mongodb";
+import { Filter, SortDirection } from "mongodb";
 import { ZodError } from "zod";
 import { DbManager } from "../bdd/db";
 import { typeValidationCatch } from "../utils/typeValidationCatch";
@@ -16,6 +16,7 @@ import {
 } from "../models/scopeAcumulator.model";
 import { FinancialScopeService } from "../services/financialScope.service";
 import { TransactionService } from "../services/transaction.service";
+import { Transaction } from "../models/transaction.model";
 
 let financialScope: FinancialScopeService;
 DbManager.getInstance().subscribe((x) => {
@@ -171,5 +172,74 @@ export const updateCategoryForScope = (req: Request, res: Response) => {
       });
   } catch (err) {
     typeValidationCatch(err as Error, res);
+  }
+};
+
+export const getTransactionsByScopeId = (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { year, month, page, pageSize, description, category } = req.query;
+    let from: Date = new Date();
+    let to: Date = new Date();
+
+    //#region DateRange validations
+    let intYear = parseInt(year as string);
+    if (!year) throw new TypeError("year is not defined");
+    if (isNaN(intYear)) throw new TypeError("year is not a number");
+    if (intYear < 1900 || intYear > 2100)
+      throw new TypeError("year must be between 1900 and 2100");
+
+    let intMonth = parseInt(month as string);
+    if (!month) throw new TypeError("month is not defined");
+    if (isNaN(intMonth)) throw new TypeError("month is not a number");
+    if (intMonth < 0 || intMonth > 11)
+      throw new TypeError("month must be between 0 and 11");
+    //#endregion
+
+    from = new Date(intYear, intMonth);
+    to = new Date(intYear, intMonth + 1);
+    to.setMinutes(to.getMinutes() - 1);
+
+    const filter: Filter<Transaction> = {
+      "scope._id": id,
+      date: {
+        $gte: from,
+        $lte: to,
+      },
+    };
+
+    if (typeof description === "string") {
+      filter.description = { $regex: description, $options: "i" };
+    }
+
+    if (typeof category === "string") {
+      filter["scope.category.name"] = category;
+    }
+
+    let dateDirection: SortDirection = -1;
+    let idDirection: SortDirection = -1;
+    const sort = { date: dateDirection, _id: idDirection };
+
+    transactionService
+      .getAll(
+        {
+          page: parseInt(page as string),
+          pageSize: parseInt(pageSize as string),
+        },
+        filter,
+        sort
+      )
+      .subscribe((val) => res.json(val));
+  } catch (error) {
+    if (error instanceof TypeError) {
+      res.status(400).json({
+        ...new ResponseStrategy(400, error.message),
+      });
+      return;
+    }
+
+    res.status(500).json({
+      ...new ResponseStrategy(500, "Internal server error"),
+    });
   }
 };

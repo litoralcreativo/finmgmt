@@ -4,12 +4,10 @@
 .scope-grid {
   display: grid;
   grid-gap: 12px 24px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 23.125em 1fr;
   grid-template-areas:
     "top top"
-    "center-left center-right"
-    "left right"
-    "bottom bottom";
+    "left right";
 
   .grid-top {
     grid-area: top;
@@ -26,9 +24,6 @@
     grid-gap: 24px;
     display: grid;
   }
-  .grid-bottom {
-    grid-area: bottom;
-  }
 }
 
 /* Media query para dispositivos móviles */
@@ -37,10 +32,8 @@
     grid-template-columns: 1fr;
     grid-template-areas:
       "top"
-      "center"
       "left"
-      "right"
-      "bottom";
+      "right";
   }
 }
 
@@ -101,51 +94,27 @@
   }
 }
 
-::ng-deep mat-chip-set.categories-list {
+.categories-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px;
+
   mat-chip {
-    flex-grow: 1;
-    .chip-content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 5px;
-    }
-
-    &:not(.non-selected) {
-      * {
-        color: mat.get-theme-color(m3.$light-theme, neutral-variant, 80);
-      }
-      .mdc-evolution-chip__action--primary::before {
-        border-style: dashed;
-      }
-    }
-
     &.non-selected {
-      /* background-color: mat.get-theme-color(m3.$light-theme, primary, 95);
-      * {
-        color: mat.get-theme-color(m3.$light-theme, primary, 10);
-      }
-
-      &.tertiary {
-        background-color: mat.get-theme-color(m3.$light-theme, tertiary, 99);
-        * {
-          color: mat.get-theme-color(m3.$light-theme, tertiary, 50);
-        }
-      } */
+      opacity: 0.5;
     }
-
     &.selected {
-      background-color: mat.get-theme-color(m3.$light-theme, primary, 90);
-      * {
-        color: mat.get-theme-color(m3.$light-theme, primary, 20);
-      }
-
-      &.tertiary {
-        background-color: mat.get-theme-color(m3.$light-theme, tertiary, 90);
-        * {
-          color: mat.get-theme-color(m3.$light-theme, tertiary, 20);
-        }
-      }
+      background-color: var(--mat-primary-color);
+      color: white;
+    }
+    &.tertiary {
+      background-color: var(--mat-tertiary-color);
+      color: white;
     }
   }
+}
+
+.maxwith {
+  width: 100%;
 }

@@ -48,6 +48,10 @@ export const routes = {
       `${environment.apiUrl}/scopes/${id}/category`,
     updateCategory: (scopeId: string, catName: string) =>
       `${environment.apiUrl}/scopes/${scopeId}/category/${catName}`,
+    transactions: (id: string, query?: string) =>
+      `${environment.apiUrl}/scopes/${id}/transactions${
+        query ? '?' + query : ''
+      }`,
   },
   transactions: {
     all: `${environment.apiUrl}/transaction`,
