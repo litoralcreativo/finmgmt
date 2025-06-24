@@ -1,9 +1,9 @@
-export type BalanceData = {
+export interface BalanceData {
   day: Date;
   totalAmount: number;
 };
 
-export type BalanceDataDTO = {
+export interface BalanceDataDTO {
   day: string;
   totalAmount: number;
 };

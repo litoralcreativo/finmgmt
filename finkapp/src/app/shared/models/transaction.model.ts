@@ -1,12 +1,6 @@
-import { throwToolbarMixedModesError } from '@angular/material/toolbar';
-import {
-  Account,
-  AccountData,
-  AccountType,
-  ACCOUNT_TYPES,
-} from './accountData.model';
+import { Account } from './accountData.model';
 import { Category } from './category.model';
-import { Scope, ScopedCategory } from './scope.model';
+import { ScopedCategory } from './scope.model';
 
 export type TransactionType = 'incoming' | 'outgoing' | undefined;
 
@@ -53,8 +47,6 @@ export abstract class Transaction {
   protected set destination(value: Account) {
     this._destination = value;
   }
-
-  constructor() {}
 
   /**
    * Sets the account where the transaction will impact
@@ -134,7 +126,7 @@ export abstract class Transaction {
 
     const accountId = this.origin?.data._id || this.destination?.data._id;
 
-    let tranReq: TransactionRequestDTO = {
+    const tranReq: TransactionRequestDTO = {
       account_id: accountId,
       amount: this.amount,
       description: this.description ?? '',
@@ -177,12 +169,12 @@ export class IncomingTransaction extends Transaction {
   }
 }
 
-export type TransactionFilterRequest = {
+export interface TransactionFilterRequest {
   description: string;
   category: string;
 };
 
-export type TransactionResponse = {
+export interface TransactionResponse {
   _id: string;
   user_id: string;
   account_id: string;
@@ -192,7 +184,7 @@ export type TransactionResponse = {
   scope: ScopedCategory;
 };
 
-export type TransactionRequestDTO = {
+export interface TransactionRequestDTO {
   account_id: string;
   amount: number;
   description: string;
@@ -205,7 +197,7 @@ export type TransactionRequestDTO = {
   };
 };
 
-export type ModifiedTransactionRequestDTO = {
+export interface ModifiedTransactionRequestDTO {
   amount: number;
   description: string;
   scope: {

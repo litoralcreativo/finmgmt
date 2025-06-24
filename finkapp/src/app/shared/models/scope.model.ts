@@ -1,6 +1,6 @@
 import { Category } from './category.model';
 
-export type ScopeResponse = {
+export interface ScopeResponse {
   _id: string;
   cerator: string;
   users: string[];
@@ -31,13 +31,13 @@ export class Scope {
   }
 }
 
-export type ScopeDTO = {
+export interface ScopeDTO {
   icon: string;
   name: string;
   shared: boolean;
 };
 
-export type ScopedCategory = {
+export interface ScopedCategory {
   _id: string;
   name: string;
   icon: string;

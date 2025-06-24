@@ -1,4 +1,4 @@
-export type SspPayload<T> = {
+export interface SspPayload<T> {
   paginator: {
     pageSize: number;
     pageIndex: number;
@@ -13,7 +13,7 @@ export type SspPayload<T> = {
   };
 };
 
-export type SspResponse<T> = {
+export interface SspResponse<T> {
   total: number;
   page: number;
   pageSize: number;

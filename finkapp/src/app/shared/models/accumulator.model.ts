@@ -1,13 +1,13 @@
 import { Category } from './category.model';
 
-export type MonthlyAcumulator = {
+export interface MonthlyAcumulator {
   year: number;
   month: number;
   total: number;
   groups: AcumulatorGroup[];
 };
 
-export type AcumulatorGroup = {
+export interface AcumulatorGroup {
   category: Category;
   amount: number;
   percent?: number;
