@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
@@ -10,12 +10,11 @@ import { LoginComponent } from '../shell/login/login.component';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-    private dialog: MatDialog
-  ) {}
-  ngOnInit(): void {
+  private auth = inject(AuthService);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+
+  ngOnInit() {
     if (this.auth.userData) this.router.navigate(['..']);
   }
 

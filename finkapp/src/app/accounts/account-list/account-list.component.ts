@@ -17,7 +17,7 @@ import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 export class AccountListComponent extends FetchingFlag implements OnInit {
   accounts: Account[];
   sortedAccounts: { title: string; accounts: Account[]; sum: number }[];
-  hideEmpty: boolean = false;
+  hideEmpty = false;
   selectedAccountTypes: AccountType[] = [...ACCOUNT_TYPES];
 
   constructor(
@@ -79,7 +79,7 @@ export class AccountListComponent extends FetchingFlag implements OnInit {
 
   private totalAmount(accArr: Account[]): number {
     return accArr.reduce((a, c) => {
-      let symbolCoeficent: number = 1;
+      let symbolCoeficent = 1;
       if (c.data.symbol === 'USD') {
         symbolCoeficent =
           this.symbolChangeService.prices.get('MEP')?.venta ?? 0;

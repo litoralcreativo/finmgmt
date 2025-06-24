@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -6,7 +6,6 @@ import { CategoryDialogComponent } from 'src/app/shared/components/category-dial
 import { MonthlyAcumulator } from 'src/app/shared/models/accumulator.model';
 import { Category } from 'src/app/shared/models/category.model';
 import { Scope } from 'src/app/shared/models/scope.model';
-import { ScopeAcumulator } from 'src/app/shared/models/scopeAcumulator.model';
 import { TransactionResponse } from 'src/app/shared/models/transaction.model';
 import { ScopeService } from 'src/app/shared/services/scope.service';
 
@@ -15,7 +14,7 @@ import { ScopeService } from 'src/app/shared/services/scope.service';
   templateUrl: './scope.component.html',
   styleUrl: './scope.component.scss',
 })
-export class ScopeComponent {
+export class ScopeComponent implements OnInit {
   scopeId: string;
   scope: Scope;
   scopeCategories: (Category & {
@@ -26,25 +25,25 @@ export class ScopeComponent {
   month: number;
   transactions: TransactionResponse[] = [];
 
-  fetchingScope: boolean = false;
-  fetchingAcumulator: boolean = false;
-  fetchingTransactions: boolean = false;
+  fetchingScope = false;
+  fetchingAcumulator = false;
+  fetchingTransactions = false;
 
   searchFormControl: FormControl = new FormControl('');
 
   donutData: MonthlyAcumulator;
 
-  colorTheme: string = '#3878c8';
+  colorTheme = '#3878c8';
 
-  monthTotal: number = 0;
+  monthTotal = 0;
 
-  constructor(
-    private router: Router,
-    private aRoute: ActivatedRoute,
-    private scopeService: ScopeService,
-    private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
-  ) {
+  private router = inject(Router);
+  private aRoute = inject(ActivatedRoute);
+  private scopeService = inject(ScopeService);
+  private dialog = inject(MatDialog);
+  private cdr = inject(ChangeDetectorRef);
+
+  constructor() {
     const today: Date = new Date();
     this.donutData = {
       year: today.getFullYear(),
@@ -54,7 +53,7 @@ export class ScopeComponent {
     };
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     const date = new Date();
     this.year = date.getFullYear();
     this.month = date.getMonth();
@@ -152,7 +151,7 @@ export class ScopeComponent {
   }
 
   goToHistory(search?: string) {
-    const queryParams: any = {
+    const queryParams: { year: number; month: number; search?: string } = {
       year: this.year,
       month: this.month,
     };

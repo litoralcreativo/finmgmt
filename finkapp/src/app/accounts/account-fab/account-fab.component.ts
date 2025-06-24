@@ -6,11 +6,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './account-fab.component.scss',
 })
 export class AccountFABComponent {
-  hide: boolean = false;
-  actionsShown: boolean = false;
+  hide = false;
+  actionsShown = false;
 
-  @Output('action') action: EventEmitter<'in' | 'out' | 'swap'> =
-    new EventEmitter();
+  @Output() action =
+    new EventEmitter<'in' | 'out' | 'swap'>();
 
   toggleActions() {
     this.actionsShown = !this.actionsShown;

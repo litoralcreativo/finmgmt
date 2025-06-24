@@ -42,7 +42,7 @@ export class CalendarComponent implements OnInit {
 
     combineLatest([$accounts, $scopes]).subscribe({
       next: ([accounts, scopes]) => {
-        const groups: Set<AccountType> = new Set(
+        const groups = new Set<AccountType>(
           accounts.map((x) => x.data.type)
         );
 
@@ -67,7 +67,7 @@ export class CalendarComponent implements OnInit {
   onDaySelection($event: Date | null) {}
 
   dateClass(date: Date, view: 'month' | 'year' | 'multi-year'): Set<string> {
-    const classes: Set<string> = new Set(['all-calendar-days']);
+    const classes = new Set<string>(['all-calendar-days']);
     return classes;
   }
 }

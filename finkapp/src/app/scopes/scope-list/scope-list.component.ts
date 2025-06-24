@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Scope } from 'src/app/shared/models/scope.model';
 import { ScopeService } from 'src/app/shared/services/scope.service';
 
@@ -7,10 +7,10 @@ import { ScopeService } from 'src/app/shared/services/scope.service';
   templateUrl: './scope-list.component.html',
   styleUrl: './scope-list.component.scss',
 })
-export class ScopeListComponent {
+export class ScopeListComponent implements OnInit {
   scopes: Scope[] = [];
 
-  constructor(private scopeService: ScopeService) {}
+  private scopeService = inject(ScopeService);
 
   ngOnInit() {
     this.scopeService.$scopes.subscribe((spa) => {

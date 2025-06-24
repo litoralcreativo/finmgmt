@@ -72,8 +72,8 @@ export class CategoryDialogComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res.result?.category?.modifiedCount > 0) {
-            let categoriesCount: number = res.result?.category?.modifiedCount;
-            let transactionsCount: number =
+            const categoriesCount: number = res.result?.category?.modifiedCount;
+            const transactionsCount: number =
               res.result?.transactions?.modifiedCount;
             this.snackbar.open(
               `Update ${categoriesCount} category and ${transactionsCount} transactions`,

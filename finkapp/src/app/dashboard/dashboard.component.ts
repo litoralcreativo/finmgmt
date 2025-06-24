@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { BalanceData } from '../shared/models/balanceData.model';
 import { AccountService } from '../shared/services/account.service';
@@ -10,12 +10,12 @@ import { AccountService } from '../shared/services/account.service';
 })
 export class DashboardComponent implements OnInit {
   balanceDays = 30;
-  accountBalanceDataMap: Map<string, BalanceData[]> = new Map();
-  accountBalanceData: BalanceData[][];
-  fetchingBalanceData: boolean = false;
-  constructor(private accService: AccountService) {}
+  accountBalanceDataMap = new Map<string, BalanceData[]>();
+  accountBalanceData: BalanceData[][] = [];
+  fetchingBalanceData = false;
+  private accService = inject(AccountService);
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.accService.$account
       .pipe(filter((x) => x.length > 0))
       .subscribe((x) => {

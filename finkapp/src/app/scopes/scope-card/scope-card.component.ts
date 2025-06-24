@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Scope } from 'src/app/shared/models/scope.model';
 
@@ -8,10 +8,11 @@ import { Scope } from 'src/app/shared/models/scope.model';
   styleUrl: './scope-card.component.scss',
 })
 export class ScopeCardComponent {
-  @Input('scope') scope: Scope;
-  @Input('ripple') ripple: boolean = true;
+  @Input() scope!: Scope;
+  @Input() ripple = true;
 
-  constructor(private router: Router, private aRoute: ActivatedRoute) {}
+  private router = inject(Router);
+  private aRoute = inject(ActivatedRoute);
 
   onCardClick() {
     if (!this.ripple) return;

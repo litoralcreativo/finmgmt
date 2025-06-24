@@ -7,7 +7,7 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
-  ViewChild,
+  ViewChild, OnInit,
 } from '@angular/core';
 import {
   ChartComponent,
@@ -40,7 +40,7 @@ export interface ChartOptions {
   templateUrl: './balance-graph.component.html',
   styleUrls: ['./balance-graph.component.scss'],
 })
-export class BalanceGraphComponent implements OnChanges {
+export class BalanceGraphComponent implements OnChanges, OnInit {
   @ViewChild('chart') chart!: ChartComponent;
   chartOptions!: ChartOptions;
   @Input() data: BalanceData[][] = [];
