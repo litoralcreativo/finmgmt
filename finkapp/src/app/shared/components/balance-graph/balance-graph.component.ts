@@ -2,9 +2,9 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -22,7 +22,7 @@ import {
 } from 'ng-apexcharts';
 import { BalanceData } from '../../models/balanceData.model';
 
-export type ChartOptions = {
+export interface ChartOptions {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
@@ -33,23 +33,24 @@ export type ChartOptions = {
   labels: string[];
   legend: ApexLegend;
   subtitle: ApexTitleSubtitle;
-};
+}
 
 @Component({
   selector: 'app-balance-graph',
   templateUrl: './balance-graph.component.html',
   styleUrls: ['./balance-graph.component.scss'],
 })
-export class BalanceGraphComponent implements OnInit, OnChanges {
-  @ViewChild('chart') chart: ChartComponent;
-  chartOptions: ChartOptions;
-  @Input('data') data: BalanceData[][] = [];
-  @Output('scopeChange') scopeChange: EventEmitter<number> = new EventEmitter();
+export class BalanceGraphComponent implements OnChanges {
+  @ViewChild('chart') chart!: ChartComponent;
+  chartOptions!: ChartOptions;
+  @Input() data: BalanceData[][] = [];
+  @Output() scopeChange = new EventEmitter<number>();
 
-  showChart: boolean = false;
-  scope: 30;
+  showChart = false;
+  scope = 30;
+  cdr = inject(ChangeDetectorRef);
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor() {
     this.chartOptions = {
       series: this.data?.map((data) => {
         return {
@@ -119,13 +120,11 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.chart;
   }
-
-  ngAfterViewInit() {}
-
-  updateData() {
+  
+  private updateData() {
     this.chartOptions.series = this.data.map((data) => {
       return {
         name: 'BALANCE',
@@ -146,7 +145,7 @@ export class BalanceGraphComponent implements OnInit, OnChanges {
     this.showChart = true;
   }
 
-  onSelectionChange($event: any) {
+  onSelectionChange($event: number) {
     this.scopeChange.emit($event);
   }
 }

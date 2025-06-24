@@ -5,6 +5,7 @@ import {
   inject,
   Input,
   Output,
+  OnChanges,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -37,8 +38,8 @@ export interface ChartOptions {
   styleUrl: './donut-graph.component.scss',
   providers: [CurrencyPipe],
 })
-export class DonutGraphComponent {
-  @ViewChild(ChartComponent) chart: ChartComponent;
+export class DonutGraphComponent implements OnChanges {
+  @ViewChild(ChartComponent) chart!: ChartComponent;
   @Input() data: AcumulatorGroup[] = startingAccumulator;
   @Input() colorTheme = '#3878c8';
   @Output() scopeChange = new EventEmitter<number>();
@@ -46,8 +47,8 @@ export class DonutGraphComponent {
     name: string;
     selected: boolean;
   }>();
-  public chartOptions: ChartOptions;
-  showChart: boolean;
+  public chartOptions!: ChartOptions;
+  showChart = false;
   selectedCategory?: AcumulatorGroup;
 
   private currencyPipe = inject(CurrencyPipe);
