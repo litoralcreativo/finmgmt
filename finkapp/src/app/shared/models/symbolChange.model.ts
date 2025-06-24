@@ -1,4 +1,4 @@
-export type SymbolChangeResponse = {
+export interface SymbolChangeResponse {
   compra: string;
   venta: string;
   fecha: string;
@@ -8,7 +8,7 @@ export type SymbolChangeResponse = {
 
 type percent = number;
 
-export type SymbolChange = {
+export interface SymbolChange {
   compra: number;
   venta: number;
   fecha: Date;

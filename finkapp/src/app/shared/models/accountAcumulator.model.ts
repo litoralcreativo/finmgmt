@@ -1,13 +1,13 @@
 import { Category } from './category.model';
 
-export type AccountAcumulator = {
+export interface AccountAcumulator {
   year: number;
   month: number;
   total: number;
   groups: AccountAcumulatorGroup[];
 };
 
-export type AccountAcumulatorGroup = {
+export interface AccountAcumulatorGroup {
   scope: {
     _id: string;
     icon: string;

@@ -1,4 +1,4 @@
-export type Category = {
+export interface Category {
   name: string;
   icon: string;
   fixed: boolean;

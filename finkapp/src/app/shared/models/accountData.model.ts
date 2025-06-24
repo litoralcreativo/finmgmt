@@ -12,7 +12,7 @@ export const ACCOUNT_TYPES: AccountType[] = [
   AccountType.CASH,
 ];
 
-export type AccountData = {
+export interface AccountData {
   _id: string;
   user_id: string;
   name: string;
