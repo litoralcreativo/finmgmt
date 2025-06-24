@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 
@@ -10,7 +10,10 @@ import { filter } from 'rxjs';
 export class HeaderComponent {
   breadcrumbs: string[] = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
+  constructor() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -18,11 +21,9 @@ export class HeaderComponent {
       });
   }
 
-  ngOnInit(): void {}
-
   private buildBreadcrumbs(
     route: ActivatedRoute,
-    url: string = '',
+    url = '',
     breadcrumbs: string[] = []
   ): string[] {
     const children: ActivatedRoute[] = route.children;
@@ -32,7 +33,7 @@ export class HeaderComponent {
     }
 
     for (const child of children) {
-      const routeURL: string = child.snapshot.url
+      const routeURL = child.snapshot.url
         .map((segment) => segment.path)
         .join('/');
       if (routeURL !== '') {

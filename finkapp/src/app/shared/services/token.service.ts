@@ -4,8 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class TokenService {
-  constructor() {}
-
   isAuthenticated(): boolean {
     const token = this.getToken();
     return token ? !this.isTokenExpired(token) : false;

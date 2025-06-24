@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { LoginComponent } from './login/login.component';
@@ -16,22 +16,22 @@ import { NavItem } from '../shared/models/navItem.model';
   styleUrls: ['./shell.component.scss'],
 })
 export class ShellComponent implements OnInit {
-  loggedIn: boolean = false;
+  private router = inject(Router);
+  private aRoute = inject(ActivatedRoute);
+  private authService = inject(AuthService);
+  private dialog = inject(MatDialog);
+  private symbolChange = inject(SymbolChangeService);
+  private breakpointService = inject(BreakpointService);
+
+  loggedIn = false;
   @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
 
-  navItems: Map<string, NavItem> = new Map([]);
+  navItems = new Map<string, NavItem>([]);
 
-  changes: Map<string, SymbolChange> = new Map();
+  changes = new Map<string, SymbolChange>();
   screenSize: number;
 
-  constructor(
-    private router: Router,
-    private aRoute: ActivatedRoute,
-    public authService: AuthService,
-    public dialog: MatDialog,
-    private symbolChange: SymbolChangeService,
-    private breakpointService: BreakpointService
-  ) {
+  constructor() {
     this.navItems.set('Dashboard', {
       name: 'Dashboard',
       route: '/dashboard',

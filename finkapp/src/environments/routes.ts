@@ -1,6 +1,6 @@
 import { environment } from './environment';
 
-export const DOLAR_URL: string = 'https://mercados.ambito.com';
+export const DOLAR_URL = 'https://mercados.ambito.com';
 
 export const routes = {
   auth: {

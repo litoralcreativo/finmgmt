@@ -1,5 +1,5 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -14,9 +14,11 @@ export class BreakpointService {
     [Breakpoints.XLarge, 'XLarge'],
   ]);
 
-  bpSubject: BehaviorSubject<string> = new BehaviorSubject('Unknown');
+  bpSubject = new BehaviorSubject<string>('Unknown');
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  private breakpointObserver = inject(BreakpointObserver);
+
+  constructor() {
     this.breakpointObserver
       .observe([
         Breakpoints.XSmall,

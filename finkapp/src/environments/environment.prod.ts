@@ -1,4 +1,4 @@
-const API_URL: string = 'https://finmgmt-lhio.onrender.com';
+const API_URL = 'https://finmgmt-lhio.onrender.com';
 
 export const environment = {
   production: true,

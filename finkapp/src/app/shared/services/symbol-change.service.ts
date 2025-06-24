@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { routes } from 'src/environments/routes';
 import {
@@ -11,10 +11,11 @@ import {
   providedIn: 'root',
 })
 export class SymbolChangeService {
-  readonly prices: Map<string, SymbolChange> = new Map();
+  private http = inject(HttpClient);
+  readonly prices = new Map<string, SymbolChange>();
   $prices = new BehaviorSubject<Map<string, SymbolChange>>(this.prices);
 
-  constructor(private http: HttpClient) {
+  constructor() {
     this.$prices.next(this.prices);
     this.fetchCurrencyData();
   }

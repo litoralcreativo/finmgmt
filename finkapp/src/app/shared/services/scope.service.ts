@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
@@ -15,9 +15,12 @@ import { generateQuery } from 'src/app/shared/utils/query.utils';
   providedIn: 'root',
 })
 export class ScopeService {
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+
   $scopes: BehaviorSubject<Scope[]> = new BehaviorSubject<Scope[]>([]);
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor() {
     this.authService.userData.subscribe((data) => {
       if (data) {
         this.getScopes();
@@ -52,8 +55,8 @@ export class ScopeService {
       .pipe(map((acc) => new Scope(acc)));
   }
 
-  createScope(scope: ScopeDTO): Observable<any> {
-    return this.http.post(routes.scopes.create, scope);
+  createScope(scope: ScopeDTO): Observable<undefined> {
+    return this.http.post<undefined>(routes.scopes.create, scope);
   }
 
   getCategoriesAmount(
@@ -73,7 +76,7 @@ export class ScopeService {
     scopeId: string,
     categoryName: string,
     category: Category
-  ): Observable<any> {
+  ): Observable<undefined> {
     return this.http
       .patch(routes.scopes.updateCategory(scopeId, categoryName), category)
       .pipe(
@@ -83,9 +86,9 @@ export class ScopeService {
       );
   }
 
-  createCategory(scopeId: string, category: Category): Observable<any> {
-    return this.http.post(routes.scopes.createCategory(scopeId), category).pipe(
-      tap((res: any) => {
+  createCategory(scopeId: string, category: Category): Observable<undefined> {
+    return this.http.post<undefined>(routes.scopes.createCategory(scopeId), category).pipe(
+      tap(() => {
         this.getScopes();
       })
     );
@@ -95,8 +98,8 @@ export class ScopeService {
     scopeId: string,
     year: number,
     month: number,
-    page: number = 1,
-    pageSize: number = 5
+    page = 1,
+    pageSize = 5
   ): Observable<SspResponse<TransactionResponse>> {
     const query = generateQuery([
       { key: 'year', value: year.toString() },

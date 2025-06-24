@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PublicUserData } from 'src/app/shared/models/userdata.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
@@ -8,9 +8,8 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   styleUrls: ['./user-menu.component.scss'],
 })
 export class UserMenuComponent implements OnInit {
+  private authService = inject(AuthService);
   user?: PublicUserData;
-
-  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.userData.subscribe((user) => {

@@ -28,6 +28,6 @@ export function generateSspKV<T>(ssp: SspPayload<T>): QueryKV[] {
   return kv;
 }
 
-export function generateFilterKV(filter: { [key: string]: string }): QueryKV[] {
+export function generateFilterKV(filter: Record<string, string>): QueryKV[] {
   return Object.entries(filter).map(([key, value]) => ({ key, value }));
-} 
+}

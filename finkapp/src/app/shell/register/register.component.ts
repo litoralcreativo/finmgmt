@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -10,6 +10,10 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private dialogRef = inject(MatDialogRef<RegisterComponent>);
+
   form: FormGroup = new FormGroup({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
@@ -21,12 +25,6 @@ export class RegisterComponent implements OnInit {
     ]),
   });
 
-  constructor(
-    public dialogRef: MatDialogRef<RegisterComponent>,
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
   ngOnInit(): void {
     this.updateFormDisableState();
   }
@@ -36,7 +34,7 @@ export class RegisterComponent implements OnInit {
     const { email, firstName, lastName, password } = this.form.value;
     this.authService
       .register({ email, password, firstName, lastName })
-      .subscribe((x) => {
+      .subscribe(() => {
         this.dialogRef.close(true);
       })
       .add(() => this.updateFormDisableState());

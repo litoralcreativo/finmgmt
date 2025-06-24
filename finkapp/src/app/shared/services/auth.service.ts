@@ -1,21 +1,22 @@
-import { inject, Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
-import { finalize, tap, switchMap, map, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { tap, switchMap, catchError } from 'rxjs/operators';
 import { PublicUserData } from '../models/userdata.model';
 import { routes } from 'src/environments/routes';
 import { TokenService } from './token.service';
-import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  public commonUsersDataEmitter: BehaviorSubject<boolean> = new BehaviorSubject(
-    true
-  );
-  private _commonUsersData: Map<string, PublicUserData | undefined> = new Map();
+  private tokenService = inject(TokenService);
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
+  public commonUsersDataEmitter = new BehaviorSubject<boolean>(true);
+  private _commonUsersData = new Map<string, PublicUserData | undefined>();
   public get commonUsersData(): Map<string, PublicUserData | undefined> {
     return this._commonUsersData;
   }
@@ -29,13 +30,9 @@ export class AuthService {
   fetching: boolean;
 
   private authStatusListener: BehaviorSubject<boolean>;
-  private reauthInProgress: boolean = false;
+  private reauthInProgress = false;
 
-  constructor(
-    private tokenService: TokenService,
-    private http: HttpClient,
-    private router: Router
-  ) {
+  constructor() {
     this.authStatusListener = new BehaviorSubject<boolean>(
       this.tokenService.isAuthenticated()
     );
@@ -45,14 +42,14 @@ export class AuthService {
   login(username: string, password: string): Observable<any> {
     this.fetching = true;
     return this.http
-      .post(
+      .post<{ token: string }>(
         routes.auth.login,
         { username, password },
         { withCredentials: true }
       )
       .pipe(
-        switchMap((response: any) => {
-          const token = (response as any).token;
+        switchMap((response) => {
+          const token = (response as { token: string }).token;
           if (token) localStorage.setItem('token', token);
           this.authStatusListener.next(true);
           return this.userInfo().pipe(
@@ -83,9 +80,9 @@ export class AuthService {
     password: string;
     firstName: string;
     lastName: string;
-  }): Observable<any> {
-    return this.http.post(routes.auth.register, data).pipe(
-      tap((response: any) => {
+  }): Observable<undefined> {
+    return this.http.post<undefined>(routes.auth.register, data).pipe(
+      tap(() => {
         this.fetching = false;
       }),
       catchError((err) => {
@@ -101,7 +98,7 @@ export class AuthService {
     this.reauthInProgress = true;
     return this.http.get(routes.auth.reauth).subscribe({
       next: (res) => {
-        const token = (res as any).token;
+        const token = (res as { token: string }).token;
         if (token) localStorage.setItem('token', token);
         this.authStatusListener.next(true);
       },

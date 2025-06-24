@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class IconService {
-  icons: Set<string> = new Set([]);
+  icons = new Set<string>([]);
 
-  catIcons: Map<string, string[]> = new Map();
+  catIcons = new Map<string, string[]>();
 
   constructor() {
     this.setCategorizedIcons();

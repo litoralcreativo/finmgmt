@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { routes } from 'src/environments/routes';
 import {
   ModifiedTransactionRequestDTO,
-  Transaction,
   TransactionRequestDTO,
 } from '../models/transaction.model';
 
@@ -12,7 +11,7 @@ import {
   providedIn: 'root',
 })
 export class TransactionService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   createTransaction(
     transactionRequest: TransactionRequestDTO
@@ -29,8 +28,8 @@ export class TransactionService {
   updateTransaction(
     transactionId: string,
     modifiedTransaction: ModifiedTransactionRequestDTO
-  ): Observable<any> {
-    return this.http.patch<any>(
+  ): Observable<undefined> {
+    return this.http.patch<undefined>(
       routes.transactions.update(transactionId),
       modifiedTransaction,
       {
@@ -39,7 +38,7 @@ export class TransactionService {
     );
   }
 
-  deleteTransaction(transactionId: string): Observable<any> {
-    return this.http.delete<any>(routes.transactions.delete(transactionId));
+  deleteTransaction(transactionId: string): Observable<undefined> {
+    return this.http.delete<undefined>(routes.transactions.delete(transactionId));
   }
 }

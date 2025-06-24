@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
@@ -10,6 +10,10 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private dialogRef = inject(MatDialogRef<LoginComponent>);
+
   form: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
@@ -18,12 +22,6 @@ export class LoginComponent implements OnInit {
       Validators.maxLength(16),
     ]),
   });
-
-  constructor(
-    public dialogRef: MatDialogRef<LoginComponent>,
-    private authService: AuthService,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.updateFormDisableState();
@@ -34,7 +32,7 @@ export class LoginComponent implements OnInit {
     const { username, password } = this.form.value;
     this.authService
       .login(username, password)
-      .subscribe((x) => {
+      .subscribe(() => {
         this.dialogRef.close('ok');
       })
       .add(() => this.updateFormDisableState());

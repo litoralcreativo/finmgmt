@@ -7,9 +7,5 @@ import { NavItem } from 'src/app/shared/models/navItem.model';
   styleUrl: './bottom-toolbar.component.scss',
 })
 export class BottomToolbarComponent {
-  @Input('items') items: Map<string, NavItem> = new Map([]);
-
-  constructor() {
-    this.items.values();
-  }
+  @Input() items = new Map<string, NavItem>([]);
 }
