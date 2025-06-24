@@ -53,7 +53,7 @@ export class AuthService {
           if (token) localStorage.setItem('token', token);
           this.authStatusListener.next(true);
           return this.userInfo().pipe(
-            tap((userdata) => {
+            tap(() => {
               this.fetching = false;
               this.router.navigate(['accounts']);
               /* if (response.redirectTo) {

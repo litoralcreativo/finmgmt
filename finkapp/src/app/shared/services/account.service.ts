@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { routes } from 'src/environments/routes';
@@ -17,9 +17,12 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class AccountService {
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+
   $account: BehaviorSubject<Account[]> = new BehaviorSubject<Account[]>([]);
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor() {
     this.authService.userData.subscribe((data) => {
       if (data) {
         this.getAccounts();
@@ -42,8 +45,8 @@ export class AccountService {
       });
   }
 
-  createAccount(account: Partial<AccountData>): Observable<any> {
-    return this.http.post<AccountData[]>(routes.account.all, account, {
+  createAccount(account: Partial<AccountData>): Observable<undefined> {
+    return this.http.post<undefined>(routes.account.all, account, {
       withCredentials: true,
     });
   }
@@ -75,7 +78,7 @@ export class AccountService {
       [P in keyof TransactionFilterRequest]: string;
     }>
   ): Observable<SspResponse<TransactionResponse>> {
-    let kv: { key: string; value: string }[] = [];
+    const kv: { key: string; value: string }[] = [];
     if (ssp) {
       kv.push(...generateSspKV(ssp));
     }
@@ -146,7 +149,7 @@ export class AccountService {
 function generateSspKV(
   ssp: SspPayload<TransactionResponse>
 ): { key: string; value: string }[] {
-  let result: { key: string; value: string }[] = [];
+  const result: { key: string; value: string }[] = [];
   result.push({ key: 'page', value: ssp.paginator.pageIndex.toString() });
   result.push({ key: 'pageSize', value: ssp.paginator.pageSize.toString() });
   return result;
@@ -157,7 +160,7 @@ function generateFilterKV<T>(
     [P in keyof T]: string;
   }>
 ): { key: string; value: string }[] {
-  let result: { key: string; value: string }[] = [];
+  const result: { key: string; value: string }[] = [];
   Object.entries<any>(filter).forEach(([key, value]) => {
     if (value) result.push({ key: key, value: value ?? '' });
   });
