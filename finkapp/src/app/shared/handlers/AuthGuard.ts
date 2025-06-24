@@ -1,10 +1,5 @@
-import { Injectable } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-} from '@angular/router';
+import { inject, Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { map, take, switchMap, catchError } from 'rxjs/operators';
@@ -14,12 +9,10 @@ import { PublicUserData } from '../models/userdata.model';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
+  canActivate(): Observable<boolean> {
     return this.authService.userData.pipe(
       take(1),
       switchMap((user: PublicUserData | undefined) => {

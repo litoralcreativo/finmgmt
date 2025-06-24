@@ -1,6 +1,8 @@
 import {
   Directive,
   ElementRef,
+  OnChanges,
+  inject,
   Input,
   OnDestroy,
   OnInit,
@@ -10,11 +12,11 @@ import {
 @Directive({
   selector: '[appSkeletonLoader]',
 })
-export class SkeletonLoaderDirective implements OnInit, OnDestroy {
+export class SkeletonLoaderDirective implements OnInit, OnDestroy, OnChanges {
+  private el = inject(ElementRef);
+  private renderer = inject(Renderer2);
   private skeletonClass = 'skeleton-loader';
-  @Input() appSkeletonLoader: boolean = true;
-
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  @Input() appSkeletonLoader = true;
 
   ngOnInit() {
     this.addSkeletonClass();
@@ -35,8 +37,7 @@ export class SkeletonLoaderDirective implements OnInit, OnDestroy {
   private addSkeletonClass() {
     const childNodes = this.el.nativeElement.childNodes;
     for (const node of childNodes) {
-      if (node.nodeType === 1) {
-        // Node.ELEMENT_NODE
+      if (node.nodeType === Node.ELEMENT_NODE) {
         this.renderer.addClass(node, this.skeletonClass);
       }
     }
@@ -45,8 +46,7 @@ export class SkeletonLoaderDirective implements OnInit, OnDestroy {
   private removeSkeletonClass() {
     const childNodes = this.el.nativeElement.childNodes;
     for (const node of childNodes) {
-      if (node.nodeType === 1) {
-        // Node.ELEMENT_NODE
+      if (node.nodeType === Node.ELEMENT_NODE) {
         this.renderer.removeClass(node, this.skeletonClass);
       }
     }

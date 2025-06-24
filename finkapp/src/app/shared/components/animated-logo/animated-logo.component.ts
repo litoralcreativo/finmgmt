@@ -5,11 +5,5 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './animated-logo.component.html',
   styleUrls: ['./animated-logo.component.scss']
 })
-export class AnimatedLogoComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class AnimatedLogoComponent {
 }

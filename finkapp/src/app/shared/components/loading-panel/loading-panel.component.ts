@@ -1,16 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-loading-panel',
   templateUrl: './loading-panel.component.html',
   styleUrls: ['./loading-panel.component.scss'],
 })
-export class LoadingPanelComponent implements OnInit {
-  @Input('theme') theme: 'light' | 'dark' = 'light';
-  @Input('spinner') spinner: boolean = true;
-  @Input('spinnerSize') spinnerSize: number = 30;
+export class LoadingPanelComponent {
+  @Input() theme: 'light' | 'dark' = 'light';
+  @Input() spinner = true;
+  @Input() spinnerSize = 30;
 
-  constructor() {}
-
-  ngOnInit(): void {}
 }

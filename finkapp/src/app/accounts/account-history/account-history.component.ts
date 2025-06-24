@@ -38,7 +38,7 @@ export class AccountHistoryComponent implements OnInit {
   filtering: boolean;
   fetching: boolean;
   scopes: Scope[] = [];
-  catSelectorOpen: boolean = false;
+  catSelectorOpen = false;
   filter: Partial<{
     [P in keyof TransactionFilterRequest]: string;
   }> = {};

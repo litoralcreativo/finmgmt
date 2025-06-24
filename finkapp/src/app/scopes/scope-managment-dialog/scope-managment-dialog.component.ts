@@ -1,9 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Scope, ScopeDTO } from 'src/app/shared/models/scope.model';
-import { IconService } from 'src/app/shared/services/icon.service';
+import { MatDialogRef } from '@angular/material/dialog';
+import { ScopeDTO } from 'src/app/shared/models/scope.model';
 import { ScopeService } from 'src/app/shared/services/scope.service';
 import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 
@@ -14,10 +12,9 @@ import { FetchingFlag } from 'src/app/shared/utils/fetching-flag';
 })
 export class ScopeManagmentDialogComponent
   extends FetchingFlag
-  implements OnInit
 {
-  iconSelectorOpen: boolean = false;
-  scopeDTO: ScopeDTO;
+  iconSelectorOpen = false;
+  scopeDTO!: ScopeDTO;
 
   form: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -25,14 +22,12 @@ export class ScopeManagmentDialogComponent
     shared: new FormControl(false),
   });
 
-  constructor(
-    public dialogRef: MatDialogRef<ScopeManagmentDialogComponent>,
-    public scopeService: ScopeService
-  ) {
+  public dialogRef = inject(MatDialogRef<ScopeManagmentDialogComponent>);
+  public scopeService = inject(ScopeService);
+
+  constructor() {
     super();
   }
-
-  ngOnInit(): void {}
 
   confirm() {
     this.scopeDTO = {
@@ -46,7 +41,7 @@ export class ScopeManagmentDialogComponent
 
     this.scopeService
       .createScope(this.scopeDTO)
-      .subscribe((res) => {
+      .subscribe(() => {
         this.dialogRef.close(true);
       })
       .add(() => {

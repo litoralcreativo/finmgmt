@@ -35,10 +35,10 @@ export class AccountComponent implements OnInit {
   year: number;
   month: number;
 
-  fetchingAccount: boolean = false;
-  fetchingAcumulator: boolean = false;
-  fetchingTransactions: boolean = false;
-  fetchingBalanceData: boolean = false;
+  fetchingAccount = false;
+  fetchingAcumulator = false;
+  fetchingTransactions = false;
+  fetchingBalanceData = false;
 
   searchFormControl: FormControl = new FormControl('');
 

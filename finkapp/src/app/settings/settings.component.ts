@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../shared/services/auth.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { AuthService } from '../shared/services/auth.service';
   styleUrl: './settings.component.scss',
 })
 export class SettingsComponent {
-  constructor(private authService: AuthService) {}
+  private authService = inject(AuthService);
   logout() {
     this.authService.logout();
   }

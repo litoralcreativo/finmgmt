@@ -1,11 +1,11 @@
 import {
   Component,
   ElementRef,
+  inject,
   Inject,
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   MatDialog,
@@ -14,13 +14,12 @@ import {
 } from '@angular/material/dialog';
 import {
   Account,
-  AccountData,
   AccountType,
 } from '../../models/accountData.model';
 import { Transaction, TransactionType } from '../../models/transaction.model';
 import { AccountService } from '../../services/account.service';
 import { FetchingFlag } from '../../utils/fetching-flag';
-import { combineLatest, forkJoin, Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Scope, ScopedCategory } from '../../models/scope.model';
 import { ScopeService } from '../../services/scope.service';
 import { Category } from '../../models/category.model';
@@ -46,24 +45,21 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
   type?: TransactionType;
   categories: Category[] = [];
 
-  swap: boolean = false;
+  swap = false;
 
   @ViewChild('categoriesInput') categoriesInput: ElementRef<HTMLInputElement>;
   defaultCategory: Category[];
   userData: PublicUserData;
-  canEdit: boolean = true;
+  canEdit = true;
 
-  constructor(
-    public dialogRef: MatDialogRef<TransactionDialogComponent>,
-    private accService: AccountService,
-    private scopeService: ScopeService,
-    private tranService: TransactionService,
-    @Inject(MAT_DIALOG_DATA) public data: Transaction,
-    private dialog: MatDialog,
-    private authService: AuthService
-  ) {
-    super();
-  }
+  @Inject(MAT_DIALOG_DATA) public data: Transaction;
+  public dialogRef = inject(MatDialogRef<TransactionDialogComponent>);
+
+  private accService = inject(AccountService);
+  private scopeService = inject(ScopeService);
+  private tranService = inject(TransactionService);
+  private dialog = inject(MatDialog);
+  private authService = inject(AuthService);
 
   ngOnInit(): void {
     this.type = this.data.type;
@@ -133,7 +129,6 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
       return;
     }
 
-    const account: Account = this.data.origin || this.data.destination;
     if (
       this.data.madeTransaction?.user_id === this.authService.userData.value?.id
     ) {
@@ -143,12 +138,6 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
       this.form.disable();
     }
 
-    /* if (this.canEdit === false) {
-      this.form.get('scope')?.setValue(this.data.madeTransaction?.scope);
-      this.form
-        .get('category')
-        ?.setValue(this.data.madeTransaction?.scope.category);
-    } */
   }
 
   fetchLists() {
@@ -159,7 +148,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
     combineLatest([$accounts, $scopes]).subscribe({
       next: ([accounts, scopes]) => {
-        const groups: Set<AccountType> = new Set(
+        const groups = new Set<AccountType>(
           accounts.map((x) => x.data.type)
         );
 
@@ -219,14 +208,14 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     this.form.updateValueAndValidity();
   }
 
-  commit(remove: boolean = false) {
+  commit(remove = false) {
     const { amount, description, date, scope, category } =
       this.form.getRawValue();
     this.data.setAmount(amount);
     this.data.setDescription(description);
     this.data.setDate(date);
 
-    let scopedCat: ScopedCategory = {
+    const scopedCat: ScopedCategory = {
       _id: scope.data._id,
       name: scope.data.name,
       icon: scope.data.icon,
@@ -245,7 +234,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
           if (res) {
             const request = this.data.generateModificationRequest();
             this.fetching = true;
-            let $obs: Observable<any>;
+            let $obs: Observable<unknown>;
 
             // delete or update
             if (remove) {
@@ -261,11 +250,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
             $obs
               .subscribe({
-                next: (x) => {
+                next: () => {
                   this.dialogRef.close(true);
-                },
-                error: (err) => {
-                  const a = err;
                 },
               })
               .add(() => {
@@ -279,11 +265,8 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
       this.tranService
         .createTransaction(request)
         .subscribe({
-          next: (x) => {
+          next: () => {
             this.dialogRef.close(true);
-          },
-          error: (err) => {
-            const a = err;
           },
         })
         .add(() => {
@@ -298,7 +281,7 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
 
   get originalChanged(): boolean {
     if (this.data.madeTransaction) {
-      const { amount, description, date, scope, category } =
+      const { amount, description, scope, category } =
         this.form.getRawValue();
 
       if (this.data.madeTransaction.description !== description) return true;

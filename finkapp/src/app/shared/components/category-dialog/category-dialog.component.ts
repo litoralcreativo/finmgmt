@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -6,30 +6,30 @@ import { Category } from '../../models/category.model';
 import { Scope } from '../../models/scope.model';
 import { ScopeService } from '../../services/scope.service';
 
-export type CategoryDialogDataModel = {
+export interface CategoryDialogDataModel {
   scope: Scope;
   category?: Category;
-};
+}
 
 @Component({
   selector: 'app-category-dialog',
   templateUrl: './category-dialog.component.html',
   styleUrl: './category-dialog.component.scss',
 })
-export class CategoryDialogComponent {
-  fetching: boolean = false;
-  iconSelectorOpen: boolean = false;
+export class CategoryDialogComponent implements OnInit {
+  fetching = false;
+  iconSelectorOpen = false;
 
   form: FormGroup;
 
-  category: Category;
+  category?: Category;
 
-  constructor(
-    public dialogRef: MatDialogRef<CategoryDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: CategoryDialogDataModel,
-    public scopeService: ScopeService,
-    private snackbar: MatSnackBar
-  ) {
+  public dialogRef = inject(MatDialogRef<CategoryDialogComponent>);
+  @Inject(MAT_DIALOG_DATA) public data: CategoryDialogDataModel;
+  public scopeService = inject(ScopeService);
+  public snackbar = inject(MatSnackBar);
+
+  constructor() {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required]),
       icon: new FormControl('more_horiz', [Validators.required]),
@@ -37,7 +37,7 @@ export class CategoryDialogComponent {
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     if (!this.data) throw new Error('No category and scope data provided');
 
     if (this.data.category) {
@@ -72,8 +72,8 @@ export class CategoryDialogComponent {
         )
         .subscribe((res: any) => {
           if (res.result?.category?.modifiedCount > 0) {
-            let categoriesCount: number = res.result?.category?.modifiedCount;
-            let transactionsCount: number =
+            const categoriesCount: number = res.result?.category?.modifiedCount;
+            const transactionsCount: number =
               res.result?.transactions?.modifiedCount;
             this.snackbar.open(
               `Update ${categoriesCount} category and ${transactionsCount} transactions`,
@@ -95,7 +95,7 @@ export class CategoryDialogComponent {
       // create
       this.scopeService
         .createCategory(this.data.scope.data._id, this.category)
-        .subscribe((res) => {
+        .subscribe(() => {
           this.dialogRef.close(true);
         })
         .add(() => {
