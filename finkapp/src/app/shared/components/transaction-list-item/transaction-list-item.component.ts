@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Account } from '../../models/accountData.model';
 import { TransactionResponse } from '../../models/transaction.model';
 import { PublicUserData } from '../../models/userdata.model';
@@ -10,15 +10,13 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './transaction-list-item.component.html',
   styleUrl: './transaction-list-item.component.scss',
 })
-export class TransactionListItemComponent {
+export class TransactionListItemComponent implements OnInit {
   account: Account;
   userData: PublicUserData;
-  @Input('transaction') transaction: TransactionResponse;
+  @Input() transaction: TransactionResponse;
 
-  constructor(
-    private authService: AuthService,
-    private accountService: AccountService
-  ) {}
+  private authService = inject(AuthService);
+  private accountService = inject(AccountService);
 
   ngOnInit() {
     this._getAccount();
@@ -29,9 +27,7 @@ export class TransactionListItemComponent {
     } else {
       this.authService
         .getForeingUserData(this.transaction.user_id)
-        .subscribe((res) => {
-          const a = res;
-        })
+        .subscribe()
         .add(() => {
           if (this.authService.commonUsersData.has(this.transaction.user_id)) {
             this.userData = this.authService.commonUsersData.get(
@@ -41,13 +37,12 @@ export class TransactionListItemComponent {
         });
     }
 
-    this.authService.commonUsersDataEmitter.subscribe((res) => {
+    this.authService.commonUsersDataEmitter.subscribe(() => {
       if (this.authService.commonUsersData.has(this.transaction.user_id)) {
         this.userData = this.authService.commonUsersData.get(
           this.transaction.user_id
         ) as PublicUserData;
       }
-      // this.cdr.detectChanges();
     });
   }
   private _getAccount() {

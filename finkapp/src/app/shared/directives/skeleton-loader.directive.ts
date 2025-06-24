@@ -1,6 +1,7 @@
 import {
   Directive,
   ElementRef,
+  OnChanges,
   inject,
   Input,
   OnDestroy,
@@ -11,7 +12,7 @@ import {
 @Directive({
   selector: '[appSkeletonLoader]',
 })
-export class SkeletonLoaderDirective implements OnInit, OnDestroy {
+export class SkeletonLoaderDirective implements OnInit, OnDestroy, OnChanges {
   private el = inject(ElementRef);
   private renderer = inject(Renderer2);
   private skeletonClass = 'skeleton-loader';
