@@ -1,8 +1,6 @@
 import { inject } from '@angular/core';
 import {
-  HttpInterceptor,
   HttpRequest,
-  HttpHandler,
   HttpEvent,
   HttpErrorResponse,
   HttpInterceptorFn,
@@ -14,15 +12,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../services/auth.service';
 import { TokenService } from '../services/token.service';
 export const authInterceptor: HttpInterceptorFn = (
-  req: HttpRequest<any>,
+  req: HttpRequest<unknown>,
   next: HttpHandlerFn
-): Observable<HttpEvent<any>> => {
+): Observable<HttpEvent<unknown>> => {
   const authService = inject(AuthService);
   const tokenService = inject(TokenService);
   const _snackBar = inject(MatSnackBar);
 
-  let reauth: boolean = false;
-  let isReauthInProgress: boolean = false;
+  let isReauthInProgress = false;
 
   const token = tokenService.getToken();
   const onError = req.headers.get('on-error');
@@ -31,7 +28,6 @@ export const authInterceptor: HttpInterceptorFn = (
   let modifiedReq = req.clone();
 
   if (onError) {
-    // Eliminar el encabezado
     modifiedReq = modifiedReq.clone({
       headers: modifiedReq.headers.delete('on-error'),
     });
@@ -40,7 +36,6 @@ export const authInterceptor: HttpInterceptorFn = (
   if (token) {
     const timeLeft = tokenService.authenticatedTimeLeft();
     if (timeLeft < 60 * 30 && !isReauthInProgress) {
-      reauth = true;
       isReauthInProgress = true;
       authService.reauth().add(() => {
         isReauthInProgress = false;
