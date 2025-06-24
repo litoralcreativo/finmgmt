@@ -2,18 +2,10 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
+  OnChanges,  
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {
-  AccountAcumulator,
-  AccountAcumulatorGroup,
-} from 'src/app/shared/models/accountAcumulator.model';
-import {
-  ScopeAcumulator,
-  ScopeAcumulatorGroup,
-} from 'src/app/shared/models/scopeAcumulator.model';
 import {
   AcumulatorGroup,
   MonthlyAcumulator,
@@ -24,28 +16,24 @@ import {
   templateUrl: './monthly-categories.component.html',
   styleUrls: ['./monthly-categories.component.scss'],
 })
-export class MonthlyCategoriesComponent implements OnInit {
-  @Input('donutData') donutData: MonthlyAcumulator;
-  @Input('colorTheme') colorTheme: string = '#3878c8';
+export class MonthlyCategoriesComponent implements OnChanges {
+  @Input() donutData: MonthlyAcumulator;
+  @Input() colorTheme = '#3878c8';
 
-  year: number = 1950;
-  month: number = 0;
-  /* @Input('acumulator') acumulator: AccountAcumulator | ScopeAcumulator;
-  swap?: AccountAcumulatorGroup; */
+  year = 1950;
+  month = 0;
   negatives: AcumulatorGroup[] = [];
   positives: AcumulatorGroup[] = [];
   totalNegative: number;
   totalPositive: number;
-  @Output('go') go: EventEmitter<-1 | 1> = new EventEmitter();
-  @Output('categorySelected') categorySelected: EventEmitter<{
+  @Output() go = new EventEmitter<1 | -1>();
+  @Output() categorySelected = new EventEmitter<{
     name: string;
     selected: boolean;
-  }> = new EventEmitter();
+  }>();
   firstDayOfMonth: Date;
-  today: Date = new Date();
+  today = new Date();
   nextMonth: Date;
-
-  constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
@@ -54,8 +42,6 @@ export class MonthlyCategoriesComponent implements OnInit {
       }
     }
   }
-
-  ngOnInit(): void {}
 
   setData() {
     if (!this.donutData) throw new Error('No acummulator provided');
@@ -66,13 +52,6 @@ export class MonthlyCategoriesComponent implements OnInit {
     this.totalNegative = this.negatives.reduce((a, c) => a + c.amount, 0);
 
     this.totalPositive = this.positives.reduce((a, c) => a + c.amount, 0);
-
-    /* this.negatives.forEach(
-      (x) => (x.percent = (100 * x.amount) / this.totalNegative)
-    );
-    this.positives.forEach(
-      (x) => (x.percent = (100 * x.amount) / this.totalPositive)
-    ); */
 
     this.negatives.sort((a, b) => a.amount - b.amount);
     this.positives.sort((a, b) => b.amount - a.amount);

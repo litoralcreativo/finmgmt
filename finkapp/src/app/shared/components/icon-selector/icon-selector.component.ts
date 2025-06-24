@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from '../../models/category.model';
 import { Scope } from '../../models/scope.model';
@@ -14,18 +21,14 @@ export class IconSelectorComponent implements OnInit {
   catIcons: [string, string[]][] = [];
   scopeIcons: [string, Category[]][] = [];
 
-  @Input('categories') categories: boolean = false;
+  @Input() categories = false;
 
-  @Output('iconSelection') iconSelection: EventEmitter<string> =
-    new EventEmitter();
-  @Output('categorySelection') categorySelection: EventEmitter<Category> =
-    new EventEmitter();
+  @Output() iconSelection = new EventEmitter<string>();
+  @Output() categorySelection = new EventEmitter<Category>();
   scopes: Scope[];
 
-  constructor(
-    private iconService: IconService,
-    private scopeService: ScopeService
-  ) {}
+  private iconService = inject(IconService);
+  private scopeService = inject(ScopeService);
 
   ngOnInit(): void {
     this.catIcons = Array.from(this.iconService.catIcons.entries());

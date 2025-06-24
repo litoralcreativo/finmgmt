@@ -1,8 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   Output,
   SimpleChanges,
@@ -10,32 +10,26 @@ import {
 } from '@angular/core';
 import {
   ApexNonAxisChartSeries,
-  ApexResponsive,
   ApexChart,
   ChartComponent,
   ApexTheme,
   ApexPlotOptions,
-  ApexOptions,
   ApexLegend,
   ApexTooltip,
 } from 'ng-apexcharts';
-import {
-  AcumulatorGroup,
-  MonthlyAcumulator,
-} from '../../models/accumulator.model';
+import { AcumulatorGroup } from '../../models/accumulator.model';
 
-const today = new Date();
 const startingAccumulator: AcumulatorGroup[] = [];
 
-export type ChartOptions = {
+export interface ChartOptions {
   series: ApexNonAxisChartSeries;
   chart: ApexChart;
   theme: ApexTheme;
   plotOptions: ApexPlotOptions;
-  labels: any;
+  labels: string[];
   legend: ApexLegend;
   tooltip: ApexTooltip;
-};
+}
 
 @Component({
   selector: 'app-donut-graph',
@@ -45,21 +39,20 @@ export type ChartOptions = {
 })
 export class DonutGraphComponent {
   @ViewChild(ChartComponent) chart: ChartComponent;
-  @Input('data') data: AcumulatorGroup[] = startingAccumulator;
-  @Input('colorTheme') colorTheme: string = '#3878c8';
-  @Output('scopeChange') scopeChange: EventEmitter<number> = new EventEmitter();
-  @Output('categorySelected') categorySelected: EventEmitter<{
+  @Input() data: AcumulatorGroup[] = startingAccumulator;
+  @Input() colorTheme = '#3878c8';
+  @Output() scopeChange = new EventEmitter<number>();
+  @Output() categorySelected = new EventEmitter<{
     name: string;
     selected: boolean;
-  }> = new EventEmitter();
+  }>();
   public chartOptions: ChartOptions;
   showChart: boolean;
   selectedCategory?: AcumulatorGroup;
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private currencyPipe: CurrencyPipe
-  ) {
+  private currencyPipe = inject(CurrencyPipe);
+
+  constructor() {
     this.chartOptions = {
       legend: {
         show: false,
@@ -73,7 +66,7 @@ export class DonutGraphComponent {
         },
         type: 'donut',
         events: {
-          dataPointSelection: (e: any, chart: any, options?: any) => {
+          dataPointSelection: (e, chart, options?) => {
             this.onChartSelection(
               options.w.globals.labels[options.dataPointIndex],
               options.selectedDataPoints[0].length !== 0
@@ -151,7 +144,7 @@ export class DonutGraphComponent {
     }
   }
 
-  onSelectionChange($event: any) {
+  onSelectionChange($event: number) {
     this.scopeChange.emit($event);
   }
 }
