@@ -52,14 +52,17 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
   userData: PublicUserData;
   canEdit = true;
 
-  @Inject(MAT_DIALOG_DATA) public data: Transaction;
-  public dialogRef = inject(MatDialogRef<TransactionDialogComponent>);
+  
 
   private accService = inject(AccountService);
   private scopeService = inject(ScopeService);
   private tranService = inject(TransactionService);
   private dialog = inject(MatDialog);
   private authService = inject(AuthService);
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Transaction, public dialogRef: MatDialogRef<TransactionDialogComponent>) {
+    super();
+  }
 
   ngOnInit(): void {
     this.type = this.data.type;
