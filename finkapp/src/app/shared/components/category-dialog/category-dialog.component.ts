@@ -24,12 +24,10 @@ export class CategoryDialogComponent implements OnInit {
 
   category?: Category;
 
-  public dialogRef = inject(MatDialogRef<CategoryDialogComponent>);
-  @Inject(MAT_DIALOG_DATA) public data: CategoryDialogDataModel;
   public scopeService = inject(ScopeService);
   public snackbar = inject(MatSnackBar);
 
-  constructor() {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: CategoryDialogDataModel, private dialogRef: MatDialogRef<CategoryDialogComponent>) {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required]),
       icon: new FormControl('more_horiz', [Validators.required]),
