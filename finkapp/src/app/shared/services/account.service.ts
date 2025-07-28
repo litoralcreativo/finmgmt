@@ -12,6 +12,7 @@ import {
   TransactionResponse,
 } from '../models/transaction.model';
 import { AuthService } from './auth.service';
+import { generateFilterKV } from '../utils/query.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -155,17 +156,6 @@ function generateSspKV(
   return result;
 }
 
-function generateFilterKV<T>(
-  filter: Partial<{
-    [P in keyof T]: string;
-  }>
-): { key: string; value: string }[] {
-  const result: { key: string; value: string }[] = [];
-  Object.entries<any>(filter).forEach(([key, value]) => {
-    if (value) result.push({ key: key, value: value ?? '' });
-  });
-  return result;
-}
 
 function generateQuery(
   kv: { key: string; value: string }[]

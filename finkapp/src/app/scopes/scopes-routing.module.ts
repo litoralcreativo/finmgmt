@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ScopeComponent } from './scope/scope.component';
 import { ScopesComponent } from './scopes.component';
+import { ScopeHistoryComponent } from './scope-history/scope-history.component';
 
 const routes: Routes = [
   {
@@ -10,7 +11,12 @@ const routes: Routes = [
   },
   {
     path: ':scopeId',
-    component: ScopeComponent,
+    component: ScopeComponent
+  },
+  {
+    path: ':scopeId/history',
+    component: ScopeHistoryComponent,
+    data: { breadcrumb: 'History' },
   },
 ];
 

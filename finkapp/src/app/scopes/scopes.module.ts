@@ -8,6 +8,7 @@ import { ScopeListComponent } from './scope-list/scope-list.component';
 import { ScopeCardComponent } from './scope-card/scope-card.component';
 import { ScopeManagmentDialogComponent } from './scope-managment-dialog/scope-managment-dialog.component';
 import { ScopeComponent } from './scope/scope.component';
+import { ScopeHistoryComponent } from './scope-history/scope-history.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { ScopeComponent } from './scope/scope.component';
     ScopeCardComponent,
     ScopeManagmentDialogComponent,
     ScopeComponent,
+    ScopeHistoryComponent,
   ],
   imports: [CommonModule, ScopesRoutingModule, SharedModule],
 })

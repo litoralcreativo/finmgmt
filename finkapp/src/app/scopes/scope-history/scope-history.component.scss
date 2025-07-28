@@ -1,0 +1,49 @@
+@use "@angular/material" as mat;
+@use "m3-theme" as m3;
+
+::ng-deep mat-card.transactions-list-container {
+  mat-card-header {
+    position: sticky;
+    top: 64px;
+    background-color: mat.get-theme-color(m3.$light-theme, neutral-variant, 99);
+    z-index: 99;
+    > .mat-mdc-card-header-text {
+      width: 100%;
+
+      .transactions-search-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        .category-selector {
+          color: mat.get-theme-color(m3.$light-theme, primary, 50);
+        }
+        margin: 1rem 0;
+        width: 100%;
+        mat-form-field {
+          width: 100%;
+          .mat-mdc-form-field-subscript-wrapper {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .history-paginator {
+    border-radius: var(--mdc-elevated-card-container-shape);
+  }
+}
+::ng-deep.no-elevation {
+  box-shadow: none;
+
+  mat-card-header {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .mat-mdc-card-content {
+    padding: 0;
+  }
+} 

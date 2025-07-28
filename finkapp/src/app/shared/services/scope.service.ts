@@ -8,8 +8,9 @@ import { Category } from '../models/category.model';
 import { Scope, ScopeDTO, ScopeResponse } from '../models/scope.model';
 import { TransactionResponse } from '../models/transaction.model';
 import { AuthService } from './auth.service';
-import { SspResponse } from '../models/sspdata.model';
-import { generateQuery } from 'src/app/shared/utils/query.utils';
+import { SspPayload, SspResponse } from '../models/sspdata.model';
+import { TransactionFilterRequest } from '../models/transaction.model';
+import { generateQuery, generateSspKV, generateFilterKV } from 'src/app/shared/utils/query.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -110,6 +111,27 @@ export class ScopeService {
 
     return this.http.get<SspResponse<TransactionResponse>>(
       routes.scopes.transactions(scopeId, query),
+      { withCredentials: true }
+    );
+  }
+
+  getScopeTransactions(
+    scopeId: string,
+    ssp?: SspPayload<TransactionResponse>,
+    filter?: Partial<{
+      [P in keyof TransactionFilterRequest]: string;
+    }>
+  ): Observable<SspResponse<TransactionResponse>> {
+    const kv: { key: string; value: string }[] = [];
+    if (ssp) {
+      kv.push(...generateSspKV(ssp));
+    }
+    if (filter) {
+      kv.push(...generateFilterKV(filter));
+    }
+
+    return this.http.get<SspResponse<TransactionResponse>>(
+      routes.scopes.transactions(scopeId, generateQuery(kv)),
       { withCredentials: true }
     );
   }
