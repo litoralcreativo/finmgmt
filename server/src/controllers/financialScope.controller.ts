@@ -178,7 +178,7 @@ export const updateCategoryForScope = (req: Request, res: Response) => {
 export const getTransactionsByScopeId = (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { year, month, page, pageSize, description, category } = req.query;
+    const { year, month, page, pageSize, description, category, user_id } = req.query;
     let from: Date = new Date();
     let to: Date = new Date();
 
@@ -214,6 +214,10 @@ export const getTransactionsByScopeId = (req: Request, res: Response) => {
 
     if (typeof category === "string") {
       filter["scope.category.name"] = category;
+    }
+
+    if (typeof user_id === "string" && user_id.length > 0) {
+      filter["user_id"] = user_id;
     }
 
     let dateDirection: SortDirection = -1;

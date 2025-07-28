@@ -172,8 +172,9 @@ export class IncomingTransaction extends Transaction {
 export interface TransactionFilterRequest {
   description: string;
   category: string;
-  year: number;
-  month: number;
+  year?: number;
+  month?: number;
+  user_id?: string;
 };
 
 export interface TransactionResponse {

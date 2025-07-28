@@ -29,6 +29,15 @@
         <input matInput title="search" formControlName="description" />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>User</mat-label>
+        <mat-select formControlName="user_id">
+          <mat-option value="">All users</mat-option>
+          <mat-option *ngFor="let user of users" [value]="user.id">
+            {{ user.name.first }} {{ user.name.last }} ({{ user.email }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>

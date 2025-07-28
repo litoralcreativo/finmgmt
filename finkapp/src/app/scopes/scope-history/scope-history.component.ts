@@ -11,6 +11,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Category } from 'src/app/shared/models/category.model';
 import { debounceTime, distinctUntilChanged, tap, map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { PublicUserData } from 'src/app/shared/models/userdata.model';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-scope-history',
@@ -26,7 +28,9 @@ export class ScopeHistoryComponent implements OnInit {
   searchFormGroup: FormGroup = new FormGroup({
     category: new FormControl(''),
     description: new FormControl(''),
+    user_id: new FormControl(''),
   });
+  users: PublicUserData[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   filtering = false;
@@ -42,7 +46,8 @@ export class ScopeHistoryComponent implements OnInit {
     private aRoute: ActivatedRoute,
     private scopeService: ScopeService,
     private cdr: ChangeDetectorRef,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +97,27 @@ export class ScopeHistoryComponent implements OnInit {
         if (!this.scope) {
           this.scopeService
             .getById(this.scopeId)
-            .subscribe((x) => (this.scope = x));
+            .subscribe((x) => {
+              this.scope = x;
+              // Poblar usuarios del scope si existen
+              if (x.data.users) {
+                this.users = [];
+                x.data.users.forEach((userId: string) => {
+                  let user = this.authService.commonUsersData.get(userId);
+                  if (user) {
+                    this.users.push(user as PublicUserData);
+                  } else {
+                    this.authService.getForeingUserData(userId).subscribe(() => {
+                      const loadedUser = this.authService.commonUsersData.get(userId);
+                      if (loadedUser) {
+                        this.users = [...this.users, loadedUser as PublicUserData];
+                        this.cdr.detectChanges();
+                      }
+                    });
+                  }
+                });
+              }
+            });
         }
       });
 
@@ -104,24 +129,28 @@ export class ScopeHistoryComponent implements OnInit {
         distinctUntilChanged((a, b) => {
           return (
             a.description === b.description &&
-            a.category?.name === b.category?.name
+            a.category?.name === b.category?.name &&
+            a.user_id === b.user_id
           );
         })
       )
       .subscribe((res) => {
-        this.updateQueryParam(res.description, res.category?.name);
+        this.updateQueryParam(res.description, res.category?.name, res.user_id);
       });
   }
 
-  updateQueryParam(description?: string, category?: string) {
+  updateQueryParam(description?: string, category?: string, user_id?: string) {
     if (!description || description === '') {
       description = undefined;
     }
     if (!category || category === '') {
       category = undefined;
     }
+    if (!user_id || user_id === '') {
+      user_id = undefined;
+    }
     this.router.navigate([], {
-      queryParams: { description: description, category: category },
+      queryParams: { description: description, category: category, user_id: user_id },
       queryParamsHandling: 'merge',
     });
   }
@@ -131,11 +160,12 @@ export class ScopeHistoryComponent implements OnInit {
 
     this.fetching = true;
     this.searchFormGroup.controls['description'].disable({ emitEvent: false });
-    // Agregar year y month al filtro, como string
+    // Agregar year, month y user_id al filtro, como string
     const filterWithDate = {
       ...this.filter,
       year: this.year?.toString(),
       month: this.month?.toString(),
+      user_id: this.searchFormGroup.get('user_id')?.value || undefined,
     };
     console.log(filterWithDate);
     
