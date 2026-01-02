@@ -9,6 +9,7 @@ import {
   getScopeById,
   updateCategoryForScope,
   getTransactionsByScopeId,
+  generateMonthlyReport, // Nueva importación
 } from "./financialScope.controller";
 
 const router = express.Router();
@@ -20,5 +21,8 @@ router.get("/:id/categories", getScopeAmountsByCategory);
 router.get("/:id/transactions", validatePagination, getTransactionsByScopeId);
 router.post("/:id/category", createCategoryForScope);
 router.patch("/:id/category/:catname", updateCategoryForScope);
+
+// Nueva ruta para generar reportes mensuales
+router.get("/:id/report/monthly", requireAuth, generateMonthlyReport);
 
 export { router };
