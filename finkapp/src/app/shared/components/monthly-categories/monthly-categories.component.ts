@@ -21,7 +21,8 @@ import { ReportService } from '../../services/report.service';
 export class MonthlyCategoriesComponent implements OnChanges {
   @Input() donutData: MonthlyAcumulator;
   @Input() colorTheme = '#3878c8';
-  @Input() scopeId: string; // Nuevo input para el ID del scope
+  @Input() scopeId: string; // ID del scope
+  @Input() scopeName: string; // Nombre del scope para el archivo
 
   year = 1950;
   month = 0;
@@ -131,9 +132,18 @@ export class MonthlyCategoriesComponent implements OnChanges {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `reporte-mensual-${year}-${(month + 1)
+
+    // Usar el nombre del scope si está disponible, sino usar el ID
+    const scopeName = this.scopeName || this.scopeId || 'scope';
+    const cleanScopeName = scopeName
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '-') // Reemplazar caracteres especiales con guiones
+      .replace(/-+/g, '-') // Reemplazar múltiples guiones con uno solo
+      .replace(/^-|-$/g, ''); // Quitar guiones al inicio y final
+
+    link.download = `${cleanScopeName}-${(month + 1)
       .toString()
-      .padStart(2, '0')}.pdf`;
+      .padStart(2, '0')}-${year}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
