@@ -1,9 +1,10 @@
-import { Db } from "mongodb";
+import { Db, ObjectId } from "mongodb";
 import { Observable, from, throwError, forkJoin } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
 import { FinancialScopeService } from "./financialScope.service";
 import { TransactionService } from "./transaction.service";
 import { UserService } from "./user.service";
+import { AccountService } from "./account.service";
 import { FinancialScope } from "../models/financialScope.model";
 import { Transaction } from "../models/transaction.model";
 import { User } from "../models/user.model";
@@ -15,6 +16,7 @@ interface MonthlyReportData {
   transactions: Transaction[];
   categoryAmounts: Array<{ _id: { name: string }; total: number }>;
   users: Map<string, User>; // Mapa de user_id -> User para acceso rápido
+  accountSymbols: Map<string, string>; // Mapa de account_id -> symbol
   period: {
     year: number;
     month: number;
@@ -30,11 +32,13 @@ export class ReportService {
   private financialScopeService: FinancialScopeService;
   private transactionService: TransactionService;
   private userService: UserService;
+  private accountService: AccountService;
 
   constructor(private db: Db) {
     this.financialScopeService = new FinancialScopeService(db);
     this.transactionService = new TransactionService(db);
     this.userService = new UserService(db);
+    this.accountService = new AccountService(db);
   }
 
   generateMonthlyReport(
@@ -58,7 +62,7 @@ export class ReportService {
     scopeId: string,
     year: number,
     month: number
-  ): Observable<MonthlyReportData> {
+  ): Observable<MonthlyReportData & { accountSymbols: Map<string, string> }> {
     const from = new Date(year, month);
     const to = new Date(year, month + 1);
     to.setMinutes(to.getMinutes() - 1);
@@ -80,22 +84,41 @@ export class ReportService {
           )
           .pipe(
             mergeMap((transactions) => {
-              // Obtener IDs únicos de usuarios de las transacciones
               const userIds = [
                 ...new Set(transactions.elements.map((t) => t.user_id)),
               ];
+              const accountIds = [
+                ...new Set(transactions.elements.map((t) => t.account_id)),
+              ];
+              const objectAccountIds = accountIds.map((id) => new ObjectId(id));
+              const accounts$ = this.accountService.getAll(undefined, {
+                _id: { $in: objectAccountIds },
+              });
 
               // Si no hay transacciones o es un scope personal, no necesitamos usuarios
               if (userIds.length === 0 || !scope.shared) {
-                return this.transactionService
-                  .getCategoryAmountsByScope(scopeId, { from, to })
-                  .pipe(
-                    map(
-                      (categoryAmounts): MonthlyReportData => ({
+                return forkJoin([
+                  accounts$,
+                  this.transactionService.getCategoryAmountsByScope(scopeId, {
+                    from,
+                    to,
+                  }),
+                ]).pipe(
+                  map(
+                    ([accountsResult, categoryAmounts]): MonthlyReportData => {
+                      const accountSymbols = new Map<string, string>();
+                      (accountsResult.elements || accountsResult).forEach(
+                        (acc: any) => {
+                          accountSymbols.set(acc._id.toString(), acc.symbol);
+                        }
+                      );
+
+                      return {
                         scope,
                         transactions: transactions.elements,
                         categoryAmounts,
                         users: new Map(), // Mapa vacío para scopes personales
+                        accountSymbols,
                         period: { year, month, from, to },
                         totalTransactions: transactions.elements.length,
                         totalIncome: transactions.elements
@@ -106,9 +129,10 @@ export class ReportService {
                             .filter((t) => t.amount < 0)
                             .reduce((sum, t) => sum + t.amount, 0)
                         ),
-                      })
-                    )
-                  );
+                      };
+                    }
+                  )
+                );
               }
 
               // Para scopes compartidos, obtener información de usuarios
@@ -126,28 +150,40 @@ export class ReportService {
                     }
                   });
 
-                  return this.transactionService
-                    .getCategoryAmountsByScope(scopeId, { from, to })
-                    .pipe(
-                      map(
-                        (categoryAmounts): MonthlyReportData => ({
-                          scope,
-                          transactions: transactions.elements,
-                          categoryAmounts,
-                          users: userMap,
-                          period: { year, month, from, to },
-                          totalTransactions: transactions.elements.length,
-                          totalIncome: transactions.elements
-                            .filter((t) => t.amount > 0)
-                            .reduce((sum, t) => sum + t.amount, 0),
-                          totalExpenses: Math.abs(
-                            transactions.elements
-                              .filter((t) => t.amount < 0)
-                              .reduce((sum, t) => sum + t.amount, 0)
-                          ),
-                        })
-                      )
-                    );
+                  return accounts$.pipe(
+                    mergeMap((accountsResult: any) => {
+                      const accountSymbols = new Map<string, string>();
+                      (accountsResult.elements || accountsResult).forEach(
+                        (acc: any) => {
+                          accountSymbols.set(acc._id.toString(), acc.symbol);
+                        }
+                      );
+
+                      return this.transactionService
+                        .getCategoryAmountsByScope(scopeId, { from, to })
+                        .pipe(
+                          map(
+                            (categoryAmounts): MonthlyReportData => ({
+                              scope,
+                              transactions: transactions.elements,
+                              categoryAmounts,
+                              users: userMap,
+                              accountSymbols,
+                              period: { year, month, from, to },
+                              totalTransactions: transactions.elements.length,
+                              totalIncome: transactions.elements
+                                .filter((t) => t.amount > 0)
+                                .reduce((sum, t) => sum + t.amount, 0),
+                              totalExpenses: Math.abs(
+                                transactions.elements
+                                  .filter((t) => t.amount < 0)
+                                  .reduce((sum, t) => sum + t.amount, 0)
+                              ),
+                            })
+                          )
+                        );
+                    })
+                  );
                 })
               );
             })
@@ -257,89 +293,209 @@ export class ReportService {
         doc.moveDown(0.5);
 
         const summaryLeftMargin = 80;
-        const summaryWidth = 400;
+        const resumenRowHeight = 18;
+        // Obtener todos los símbolos únicos presentes en ingresos, gastos o transacciones
+        const resumenSymbols = Array.from(
+          new Set([
+            ...data.transactions.map(
+              (t) => data.accountSymbols.get(t.account_id) || ""
+            ),
+          ])
+        ).filter(Boolean);
+        // Definir columnas: primera columna fija, luego una por símbolo
+        const resumenColWidths = [180, ...resumenSymbols.map(() => 90)];
+        const resumenStartX = summaryLeftMargin;
+        let resumenTableY = doc.y;
 
-        doc
-          .fontSize(12)
-          .text("Total de Ingresos:", summaryLeftMargin)
-          .fillColor(colors.income)
-          .text(
-            `$${formatCurrency(data.totalIncome)}`,
-            summaryLeftMargin,
-            doc.y - 14,
+        // Header
+        doc.fontSize(11).font("Helvetica-Bold");
+        doc.text("", resumenStartX, resumenTableY, {
+          width: resumenColWidths[0],
+        });
+        resumenSymbols.forEach((symbol, i) => {
+          doc.text(
+            symbol,
+            resumenStartX +
+              resumenColWidths.slice(0, i + 1).reduce((a, b) => a + b, 0),
+            resumenTableY,
             {
+              width: resumenColWidths[i + 1],
               align: "right",
-              width: summaryWidth,
             }
-          )
-          .fillColor(colors.black)
-          .text("Total de Gastos:", summaryLeftMargin)
-          .fillColor(colors.expense)
-          .text(
-            `$${formatCurrency(data.totalExpenses * -1)}`,
-            summaryLeftMargin,
-            doc.y - 14,
-            {
-              align: "right",
-              width: summaryWidth,
-            }
-          )
-          .fillColor(colors.black)
-          .text("Balance:", summaryLeftMargin)
-          .fillColor(
-            data.totalIncome - data.totalExpenses >= 0
-              ? colors.income
-              : colors.expense
-          )
-          .text(
-            `$${formatCurrency(data.totalIncome - data.totalExpenses)}`,
-            summaryLeftMargin,
-            doc.y - 14,
-            {
-              align: "right",
-              width: summaryWidth,
-            }
-          )
-          .fillColor(colors.black)
-          .text("Total de Transacciones:", summaryLeftMargin)
-          .text(`${data.totalTransactions}`, summaryLeftMargin, doc.y - 14, {
-            align: "right",
-            width: summaryWidth,
+          );
+        });
+        resumenTableY += resumenRowHeight;
+        doc.font("Helvetica");
+
+        // Helper para obtener valores por símbolo
+        // Ingresos por símbolo
+        const incomeBySymbol = new Map<string, number>();
+        // Gastos por símbolo
+        const expenseBySymbol = new Map<string, number>();
+        // Balance por símbolo
+        const balanceBySymbol = new Map<string, number>();
+        // Transacciones por símbolo
+        const transCountBySymbol = new Map<string, number>();
+        data.transactions.forEach((t) => {
+          const symbol = data.accountSymbols.get(t.account_id) || "";
+          if (!resumenSymbols.includes(symbol)) return;
+          if (t.amount > 0) {
+            incomeBySymbol.set(
+              symbol,
+              (incomeBySymbol.get(symbol) || 0) + t.amount
+            );
+          } else if (t.amount < 0) {
+            expenseBySymbol.set(
+              symbol,
+              (expenseBySymbol.get(symbol) || 0) + t.amount
+            );
+          }
+          transCountBySymbol.set(
+            symbol,
+            (transCountBySymbol.get(symbol) || 0) + 1
+          );
+        });
+        resumenSymbols.forEach((symbol) => {
+          balanceBySymbol.set(
+            symbol,
+            (incomeBySymbol.get(symbol) || 0) +
+              (expenseBySymbol.get(symbol) || 0)
+          );
+        });
+
+        // Filas: nombre, valores por símbolo
+        const resumenRows = [
+          {
+            label: "Total de Ingresos",
+            map: incomeBySymbol,
+            color: colors.income,
+          },
+          {
+            label: "Total de Gastos",
+            map: expenseBySymbol,
+            color: colors.expense,
+          },
+          { label: "Balance", map: balanceBySymbol, color: null },
+          {
+            label: "Total de Transacciones",
+            map: transCountBySymbol,
+            color: null,
+            isCount: true,
+          },
+        ];
+        resumenRows.forEach((row, idx) => {
+          doc.fontSize(11).font("Helvetica").fillColor(colors.black);
+          doc.text(row.label, resumenStartX, resumenTableY, {
+            width: resumenColWidths[0],
           });
+          resumenSymbols.forEach((symbol, i) => {
+            let value = row.map.get(symbol) || 0;
+            let text = row.isCount ? value.toString() : formatCurrency(value);
+            let color = row.color;
+            if (row.label === "Balance") {
+              color = value >= 0 ? colors.income : colors.expense;
+            }
+            const cellX =
+              resumenStartX +
+              resumenColWidths.slice(0, i + 1).reduce((a, b) => a + b, 0);
+            doc
+              .fillColor(color || colors.black)
+              .text(text, cellX, resumenTableY, {
+                width: resumenColWidths[i + 1],
+                align: "right",
+              })
+              .fillColor(colors.black);
+          });
+          resumenTableY += resumenRowHeight;
+          // Dibujar línea después de Total de Gastos
+          if (row.label === "Total de Gastos") {
+            doc
+              .moveTo(resumenStartX, resumenTableY - 4)
+              .lineTo(
+                resumenStartX + resumenColWidths.reduce((a, b) => a + b, 0),
+                resumenTableY - 4
+              )
+              .lineWidth(1)
+              .strokeColor("#888888")
+              .stroke()
+              .strokeColor(colors.black)
+              .lineWidth(0.5);
+          }
+        });
+        doc.y = resumenTableY + 8;
+        doc.moveDown(1);
 
-        doc.moveDown(2);
-
-        // Gastos por categoría
+        // Gastos por categoría en formato tabla
         if (data.categoryAmounts.length > 0) {
           doc.fontSize(14);
           doc.text("Gastos por Categoría:", 50, doc.y, { underline: true });
           doc.moveDown(0.5);
 
-          const categoryLeftMargin = 80;
-          const categoryWidth = 400;
+          const catStartX = summaryLeftMargin;
+          const catRowHeight = 18;
+          const catColWidths = [180, ...resumenSymbols.map(() => 90)];
+          let catTableY = doc.y;
 
+          // Header
+          doc.fontSize(11).font("Helvetica-Bold");
+          doc.text("", catStartX, catTableY, { width: catColWidths[0] });
+          resumenSymbols.forEach((symbol, i) => {
+            doc.text(
+              symbol,
+              catStartX +
+                catColWidths.slice(0, i + 1).reduce((a, b) => a + b, 0),
+              catTableY,
+              {
+                width: catColWidths[i + 1],
+                align: "right",
+              }
+            );
+          });
+          catTableY += catRowHeight;
+          doc.font("Helvetica");
+
+          // Filas por categoría
           data.categoryAmounts
             .sort((a, b) => a.total - b.total)
             .forEach((cat) => {
               if (cat.total < 0) {
-                doc
-                  .fontSize(12)
-                  .text(`${cat._id.name}:`, categoryLeftMargin)
-                  .fillColor(colors.expense)
-                  .text(
-                    `$${formatCurrency(Math.abs(cat.total))}`,
-                    categoryLeftMargin,
-                    doc.y - 14,
-                    {
-                      align: "right",
-                      width: categoryWidth,
-                    }
-                  )
-                  .fillColor(colors.black);
+                doc.fontSize(11).fillColor(colors.black);
+                doc.text(cat._id.name, catStartX, catTableY, {
+                  width: catColWidths[0],
+                });
+                // Agrupar por símbolo de moneda y sumar
+                const transaccionesCat = data.transactions.filter(
+                  (t) =>
+                    t.amount < 0 && t.scope?.category?.name === cat._id.name
+                );
+                const symbolTotals = new Map<string, number>();
+                transaccionesCat.forEach((t) => {
+                  const symbol = data.accountSymbols.get(t.account_id) || "";
+                  symbolTotals.set(
+                    symbol,
+                    (symbolTotals.get(symbol) || 0) + Math.abs(t.amount)
+                  );
+                });
+                resumenSymbols.forEach((symbol, i) => {
+                  const value = symbolTotals.get(symbol) || 0;
+                  const cellX =
+                    catStartX +
+                    catColWidths.slice(0, i + 1).reduce((a, b) => a + b, 0);
+                  doc
+                    .fillColor(colors.expense)
+                    .text(
+                      value ? formatCurrency(value) : "-",
+                      cellX,
+                      catTableY,
+                      { width: catColWidths[i + 1], align: "right" }
+                    )
+                    .fillColor(colors.black);
+                });
+                catTableY += catRowHeight;
               }
             });
-
-          doc.moveDown(2);
+          doc.y = catTableY + 8;
+          doc.moveDown(1);
         }
 
         // Lista de transacciones
@@ -354,6 +510,7 @@ export class ReportService {
         const descriptionWidth = data.scope.shared ? 140 : 180; // Menos espacio para descripción si hay usuario
         const userWidth = data.scope.shared ? 60 : 0; // Solo mostrar columna de usuario si es compartido
         const amountWidth = 80;
+        const currencyWidth = 50; // Ancho para la columna de moneda
 
         const currentY = doc.y;
 
@@ -383,6 +540,19 @@ export class ReportService {
           { align: "right", width: amountWidth }
         );
 
+        // Nueva columna para la moneda
+        doc.text(
+          "Moneda",
+          leftMargin +
+            dateWidth +
+            categoryWidth +
+            descriptionWidth +
+            userWidth +
+            amountWidth,
+          currentY,
+          { align: "right", width: currencyWidth }
+        );
+
         doc.moveDown(0.3);
 
         // Línea separadora
@@ -394,7 +564,8 @@ export class ReportService {
               categoryWidth +
               descriptionWidth +
               userWidth +
-              amountWidth,
+              amountWidth +
+              currencyWidth,
             doc.y
           )
           .stroke();
@@ -413,8 +584,8 @@ export class ReportService {
               : transaction.description;
           const amount =
             transaction.amount > 0
-              ? `+$${formatCurrency(transaction.amount)}`
-              : `-$${formatCurrency(Math.abs(transaction.amount))}`;
+              ? `+ ${formatCurrency(transaction.amount)}`
+              : `- ${formatCurrency(Math.abs(transaction.amount))}`;
 
           // Obtener el nombre del usuario si es un scope compartido
           const userDisplay = data.scope.shared
@@ -466,6 +637,26 @@ export class ReportService {
               { align: "right", width: amountWidth }
             )
             .fillColor(colors.black); // Restaurar color negro para la siguiente iteración
+
+          // Mostrar el símbolo de la moneda con espacio extra
+          const currencySymbol =
+            data.accountSymbols.get(transaction.account_id) || "";
+          const currencyOffset = 10; // Espacio en px entre amount y currency
+          doc
+            .fillColor(textColor)
+            .text(
+              currencySymbol,
+              leftMargin +
+                dateWidth +
+                categoryWidth +
+                descriptionWidth +
+                userWidth +
+                amountWidth +
+                currencyOffset,
+              currentY,
+              { align: "left", width: currencyWidth }
+            )
+            .fillColor(colors.black);
 
           doc.moveDown(0.4);
 
@@ -572,6 +763,7 @@ export class ReportService {
         }
 
         columns.push({ header: "Monto", key: "amount", width: 15 });
+        columns.push({ header: "Moneda", key: "currency", width: 10 }); // Nueva columna para moneda
 
         transactionsSheet.columns = columns;
 
@@ -592,6 +784,11 @@ export class ReportService {
               rowData.user = transaction.user_id.substring(0, 3).toUpperCase();
             }
           }
+
+          // Agregar símbolo de moneda
+          const currencySymbol =
+            data.accountSymbols.get(transaction.account_id) || "";
+          rowData.currency = currencySymbol;
 
           transactionsSheet.addRow(rowData);
         });
