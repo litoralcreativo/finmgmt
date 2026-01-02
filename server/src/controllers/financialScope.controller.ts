@@ -17,15 +17,18 @@ import {
 import { FinancialScopeService } from "../services/financialScope.service";
 import { TransactionService } from "../services/transaction.service";
 import { Transaction } from "../models/transaction.model";
+import { ReportService } from "../services/report.service";
 
 let financialScope: FinancialScopeService;
-DbManager.getInstance().subscribe((x) => {
-  if (x) financialScope = new FinancialScopeService(x);
-});
-
 let transactionService: TransactionService;
+let reportService: ReportService;
+
 DbManager.getInstance().subscribe((x) => {
-  if (x) transactionService = new TransactionService(x);
+  if (x) {
+    financialScope = new FinancialScopeService(x);
+    transactionService = new TransactionService(x);
+    reportService = new ReportService(x);
+  }
 });
 
 export const getAllScope = (req: Request, res: Response) => {
@@ -178,7 +181,8 @@ export const updateCategoryForScope = (req: Request, res: Response) => {
 export const getTransactionsByScopeId = (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { year, month, page, pageSize, description, category, user_id } = req.query;
+    const { year, month, page, pageSize, description, category, user_id } =
+      req.query;
     let from: Date = new Date();
     let to: Date = new Date();
 
@@ -244,6 +248,91 @@ export const getTransactionsByScopeId = (req: Request, res: Response) => {
 
     res.status(500).json({
       ...new ResponseStrategy(500, "Internal server error"),
+    });
+  }
+};
+
+export const generateMonthlyReport = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // scope id
+    const { year, month, format = "pdf" } = req.query;
+    const userId = (req?.user as any).id;
+
+    // Validaciones de fecha
+    const intYear = parseInt(year as string);
+    if (!year || isNaN(intYear) || intYear < 1900 || intYear > 2100) {
+      return res.status(400).json({
+        ...new ResponseStrategy(400, "Invalid year parameter"),
+      });
+    }
+
+    const intMonth = parseInt(month as string);
+    if (
+      month === undefined ||
+      isNaN(intMonth) ||
+      intMonth < 0 ||
+      intMonth > 11
+    ) {
+      return res.status(400).json({
+        ...new ResponseStrategy(400, "Invalid month parameter (0-11)"),
+      });
+    }
+
+    // Verificar que el usuario tenga acceso al scope
+    const scope = await financialScope.getById(id).toPromise();
+    if (!scope || !scope.users.includes(userId)) {
+      return res.status(403).json({
+        ...new ResponseStrategy(403, "Access denied to this scope"),
+      });
+    }
+
+    // Validar formato
+    if (format !== "pdf" && format !== "excel") {
+      return res.status(400).json({
+        ...new ResponseStrategy(400, "Invalid format. Use 'pdf' or 'excel'"),
+      });
+    }
+
+    // Generar el reporte
+    const reportBuffer = await reportService
+      .generateMonthlyReport(id, intYear, intMonth, format as "pdf" | "excel")
+      .toPromise();
+
+    if (!reportBuffer) {
+      return res.status(500).json({
+        ...new ResponseStrategy(500, "Failed to generate report"),
+      });
+    }
+
+    // Configurar headers para descarga
+    const fileName = `reporte-${scope.name}-${intYear}-${String(
+      intMonth + 1
+    ).padStart(2, "0")}.${format}`;
+    const contentType =
+      format === "pdf"
+        ? "application/pdf"
+        : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+    res.setHeader("Content-Type", contentType);
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+    res.setHeader("Content-Length", reportBuffer.length);
+
+    res.send(reportBuffer);
+  } catch (error) {
+    console.error("Error generating monthly report:", error);
+
+    if (error instanceof TypeError) {
+      res.status(400).json({
+        ...new ResponseStrategy(400, error.message),
+      });
+      return;
+    }
+
+    res.status(500).json({
+      ...new ResponseStrategy(
+        500,
+        "Internal server error while generating report"
+      ),
     });
   }
 };

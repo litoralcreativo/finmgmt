@@ -5,38 +5,6 @@
         <mat-icon>chevron_left</mat-icon> BACK TO SCOPES
       </button>
     </div>
-    <!-- <div class="grid-area grid-center-left">
-      <app-scope-card
-        *ngIf="!fetchingScope; else fetchingScopeCard"
-        [scope]="scope"
-        [ripple]="false"
-      ></app-scope-card>
-    </div>
-    <div class="grid-area grid-center-right">
-      <mat-card>
-        <mat-card-content>
-          <mat-chip-set class="categories-list">
-            @for (category of scopeCategories; track category) {
-            <mat-chip
-              [class.non-selected]="category.includedInGraph"
-              [class.selected]="category.selected"
-              [class.tertiary]="scope.data.shared"
-            >
-              <div class="chip-content">
-                <mat-icon> {{ category.icon }}</mat-icon>
-                <span>{{ category.name }}</span>
-              </div>
-            </mat-chip>
-            }
-          </mat-chip-set>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button class="maxwith" (click)="onAddCategoryBtnClick()">
-            <mat-icon>add</mat-icon> NEW CATEGORY
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div> -->
     <div class="grid-area grid-left">
       <app-scope-card
         *ngIf="!fetchingScope; else fetchingScopeCard"
@@ -72,6 +40,8 @@
       <app-monthly-categories
         [donutData]="donutData"
         [colorTheme]="colorTheme"
+        [scopeName]="scope.data.name"
+        [scopeId]="scopeId"
         (go)="onMonthlyAccumulatorNav($event)"
         (categorySelected)="oncategorySelectedFromGraph($event)"
       ></app-monthly-categories>

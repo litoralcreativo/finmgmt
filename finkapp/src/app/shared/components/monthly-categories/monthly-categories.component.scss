@@ -1,11 +1,30 @@
 .month-picker {
-  padding: 1rem;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 0;
+
   .month-label {
-    flex-grow: 1;
+    min-width: 120px;
     text-align: center;
+    font-weight: 500;
+  }
+
+  .download-btn {
+    margin-left: 8px;
+
+    &:disabled {
+      opacity: 0.6;
+    }
+
+    mat-icon {
+      animation: spin 1s linear infinite;
+    }
+
+    &:not(:disabled) mat-icon {
+      animation: none;
+    }
   }
 }
 
@@ -19,4 +38,13 @@
 
 .progress-and-amount {
   width: 100%;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

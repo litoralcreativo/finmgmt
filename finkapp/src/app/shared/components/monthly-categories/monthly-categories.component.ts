@@ -2,7 +2,7 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,  
+  OnChanges,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -10,6 +10,8 @@ import {
   AcumulatorGroup,
   MonthlyAcumulator,
 } from '../../models/accumulator.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ReportService } from '../../services/report.service';
 
 @Component({
   selector: 'app-monthly-categories',
@@ -19,6 +21,8 @@ import {
 export class MonthlyCategoriesComponent implements OnChanges {
   @Input() donutData: MonthlyAcumulator;
   @Input() colorTheme = '#3878c8';
+  @Input() scopeId: string; // ID del scope
+  @Input() scopeName: string; // Nombre del scope para el archivo
 
   year = 1950;
   month = 0;
@@ -34,6 +38,12 @@ export class MonthlyCategoriesComponent implements OnChanges {
   firstDayOfMonth: Date;
   today = new Date();
   nextMonth: Date;
+  isDownloading = false;
+
+  constructor(
+    private snackBar: MatSnackBar,
+    private reportService: ReportService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     for (const propName in changes) {
@@ -84,5 +94,93 @@ export class MonthlyCategoriesComponent implements OnChanges {
 
   goToMonth(direction: -1 | 1) {
     this.go.emit(direction);
+  }
+
+  downloadMonthlyReport(): void {
+    if (this.isDownloading) return;
+
+    if (!this.scopeId) {
+      this.snackBar.open('Error: No se ha especificado el scope', 'Cerrar', {
+        duration: 3000,
+      });
+      return;
+    }
+
+    this.isDownloading = true;
+
+    // Extraer año y mes de la fecha actual
+    const year = this.firstDayOfMonth.getFullYear();
+    const month = this.firstDayOfMonth.getMonth();
+
+    console.log('Iniciando descarga de reporte mensual:', {
+      scopeId: this.scopeId,
+      year,
+      month,
+    });
+
+    // Llamada real al servicio de reportes
+    this.reportService
+      .downloadMonthlyReport(this.scopeId, year, month, 'pdf')
+      .subscribe({
+        next: (blob: Blob) => this.handleFileDownload(blob, year, month),
+        error: (error) => this.handleDownloadError(error),
+        complete: () => (this.isDownloading = false),
+      });
+  }
+
+  private handleFileDownload(blob: Blob, year: number, month: number): void {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Usar el nombre del scope si está disponible, sino usar el ID
+    const scopeName = this.scopeName || this.scopeId || 'scope';
+    const cleanScopeName = scopeName
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '-') // Reemplazar caracteres especiales con guiones
+      .replace(/-+/g, '-') // Reemplazar múltiples guiones con uno solo
+      .replace(/^-|-$/g, ''); // Quitar guiones al inicio y final
+
+    link.download = `${cleanScopeName}-${(month + 1)
+      .toString()
+      .padStart(2, '0')}-${year}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
+  private handleDownloadError(error: any): void {
+    console.error('Error al descargar reporte:', error);
+
+    let errorMessage = 'Error al generar el reporte. Inténtalo nuevamente.';
+
+    if (error.status === 403) {
+      errorMessage = 'No tienes permisos para generar este reporte.';
+    } else if (error.status === 400) {
+      errorMessage = 'Parámetros inválidos para la generación del reporte.';
+    } else if (error.status === 500) {
+      errorMessage = 'Error interno del servidor al generar el reporte.';
+    }
+
+    this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
+  }
+
+  private getMonthName(monthIndex: number): string {
+    const months = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
+    ];
+    return months[monthIndex];
   }
 }
