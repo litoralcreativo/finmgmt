@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit {
     this.authService
       .login(username, password)
       .subscribe(() => {
-        localStorage.setItem('lastLoginEmail', username);
         this.dialogRef.close('ok');
       })
       .add(() => this.updateFormDisableState());

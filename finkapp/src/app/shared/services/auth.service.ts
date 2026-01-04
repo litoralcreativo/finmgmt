@@ -50,7 +50,8 @@ export class AuthService {
       .pipe(
         switchMap((response) => {
           const token = (response as { token: string }).token;
-          if (token) localStorage.setItem('token', token);
+          if (token) sessionStorage.setItem('token', token);
+          localStorage.setItem('lastLoginEmail', username);
           this.authStatusListener.next(true);
           return this.userInfo().pipe(
             tap(() => {
@@ -69,7 +70,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     localStorage.removeItem('lastLoginEmail');
     this.authStatusListener.next(false);
     this.router.navigate(['/']);
@@ -100,7 +101,7 @@ export class AuthService {
     return this.http.get(routes.auth.reauth).subscribe({
       next: (res) => {
         const token = (res as { token: string }).token;
-        if (token) localStorage.setItem('token', token);
+        if (token) sessionStorage.setItem('token', token);
         this.authStatusListener.next(true);
       },
       complete: () => {
