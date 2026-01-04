@@ -44,7 +44,10 @@ export class SettingsComponent {
       );
       this.successMsg = 'Ingreso biométrico habilitado correctamente.';
     } catch (e: any) {
-      this.errorMsg = e?.message || 'Error al habilitar biometría.';
+      this.errorMsg =
+        e?.error?.msg || e?.message || 'Error al habilitar biometría.';
+      console.log(e);
+
       this.snackBar.open(this.errorMsg, 'Cerrar', { duration: 5000 });
     } finally {
       this.loading = false;
