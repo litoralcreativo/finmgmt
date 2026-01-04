@@ -230,7 +230,7 @@ export const webauthnRegisterResponse = async (req: Request, res: Response) => {
           .json(new ResponseStrategy(400, "Challenge no encontrado"));
       }
       // Validar que el flag userVerified esté presente
-      if (!attestationResponse?.response?.userVerified) {
+      /* if (!attestationResponse?.response?.userVerified) {
         return res
           .status(400)
           .json(
@@ -239,43 +239,51 @@ export const webauthnRegisterResponse = async (req: Request, res: Response) => {
               "El flag userVerified no está presente en la respuesta del dispositivo. El dispositivo o navegador podría no soportar verificación biométrica real."
             )
           );
-      }
+      } */
       // Validar respuesta de registro
-      const verification = await verifyAttestationResponse({
-        response: attestationResponse,
-        expectedChallenge,
-        expectedOrigin: process.env.WEBAUTHN_ORIGIN || "http://localhost:4200",
-        expectedRPID: process.env.WEBAUTHN_RPID || "localhost",
-      });
-      if (!verification.verified) {
-        return res
-          .status(400)
-          .json(new ResponseStrategy(400, "Registro biométrico inválido"));
-      }
-      // Guardar credencial en el usuario
-      const cred = verification.registrationInfo!.credential;
-      user.credentials.push({
-        credentialID: cred.id,
-        publicKey: Buffer.from(cred.publicKey).toString("base64url"),
-        counter: cred.counter,
-      });
-      // Limpiar challenge temporal en la base de datos
-      userService
-        .updateOneById(user._id, {
-          credentials: user.credentials,
-          webAuthnChallenge: undefined,
-        })
-        .subscribe({
-          next: () =>
-            res.json({
-              success: true,
-              message: "Credencial registrada correctamente",
-            }),
-          error: () =>
-            res
-              .status(500)
-              .json(new ResponseStrategy(500, "Error al guardar credencial")),
+      try {
+        const verification = await verifyAttestationResponse({
+          response: attestationResponse,
+          expectedChallenge,
+          expectedOrigin:
+            process.env.WEBAUTHN_ORIGIN || "http://localhost:4200",
+          expectedRPID: process.env.WEBAUTHN_RPID || "localhost",
         });
+        if (!verification.verified) {
+          return res
+            .status(400)
+            .json(new ResponseStrategy(400, "Registro biométrico inválido"));
+        }
+        // Guardar credencial en el usuario
+        const cred = verification.registrationInfo!.credential;
+        user.credentials.push({
+          credentialID: cred.id,
+          publicKey: Buffer.from(cred.publicKey).toString("base64url"),
+          counter: cred.counter,
+        });
+        // Limpiar challenge temporal en la base de datos
+        userService
+          .updateOneById(user._id, {
+            credentials: user.credentials,
+            webAuthnChallenge: undefined,
+          })
+          .subscribe({
+            next: () =>
+              res.json({
+                success: true,
+                message: "Credencial registrada correctamente",
+              }),
+            error: () =>
+              res
+                .status(500)
+                .json(new ResponseStrategy(500, "Error al guardar credencial")),
+          });
+      } catch (e) {
+        console.error(e);
+        res
+          .status(500)
+          .json(new ResponseStrategy(500, "Error al guardar credencial"));
+      }
     });
   } catch (error) {
     console.error(error);
