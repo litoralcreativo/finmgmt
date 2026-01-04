@@ -324,8 +324,18 @@ export const webauthnLoginRequest = async (req: Request, res: Response) => {
         })),
         userVerification: "preferred",
       });
-      (user as any)._currentChallenge = options.challenge;
-      return res.json({ options });
+      // Guardar challenge en la base de datos del usuario (igual que en registro)
+      userService
+        .updateOneById(user._id, { webAuthnChallenge: options.challenge })
+        .subscribe({
+          next: () => res.json({ options }),
+          error: () =>
+            res
+              .status(500)
+              .json(
+                new ResponseStrategy(500, "Error al guardar challenge de login")
+              ),
+        });
     });
   } catch (error) {
     console.error(error);
@@ -352,7 +362,8 @@ export const webauthnLoginResponse = async (req: Request, res: Response) => {
             new ResponseStrategy(404, "Usuario o credenciales no encontradas")
           );
       }
-      const expectedChallenge = (user as any)._currentChallenge;
+      // Obtener challenge guardado desde la base de datos
+      const expectedChallenge = (user as any).webAuthnChallenge;
       if (!expectedChallenge) {
         return res
           .status(400)
