@@ -256,6 +256,10 @@ export const webauthnRegisterResponse = async (req: Request, res: Response) => {
         }
         // Guardar credencial en el usuario
         const cred = verification.registrationInfo!.credential;
+        // Asegurar que user.credentials esté inicializado
+        if (!user.credentials) {
+          user.credentials = [];
+        }
         user.credentials.push({
           credentialID: cred.id,
           publicKey: Buffer.from(cred.publicKey).toString("base64url"),
