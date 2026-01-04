@@ -1,6 +1,24 @@
 <div class="settings-container">
-  <button mat-flat-button (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    Logout
-  </button>
+  <h2>Configuración de cuenta</h2>
+
+  <div class="features-container">
+    <button
+      mat-stroked-button
+      (click)="enableBiometric()"
+      [disabled]="loading"
+      color="secondary"
+    >
+      {{
+        loading ? "Habilitando biometría..." : "Habilitar ingreso biométrico"
+      }}
+    </button>
+
+    <div *ngIf="successMsg" class="success-msg">{{ successMsg }}</div>
+    <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
+
+    <button mat-flat-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </div>
 </div>

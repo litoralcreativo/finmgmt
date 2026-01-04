@@ -11,6 +11,10 @@ export const routes = {
     authenticated: `${environment.apiUrl}/auth/authenticated`,
     user: `${environment.apiUrl}/auth/user`,
     foreinguser: (id: string) => `${environment.apiUrl}/auth/foreinguser/${id}`,
+    webauthnRegisterRequest: `${environment.apiUrl}/auth/webauthn/register-request`,
+    webauthnRegisterResponse: `${environment.apiUrl}/auth/webauthn/register-response`,
+    webauthnLoginRequest: `${environment.apiUrl}/auth/webauthn/login-request`,
+    webauthnLoginResponse: `${environment.apiUrl}/auth/webauthn/login-response`,
   },
   currency: {
     mep: `${DOLAR_URL}/dolarrava/mep/variacion`,

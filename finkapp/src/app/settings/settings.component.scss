@@ -1,5 +1,10 @@
 .settings-container {
-  button {
-    width: 100%;
+  .features-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    button {
+      width: 100%;
+    }
   }
 }

@@ -14,6 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@simplewebauthn/server": "^13.2.2",
+    "@simplewebauthn/types": "^12.0.0",
+    "@simplewebauthn/typescript-types": "^8.3.4",
     "@types/mongodb": "^4.0.7",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
