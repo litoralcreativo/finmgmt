@@ -53,6 +53,7 @@ export class LoginComponent implements OnInit {
           this.lastLoginEmail!,
           assertionResponse
         );
+        this.router.navigate(['accounts']);
         this.dialogRef.close('ok');
         return;
       }
