@@ -110,4 +110,12 @@ export class WebauthnService {
       clientExtensionResults: cred.getClientExtensionResults?.() || {},
     };
   }
+
+  // Verificar disponibilidad de WebAuthn
+  public isWebAuthnAvailable(): boolean {
+    return !!(
+      window.PublicKeyCredential &&
+      typeof window.PublicKeyCredential === 'function'
+    );
+  }
 }
