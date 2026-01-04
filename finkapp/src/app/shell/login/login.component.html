@@ -1,7 +1,7 @@
 <h2 class="mat-h1" mat-dialog-title>Login</h2>
 
 <mat-dialog-content>
-  <form *ngIf="!showBiometricOnly" [formGroup]="form" class="login-form">
+  <form [formGroup]="form" class="login-form">
     <mat-form-field apperance="outline">
       <mat-label>Email</mat-label>
       <input
@@ -27,14 +27,6 @@
       </mat-error>
     </mat-form-field>
   </form>
-  <div *ngIf="canUseBiometrics" class="biometric-hint">
-    <mat-icon color="primary" style="vertical-align: middle"
-      >fingerprint</mat-icon
-    >
-    <span class="mat-caption"
-      >Puedes iniciar sesión con biometría si tu dispositivo lo permite.</span
-    >
-  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

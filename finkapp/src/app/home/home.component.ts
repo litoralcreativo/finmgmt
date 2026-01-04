@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { LoginComponent } from '../shell/login/login.component';
+import { WebauthnService } from '../shared/services/webauthn.service';
 
 @Component({
   selector: 'app-home',
@@ -13,12 +14,56 @@ export class HomeComponent implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
+  private webauthnService = inject(WebauthnService);
 
-  ngOnInit() {
-    if (this.auth.userData) this.router.navigate(['..']);
+  async ngOnInit() {
+    /* console.log(this.auth.userData.value);
+    if (this.auth.userData) {
+      this.router.navigate(['..']);
+      return;
+    } */
+
+    await this.loginBiometrico();
+  }
+
+  async loginBiometrico() {
+    // Intento de login biométrico automático
+
+    const lastLoginEmail = localStorage.getItem('lastLoginEmail');
+
+    if (lastLoginEmail && this.webauthnService.isWebAuthnAvailable()) {
+      try {
+        const { options } = await this.webauthnService.loginStart(
+          lastLoginEmail
+        );
+        const publicKey =
+          this.webauthnService.prepareCredentialRequestOptions(options);
+        const cred = await navigator.credentials.get({ publicKey });
+        if (cred) {
+          const assertionResponse =
+            this.webauthnService.formatAssertionResponse(cred);
+          await this.webauthnService.loginFinish(
+            lastLoginEmail,
+            assertionResponse
+          );
+          this.router.navigate(['accounts']);
+          return;
+        }
+      } catch (e) {
+        // Si falla biometría, mostrar login clásico
+        this.openLoginDialog();
+        return;
+      }
+    }
+    // Si no hay email guardado o no hay biometría, mostrar login clásico
+    this.openLoginDialog();
   }
 
   onGetStartedClick() {
+    this.openLoginDialog();
+  }
+
+  openLoginDialog() {
     this.dialog.open(LoginComponent, {
       width: '400px',
     });

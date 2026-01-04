@@ -70,6 +70,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('lastLoginEmail');
     this.authStatusListener.next(false);
     this.router.navigate(['/']);
     this.userData.next(undefined);
