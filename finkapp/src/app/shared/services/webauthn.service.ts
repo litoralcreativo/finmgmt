@@ -41,12 +41,18 @@ export class WebauthnService {
     );
   }
   async loginFinish(username: string, assertionResponse: any) {
-    return firstValueFrom(
+    const result = await firstValueFrom(
       this.http.post<any>(routes.auth.webauthnLoginResponse, {
         username,
         assertionResponse,
       })
     );
+    // Guardar token si viene en la respuesta
+    if (result && result.token) {
+      sessionStorage.setItem('token', result.token);
+      localStorage.setItem('lastLoginEmail', username);
+    }
+    return result;
   }
 
   // Adaptar opciones para navigator.credentials.create
