@@ -17,6 +17,13 @@ export class HomeComponent implements OnInit {
   private webauthnService = inject(WebauthnService);
 
   async ngOnInit() {
+    // Si ya hay token en sessionStorage, no hacer login biométrico ni mostrar login
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      this.router.navigate(['accounts']);
+      return;
+    }
+
     /* console.log(this.auth.userData.value);
     if (this.auth.userData) {
       this.router.navigate(['..']);
