@@ -24,13 +24,19 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    /* console.log(this.auth.userData.value);
-    if (this.auth.userData) {
-      this.router.navigate(['..']);
-      return;
-    } */
+    // Detectar si es dispositivo móvil
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
 
-    await this.loginBiometrico();
+    console.log(navigator.userAgent);
+
+    if (isMobile) {
+      await this.loginBiometrico();
+    } else {
+      this.openLoginDialog();
+    }
   }
 
   async loginBiometrico() {
