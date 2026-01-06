@@ -13,6 +13,17 @@ export class User {
   name: { first?: string | null; last?: string | null };
   email: string | null;
   security: { passwordHash: string | null };
+  // Credenciales WebAuthn (biometría)
+  credentials: Array<{
+    credentialID: string; // base64url
+    publicKey: string; // base64url
+    counter: number;
+    transports?: string[];
+    deviceType?: string;
+    backedUp?: boolean;
+  }>;
+  // Challenge temporal para WebAuthn (persistente en BD)
+  webAuthnChallenge?: string;
 
   constructor() {
     this.created = Date.now();
@@ -24,6 +35,8 @@ export class User {
     this.security = {
       passwordHash: null,
     };
+    this.credentials = [];
+    this.webAuthnChallenge = undefined;
   }
 
   setFirstName(firstName: string) {

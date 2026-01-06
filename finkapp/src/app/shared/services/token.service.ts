@@ -16,7 +16,7 @@ export class TokenService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
 
   private isTokenExpired(token: string): boolean {

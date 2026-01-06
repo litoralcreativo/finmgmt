@@ -23,13 +23,17 @@ export class LoginComponent implements OnInit {
     ]),
   });
 
+  public lastLoginEmail: string | null = null;
+
   ngOnInit(): void {
     this.updateFormDisableState();
   }
 
-  login() {
+  async login() {
     if (this.form.invalid) return;
     const { username, password } = this.form.value;
+
+    // Login clásico
     this.authService
       .login(username, password)
       .subscribe(() => {
