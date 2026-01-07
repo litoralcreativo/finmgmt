@@ -17,7 +17,7 @@ import {
 import { FinancialScopeService } from "../services/financialScope.service";
 import { TransactionService } from "../services/transaction.service";
 import { Transaction } from "../models/transaction.model";
-import { ReportService } from "../services/report.service";
+import { ReportService } from "../services/reporter/report.service";
 
 let financialScope: FinancialScopeService;
 let transactionService: TransactionService;

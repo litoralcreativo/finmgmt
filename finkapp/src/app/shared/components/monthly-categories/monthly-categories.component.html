@@ -7,16 +7,34 @@
     <button mat-icon-button (click)="goToMonth(1)" [disabled]="disableNext">
       <mat-icon>chevron_right</mat-icon>
     </button>
-    <!-- Botón de descarga del reporte mensual -->
+    <!-- Botón de descarga del reporte mensual con menú de formatos -->
     <button
       mat-icon-button
-      (click)="downloadMonthlyReport()"
+      [matMenuTriggerFor]="downloadMenu"
       matTooltip="Descargar reporte mensual"
       [disabled]="isDownloading"
       class="download-btn"
     >
       <mat-icon>{{ isDownloading ? "hourglass_empty" : "download" }}</mat-icon>
     </button>
+    <mat-menu #downloadMenu="matMenu">
+      <button
+        mat-menu-item
+        (click)="onDownloadFormatSelected('pdf')"
+        [disabled]="isDownloading"
+      >
+        <mat-icon>picture_as_pdf</mat-icon>
+        PDF
+      </button>
+      <button
+        mat-menu-item
+        (click)="onDownloadFormatSelected('excel')"
+        [disabled]="isDownloading"
+      >
+        <mat-icon>table_view</mat-icon>
+        Excel
+      </button>
+    </mat-menu>
   </div>
   <mat-tab-group animationDuration="0ms">
     <mat-tab label="Outcome" #outcome>
