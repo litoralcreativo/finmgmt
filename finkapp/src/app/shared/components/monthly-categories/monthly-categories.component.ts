@@ -39,6 +39,7 @@ export class MonthlyCategoriesComponent implements OnChanges {
   today = new Date();
   nextMonth: Date;
   isDownloading = false;
+  selectedFormat: 'pdf' | 'excel' = 'pdf';
 
   constructor(
     private snackBar: MatSnackBar,
@@ -96,7 +97,13 @@ export class MonthlyCategoriesComponent implements OnChanges {
     this.go.emit(direction);
   }
 
-  downloadMonthlyReport(): void {
+  // Llama este método cuando el usuario elija el formato desde el menú
+  onDownloadFormatSelected(format: 'pdf' | 'excel') {
+    this.selectedFormat = format;
+    this.downloadMonthlyReportWithFormat(format);
+  }
+
+  private downloadMonthlyReportWithFormat(format: 'pdf' | 'excel'): void {
     if (this.isDownloading) return;
 
     if (!this.scopeId) {
@@ -116,16 +123,23 @@ export class MonthlyCategoriesComponent implements OnChanges {
       scopeId: this.scopeId,
       year,
       month,
+      format,
     });
 
-    // Llamada real al servicio de reportes
     this.reportService
-      .downloadMonthlyReport(this.scopeId, year, month, 'pdf')
+      .downloadMonthlyReport(this.scopeId, year, month, format)
       .subscribe({
         next: (blob: Blob) => this.handleFileDownload(blob, year, month),
         error: (error) => this.handleDownloadError(error),
         complete: () => (this.isDownloading = false),
       });
+  }
+
+  // El método original queda como compatibilidad, pero ahora sugiere abrir el menú
+  downloadMonthlyReport(): void {
+    // Aquí podrías abrir el menú en el HTML, o simplemente llamar a onDownloadFormatSelected(this.selectedFormat)
+    // Por ahora, solo llamamos al método con el formato seleccionado
+    this.onDownloadFormatSelected(this.selectedFormat);
   }
 
   private handleFileDownload(blob: Blob, year: number, month: number): void {
@@ -141,9 +155,12 @@ export class MonthlyCategoriesComponent implements OnChanges {
       .replace(/-+/g, '-') // Reemplazar múltiples guiones con uno solo
       .replace(/^-|-$/g, ''); // Quitar guiones al inicio y final
 
+    // Determinar extensión según formato
+    const extension = this.selectedFormat === 'excel' ? 'xlsx' : 'pdf';
+
     link.download = `${cleanScopeName}-${(month + 1)
       .toString()
-      .padStart(2, '0')}-${year}.pdf`;
+      .padStart(2, '0')}-${year}.${extension}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
