@@ -38,6 +38,7 @@
 
     <div class="grid-area grid-right">
       <app-monthly-categories
+        *ngIf="this.scope"
         [donutData]="donutData"
         [colorTheme]="colorTheme"
         [scopeName]="scope.data.name"
@@ -50,7 +51,7 @@
         class="transactions-list-container"
         *ngIf="!fetchingTransactions; else fetchingTransactionsCard"
       >
-        <mat-card-header>
+        <!-- <mat-card-header>
           <div class="transactions-search-bar">
             <mat-form-field appearance="fill">
               <mat-label>Search</mat-label>
@@ -63,7 +64,7 @@
               <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
           </div>
-        </mat-card-header>
+        </mat-card-header> -->
         <mat-card-content>
           <div class="transaction-list">
             @for (transaction of transactions; track transaction) {
