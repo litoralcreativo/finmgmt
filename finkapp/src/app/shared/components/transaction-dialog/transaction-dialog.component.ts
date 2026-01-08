@@ -84,6 +84,10 @@ export class TransactionDialogComponent extends FetchingFlag implements OnInit {
     this.form.get('date')?.disable();
     this.form.get('category')?.disable();
 
+    this.form.get('amount')?.valueChanges.subscribe((value) => {
+      console.log(value, this.form.get('amount'));
+    });
+
     this.form.get('scope')?.valueChanges.subscribe((scope: Scope) => {
       if (scope) {
         this.form.get('category')?.enable();
