@@ -4,7 +4,10 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TransactionDialogComponent } from 'src/app/shared/components/transaction-dialog/transaction-dialog.component';
 import { SspPayload } from 'src/app/shared/models/sspdata.model';
-import { TransactionResponse, TransactionFilterRequest } from 'src/app/shared/models/transaction.model';
+import {
+  TransactionResponse,
+  TransactionFilterRequest,
+} from 'src/app/shared/models/transaction.model';
 import { ScopeService } from 'src/app/shared/services/scope.service';
 import { Scope } from 'src/app/shared/models/scope.model';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -57,8 +60,12 @@ export class ScopeHistoryComponent implements OnInit {
           const id: string | null = params.get('scopeId');
           const description = queryParams['description'] || null;
           const category = queryParams['category'] || null;
-          const year = queryParams['year'] ? +queryParams['year'] : new Date().getFullYear();
-          const month = queryParams['month'] ? +queryParams['month'] : new Date().getMonth() + 1;
+          const year = queryParams['year']
+            ? +queryParams['year']
+            : new Date().getFullYear();
+          const month = queryParams['month']
+            ? +queryParams['month']
+            : new Date().getMonth() + 1;
 
           if (!id) throw new Error('No scopeId provided');
 
@@ -95,29 +102,31 @@ export class ScopeHistoryComponent implements OnInit {
         this.getScopeTransactions();
 
         if (!this.scope) {
-          this.scopeService
-            .getById(this.scopeId)
-            .subscribe((x) => {
-              this.scope = x;
-              // Poblar usuarios del scope si existen
-              if (x.data.users) {
-                this.users = [];
-                x.data.users.forEach((userId: string) => {
-                  let user = this.authService.commonUsersData.get(userId);
-                  if (user) {
-                    this.users.push(user as PublicUserData);
-                  } else {
-                    this.authService.getForeingUserData(userId).subscribe(() => {
-                      const loadedUser = this.authService.commonUsersData.get(userId);
-                      if (loadedUser) {
-                        this.users = [...this.users, loadedUser as PublicUserData];
-                        this.cdr.detectChanges();
-                      }
-                    });
-                  }
-                });
-              }
-            });
+          this.scopeService.getById(this.scopeId).subscribe((x) => {
+            this.scope = x;
+            // Poblar usuarios del scope si existen
+            if (x.data.users) {
+              this.users = [];
+              x.data.users.forEach((userId: string) => {
+                let user = this.authService.commonUsersData.get(userId);
+                if (user) {
+                  this.users.push(user as PublicUserData);
+                } else {
+                  this.authService.getForeignUserData(userId).subscribe(() => {
+                    const loadedUser =
+                      this.authService.commonUsersData.get(userId);
+                    if (loadedUser) {
+                      this.users = [
+                        ...this.users,
+                        loadedUser as PublicUserData,
+                      ];
+                      this.cdr.detectChanges();
+                    }
+                  });
+                }
+              });
+            }
+          });
         }
       });
 
@@ -150,7 +159,11 @@ export class ScopeHistoryComponent implements OnInit {
       user_id = undefined;
     }
     this.router.navigate([], {
-      queryParams: { description: description, category: category, user_id: user_id },
+      queryParams: {
+        description: description,
+        category: category,
+        user_id: user_id,
+      },
       queryParamsHandling: 'merge',
     });
   }
@@ -168,12 +181,14 @@ export class ScopeHistoryComponent implements OnInit {
       user_id: this.searchFormGroup.get('user_id')?.value || undefined,
     };
     console.log(filterWithDate);
-    
+
     this.scopeService
       .getScopeTransactions(this.scopeId, this.ssp, filterWithDate)
       .subscribe((res) => {
         this.fetching = false;
-        this.searchFormGroup.controls['description'].enable({ emitEvent: false });
+        this.searchFormGroup.controls['description'].enable({
+          emitEvent: false,
+        });
         this.transactions = res.elements;
         this.cdr.detectChanges();
         if (this.paginator) {
@@ -221,4 +236,4 @@ export class ScopeHistoryComponent implements OnInit {
     this.searchFormGroup.get('category')?.setValue(cat);
     this.catSelectorOpen = false;
   }
-} 
+}

@@ -39,6 +39,20 @@ export class TransactionService {
   }
 
   deleteTransaction(transactionId: string): Observable<undefined> {
-    return this.http.delete<undefined>(routes.transactions.delete(transactionId));
+    return this.http.delete<undefined>(
+      routes.transactions.delete(transactionId)
+    );
+  }
+
+  createSwapTransactions(
+    transactions: [TransactionRequestDTO, TransactionRequestDTO]
+  ): Observable<any> {
+    return this.http.post<any>(
+      routes.transactions.swap,
+      { transactions },
+      {
+        withCredentials: true,
+      }
+    );
   }
 }

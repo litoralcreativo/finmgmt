@@ -18,13 +18,14 @@
   ></ng-container>
 </div>
 <div mat-dialog-actions class="transaction-dialog-actions">
-  <!-- <mat-checkbox
-    class="example-margin"
+  <mat-checkbox
+    *ngIf="swapEnabled && !hasOriginal"
+    class="swap-checkbox"
     [(ngModel)]="swap"
-    style="margin-right: auto"
     (change)="onSwapCheckboxChange()"
+    style="margin-right: auto"
     >Swap</mat-checkbox
-  > -->
+  >
   <button
     mat-icon-button
     *ngIf="hasOriginal && canEdit"
@@ -39,7 +40,22 @@
     mat-flat-button
     [color]="hasOriginal ? 'warn' : 'primary'"
     (click)="commit()"
-    [disabled]="!form.valid || fetching || (hasOriginal && !originalChanged)"
+    [disabled]="
+      fetching ||
+      (hasOriginal && !originalChanged) ||
+      (!swap &&
+        (!form.controls['amount'].valid ||
+          !form.controls['scope'].valid ||
+          !form.controls['category'].valid)) ||
+      (swap &&
+        (!form.controls['amount'].valid ||
+          !form.controls['origin'].valid ||
+          !form.controls['destination'].valid ||
+          (form.controls['origin'].value &&
+            form.controls['destination'].value &&
+            form.controls['origin'].value.data._id ===
+              form.controls['destination'].value.data._id)))
+    "
     type="submit"
   >
     {{ hasOriginal ? "Apply change" : "Commit" }}
@@ -71,13 +87,6 @@
       </mat-form-field>
     </div>
     <div class="form-row">
-      <mat-form-field appearance="fill">
-        <mat-label>Description</mat-label>
-        <input matInput formControlName="description" title="description" />
-        <mat-error *ngIf="form.controls['description'].hasError('required')"
-          >This field is required</mat-error
-        >
-      </mat-form-field>
       <mat-form-field appearance="fill" class="transaction-date">
         <mat-label>Date</mat-label>
         <input
@@ -95,7 +104,7 @@
         <mat-datepicker #dp3 disabled="false"></mat-datepicker>
       </mat-form-field>
     </div>
-    <div class="form-row" *ngIf="!swap && canEdit">
+    <div class="form-row">
       <mat-form-field appearance="fill" class="iconed-form-field">
         <mat-label>Scope</mat-label>
         <mat-select formControlName="scope">
@@ -145,81 +154,117 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="form-row" *ngIf="swap">
-      <mat-form-field appearance="fill" class="iconed-form-field">
-        <mat-label>{{ type === "incoming" ? "From" : "To" }}</mat-label>
-        <mat-select *ngIf="type === 'incoming'" formControlName="origin">
-          <mat-select-trigger>
-            <div class="row-flex">
-              <mat-icon>swap_horiz</mat-icon>
-              {{
-                this.form.controls["origin"].value
-                  ? this.form.controls["origin"].value.data.name
-                  : "None"
-              }}<span *ngIf="this.form.controls['amount'].value">
-                (- {{ this.form.controls["amount"].value | currency }})
-              </span>
-            </div>
-          </mat-select-trigger>
-          <mat-option [value]="null">None</mat-option>
-          <mat-optgroup
-            *ngFor="let group of userAccounts"
-            [label]="group.type | uppercase"
-          >
-            <mat-option
-              *ngFor="let account of group.accounts"
-              [value]="account"
-              [disabled]="
-                account.data._id ===
-                this.form.controls['destination'].value.data?._id
-              "
+    <div class="form-row" *ngIf="!swap">
+      <mat-form-field appearance="fill">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" title="description" />
+        <mat-error *ngIf="form.controls['description'].hasError('required')">
+          This field is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-row no-gap" *ngIf="swap">
+      <!-- Cuenta origen SIEMPRE a la izquierda -->
+      <mat-form-field
+        [appearance]="type === 'outgoing' ? 'outline' : 'fill'"
+        class="iconed-form-field"
+        style="flex: 1; margin-right: 8px"
+      >
+        <mat-label>Cuenta origen</mat-label>
+        <ng-container *ngIf="type === 'incoming'">
+          <mat-select formControlName="origin">
+            <mat-select-trigger>
+              <div class="row-flex">
+                {{
+                  form.controls["origin"].value?.data?.name ||
+                    "Selecciona cuenta origen"
+                }}
+              </div>
+            </mat-select-trigger>
+            <mat-option [value]="null">Selecciona cuenta origen</mat-option>
+            <mat-optgroup
+              *ngFor="let group of userAccounts"
+              [label]="group.type | uppercase"
             >
-              {{ account.data.name }}
-              {{
-                account.data._id ===
-                this.form.controls["destination"].value.data?._id
-                  ? "(destination)"
-                  : ""
-              }}
-            </mat-option>
-          </mat-optgroup>
-        </mat-select>
-        <mat-select *ngIf="type === 'outgoing'" formControlName="destination">
-          <mat-select-trigger>
-            <div class="row-flex">
-              <mat-icon>swap_horiz</mat-icon>
-              {{
-                this.form.controls["destination"].value
-                  ? this.form.controls["destination"].value.data.name
-                  : "None"
-              }}<span *ngIf="this.form.controls['amount'].value">
-                (+ {{ this.form.controls["amount"].value | currency }})
-              </span>
-            </div>
-          </mat-select-trigger>
-          <mat-option [value]="null">None</mat-option>
-          <mat-optgroup
-            *ngFor="let group of userAccounts"
-            [label]="group.type | uppercase"
-          >
-            <mat-option
-              *ngFor="let account of group.accounts"
-              [value]="account"
-              [disabled]="
-                account.data._id ===
-                this.form.controls['origin'].value.data?._id
-              "
+              <mat-option
+                *ngFor="let account of group.accounts"
+                [value]="account"
+                [disabled]="
+                  account.data._id ===
+                  form.controls['destination'].value?.data?._id
+                "
+              >
+                {{ account.data.name }}
+                {{
+                  account.data._id ===
+                  form.controls["destination"].value?.data?._id
+                    ? "(seleccionada)"
+                    : ""
+                }}
+              </mat-option>
+            </mat-optgroup>
+          </mat-select>
+        </ng-container>
+        <ng-container *ngIf="type === 'outgoing'">
+          <input
+            matInput
+            [value]="form.controls['origin'].value?.data?.name"
+            readonly
+            title="Cuenta origen seleccionada"
+          />
+        </ng-container>
+      </mat-form-field>
+      <!-- Icono flecha derecha -->
+      <div class="swap-arrow-container">
+        <mat-icon class="swap-arrow">arrow_forward</mat-icon>
+      </div>
+      <!-- Cuenta destino SIEMPRE a la derecha -->
+      <mat-form-field
+        [appearance]="type === 'incoming' ? 'outline' : 'fill'"
+        class="iconed-form-field"
+        style="flex: 1; margin-left: 8px"
+      >
+        <mat-label>Cuenta destino</mat-label>
+        <ng-container *ngIf="type === 'incoming'">
+          <input
+            matInput
+            [value]="form.controls['destination'].value?.data?.name"
+            readonly
+            title="Cuenta destino seleccionada"
+          />
+        </ng-container>
+        <ng-container *ngIf="type === 'outgoing'">
+          <mat-select formControlName="destination">
+            <mat-select-trigger>
+              <div class="row-flex">
+                {{
+                  form.controls["destination"].value?.data?.name ||
+                    "Selecciona cuenta destino"
+                }}
+              </div>
+            </mat-select-trigger>
+            <mat-option [value]="null">Selecciona cuenta destino</mat-option>
+            <mat-optgroup
+              *ngFor="let group of userAccounts"
+              [label]="group.type | uppercase"
             >
-              {{ account.data.name }}
-              {{
-                account.data._id ===
-                this.form.controls["origin"].value.data?._id
-                  ? "(origin)"
-                  : ""
-              }}
-            </mat-option>
-          </mat-optgroup>
-        </mat-select>
+              <mat-option
+                *ngFor="let account of group.accounts"
+                [value]="account"
+                [disabled]="
+                  account.data._id === form.controls['origin'].value?.data?._id
+                "
+              >
+                {{ account.data.name }}
+                {{
+                  account.data._id === form.controls["origin"].value?.data?._id
+                    ? "(seleccionada)"
+                    : ""
+                }}
+              </mat-option>
+            </mat-optgroup>
+          </mat-select>
+        </ng-container>
       </mat-form-field>
     </div>
   </form>

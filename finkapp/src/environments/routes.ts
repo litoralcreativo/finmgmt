@@ -63,5 +63,6 @@ export const routes = {
     create: `${environment.apiUrl}/transaction`,
     update: (id: string) => `${environment.apiUrl}/transaction/${id}`,
     delete: (id: string) => `${environment.apiUrl}/transaction/${id}`,
+    swap: `${environment.apiUrl}/transaction/swap`,
   },
 };

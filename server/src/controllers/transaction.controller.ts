@@ -336,6 +336,98 @@ export const deleteTransactionById = async (req: Request, res: Response) => {
   });
 };
 
+export const createSwapTransactions = async (req: Request, res: Response) => {
+  try {
+    const transactions = req.body.transactions;
+    if (!Array.isArray(transactions) || transactions.length !== 2) {
+      return Responses.BadRequest(
+        res,
+        "Debe enviar exactamente dos transacciones en el array 'transactions'."
+      );
+    }
+    const results: any[] = [];
+    for (const tx of transactions) {
+      const { account_id, amount, description, date } = tx;
+      const scopeId = tx.scope?._id;
+      const categoryName = tx.scope?.category?.name;
+      const userId: string = (req.user as any)?.id;
+      // Validaciones
+      if (!account_id)
+        return Responses.BadRequest(res, "The account_id is missing");
+      if (!amount) return Responses.BadRequest(res, "The amount is missing");
+      if (!date) return Responses.BadRequest(res, "The date is missing");
+      if (!scopeId) return Responses.BadRequest(res, "The scope id is missing");
+      if (!categoryName)
+        return Responses.BadRequest(res, "The categoryName is missing");
+      if (!userId)
+        return Responses.BadRequest(res, "The user id id is missing");
+      let insertion: Partial<Transaction> = {
+        user_id: userId,
+        account_id,
+        amount,
+        description,
+        date: new Date(date),
+      };
+      const $getAccount = accountService.getById(account_id);
+      const $getScope = financialScope.getById(scopeId);
+      let account: Account;
+      await firstValueFrom($getAccount)
+        .then((result) => {
+          if (result) {
+            insertion.account_id = account_id;
+            account = result;
+          } else {
+            Responses.BadRequest(res, "The account doesn't exist");
+          }
+        })
+        .catch((err) => Responses.BadRequest(res, "The account doesn't exist"));
+      await firstValueFrom($getScope)
+        .then((scopeData) => {
+          if (!scopeData) {
+            return throwError(() => new Error("The scope doesn't exist"));
+          }
+          const category = scopeData.categories.find(
+            (x) => x.name === categoryName
+          );
+          if (!category) {
+            return throwError(
+              () => new Error("The category doesn't exist in the scope")
+            );
+          }
+          insertion.scope = {
+            _id: scopeId,
+            name: scopeData.name,
+            icon: scopeData.icon,
+            category: {
+              name: category.name,
+              icon: category.icon,
+              fixed: category.fixed,
+            },
+          };
+        })
+        .catch((err) => Responses.BadRequest(res, err.message));
+      await firstValueFrom(transactionService.createOne(insertion))
+        .then((val) => {
+          if (!val) {
+            return res.status(404).json({ message: "Not inserted" });
+          }
+          results.push(val);
+        })
+        .catch((err) => Responses.BadRequest(res, err.message));
+      // Actualizar saldo de la cuenta
+      await updateAccountAmount(account_id);
+    }
+    return res.status(200).json({
+      ...new ResponseStrategy(200, "swap inserted"),
+      results,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      ...new ResponseStrategy(500, error.toString()),
+    });
+  }
+};
+
 const updateAccountAmount = async (account_id: string) => {
   if (account_id! === undefined) throw new Error("No account id");
   const acountAmount = await firstValueFrom(

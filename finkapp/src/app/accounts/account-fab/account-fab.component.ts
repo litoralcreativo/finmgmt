@@ -9,14 +9,13 @@ export class AccountFABComponent {
   hide = false;
   actionsShown = false;
 
-  @Output() action =
-    new EventEmitter<'in' | 'out' | 'swap'>();
+  @Output() action = new EventEmitter<'in' | 'out'>();
 
   toggleActions() {
     this.actionsShown = !this.actionsShown;
   }
 
-  emitAction(action: 'in' | 'out' | 'swap') {
+  emitAction(action: 'in' | 'out') {
     this.action.emit(action);
     this.toggleActions();
     this.hide = true;

@@ -169,13 +169,21 @@ export class IncomingTransaction extends Transaction {
   }
 }
 
+export class SwapTransaction extends Transaction {
+  constructor(origin: Account, destination: Account) {
+    super();
+    this.origin = origin;
+    this.destination = destination;
+  }
+}
+
 export interface TransactionFilterRequest {
   description: string;
   category: string;
   year?: number;
   month?: number;
   user_id?: string;
-};
+}
 
 export interface TransactionResponse {
   _id: string;
@@ -185,7 +193,7 @@ export interface TransactionResponse {
   description: string;
   date: Date;
   scope: ScopedCategory;
-};
+}
 
 export interface TransactionRequestDTO {
   account_id: string;
@@ -198,7 +206,7 @@ export interface TransactionRequestDTO {
       name: string;
     };
   };
-};
+}
 
 export interface ModifiedTransactionRequestDTO {
   amount: number;
@@ -209,4 +217,4 @@ export interface ModifiedTransactionRequestDTO {
       name: string;
     };
   };
-};
+}

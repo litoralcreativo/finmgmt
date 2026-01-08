@@ -133,7 +133,7 @@ export class AccountComponent implements OnInit {
   }
 
   openTransactionDialog(
-    type: 'in' | 'out' | 'swap',
+    type: 'in' | 'out',
     madeTransaction?: TransactionResponse
   ) {
     let transaction: Transaction;
@@ -142,9 +142,6 @@ export class AccountComponent implements OnInit {
         transaction = new IncomingTransaction(this.account);
         break;
       case 'out':
-        transaction = new OutgoingTransaction(this.account);
-        break;
-      case 'swap':
         transaction = new OutgoingTransaction(this.account);
         break;
     }
