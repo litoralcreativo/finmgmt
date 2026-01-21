@@ -143,7 +143,7 @@ export class AuthService {
       );
   }
 
-  getForeingUserData(userId: string) {
+  getForeignUserData(userId: string) {
     this._commonUsersData.set(userId, undefined);
     return this.http.get<PublicUserData>(routes.auth.foreinguser(userId)).pipe(
       tap((userdata) => {

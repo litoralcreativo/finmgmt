@@ -136,7 +136,7 @@
     <mat-card-content>
       <div class="transaction-list">
         @for (transaction of [1, 2, 3, 4, 5]; track transaction) {
-        <div [appSkeletonLoader]="true" style="margin-bottom: 5px">
+        <div [appSkeletonLoader]="true" class="skeleton-transaction-item">
           <p class="mat-label-large">placeholder</p>
           <span>Placeholder placeholder</span>
         </div>

@@ -26,7 +26,7 @@ export class TransactionListItemComponent implements OnInit {
       ) as PublicUserData;
     } else {
       this.authService
-        .getForeingUserData(this.transaction.user_id)
+        .getForeignUserData(this.transaction.user_id)
         .subscribe()
         .add(() => {
           if (this.authService.commonUsersData.has(this.transaction.user_id)) {
