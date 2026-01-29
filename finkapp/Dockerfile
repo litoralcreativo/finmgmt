@@ -10,6 +10,6 @@ RUN npm run build -- --configuration production
 
 # Stage 2: Serve
 FROM nginx:alpine
-COPY --from=builder /app/dist/fink /usr/share/nginx/html
+COPY --from=builder /app/dist/fink/browser /usr/share/nginx/html
 EXPOSE 4200
 CMD ["nginx", "-g", "daemon off;"]
