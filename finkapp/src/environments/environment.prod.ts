@@ -1,4 +1,4 @@
-const API_URL = 'https://finmgmt-lhio.onrender.com';
+const API_URL = 'http://localhost:3000';
 
 export const environment = {
   production: true,
