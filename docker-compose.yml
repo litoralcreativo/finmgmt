@@ -1,23 +1,18 @@
 services:
-  mongo:
-    build:
-      context: ./database
-    container_name: mongo
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - fink-network
-
   api:
     build:
       context: ./server
     container_name: api
     ports:
-      - "3000:3000"
-    depends_on:
-      - mongo
+      - "3001:3000"
+    environment:
+      - MONGODB_URI=${MONGODB_URI}
+      - DB_NAME=${DB_NAME}
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - PORT=${PORT}
+      - API_URI=${API_URI}
+      - WEBAUTHN_RPID=${WEBAUTHN_RPID}
+      - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN}
     networks:
       - fink-network
 
