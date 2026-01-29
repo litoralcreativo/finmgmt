@@ -27,9 +27,6 @@ services:
     networks:
       - fink-network
 
-volumes:
-  mongo-data:
-
 networks:
   fink-network:
     driver: bridge
